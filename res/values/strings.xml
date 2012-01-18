@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+	<string name="app_name">IBC</string>
+	<string name="preferences">Einstellungen</string>
+	<string name="username">Benutzername</string>
+	<string name="path">Pfad</string>
+
+	<string name="hostname">Hostname</string>
+	<string name="password">Kennwort</string>
+	<string name="port">Port</string>
+	<string name="version">Version</string>
+	<string name="connect">Mit Server verbinden</string>
+	<string-array name="api_list">
+		<item>1</item>
+		<item>2</item>
+
+	</string-array>
+	<string-array name="version_list">
+		<item>1.0</item>
+		<item>1.1</item>
+	</string-array>
+	<string name="writable">Schreibzugriff</string>
+	<string name="version_summary">Server-Version</string>
+	
+	<string name="publish">Veröffentlichen</string>
+	<string name="properties">Eigenschaften</string>
+	<string name="loading">Warten auf Server</string>
+	<string name="waitingforcontent">Inhalt wird geladen</string>
+	<string name="waitingforprojects">Projekte werden geladen</string>
+	<string name="waitingforlogin">Anmeldung am Server</string>
+	<string name="waitingfordelete">Löschen</string>
+	<string name="waitingfornew">Erzeuge</string>
+	<string name="waitingforsave">Speichern</string>
+	<string name="waitingforlanguageload">Verfügbare Sprachen werden geladen</string>
+	<string name="waitingforlanguagesave">Ausgewählte Sprache wird aktiviert</string>
+	<string name="language">Sprache</string>
+	<string name="model">Variante</string>
+	<string name="new1">Neu</string>
+	<string name="new_folder">Neuer Unterordner</string>
+	<string name="new_page">Neue Seite</string>
+	<string name="upload">Hochladen</string>
+	<string name="upload_long">Die Datei wird jetzt hochladen</string>
+	<string name="upload_file">Datei hochladen</string>
+	<string name="upload_image">Bild hochladen</string>
+	<string name="upload_ok">Hochladevorgang abgeschlossen</string>
+	<string name="upload_ok_long">Die Datei wurde erfolgreich auf den Server geladen</string>
+	<string name="upload_fail">Hochladevorgang fehlerhaft</string>
+	<string name="upload_fail_long">Die Datei konnte nicht auf den Server geladen werden</string>
+	<string name="publish_long">Die Veröffentlichung wurde gestartet</string>
+	<string name="publish_ok">Wurde veröffentlicht</string>
+	<string name="publish_ok_long">Erfolgreich veröffentlicht</string>
+	<string name="publish_fail">Veröffentlichung nicht erfolgreich</string>
+	<string name="publish_fail_long">Leider konnte die Datei nicht veröffentlicht werden</string>
+	<string name="delete">Löschen</string>
+	<string name="name">Name</string>
+	<string name="filename">Dateiname</string>
+	<string name="template">Vorlage</string>
+	<string name="save">Speichern</string>
+	
+	
+	
+	
+	<string name="description">Inhalt</string>
+	<string name="editor">Inhalt</string>
+	<string name="error_timeout">Zeitablauf</string>
+	<string name="error_io">Verbindungsabbruch</string>
+	<string name="error">Fehler</string>
+	<string name="reason">Grund</string>
+	<string name="areyousure">Sicher?</string>
+	<string name="choosefile">Datei auswählen</string>
+	<string name="chooseimage">Bild auswählen</string>
+	<string name="newserver">Neuer Server</string>
+	<string name="server">Server</string>
+	<string name="timeout">Zeitablauf</string>
+	<string name="timeout_desc">Timeout der TCP/IP-Verbindung in Sekunden</string>
+	<string name="databaseid">Datenbank-Id</string>
+	<string name="databaseid_desc">Datenbank-Id aus der Server-Konfiguration</string>
+	<string name="saved">Gespeichert</string>
+	<string name="release">Freigeben</string>
+	<string name="noserver">Es ist noch kein Server konfiguriert. Über die Menütaste können Sie einen neuen Server anlegen.</string>
+	
+<string name="forum">Forum</string>
+<string name="news">News</string>
+<string name="photos">Fotos</string>
+</resources>
