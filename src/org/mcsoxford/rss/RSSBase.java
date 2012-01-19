@@ -16,6 +16,7 @@
 
 package org.mcsoxford.rss;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  * 
  * @author Mr Horn
  */
-abstract class RSSBase {
+abstract class RSSBase implements Serializable {
 
   private String title;
   private android.net.Uri link;

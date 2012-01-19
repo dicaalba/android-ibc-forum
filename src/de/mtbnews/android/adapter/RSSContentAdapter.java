@@ -80,10 +80,10 @@ public class RSSContentAdapter extends BaseAdapter
 
 		TextView desc = (TextView) view.findViewById(R.id.item_description);
 
-		if (e.getContent() != null)
-			desc.setText(Html.fromHtml(e.getContent()));
-		else if (e.getDescription() != null)
+		if (e.getDescription() != null)
 			desc.setText(e.getDescription() + " ...");
+		else
+			desc.setText("");
 
 		return view;
 	}

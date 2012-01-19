@@ -1,17 +1,14 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 import org.mcsoxford.rss.RSSFeed;
-import org.mcsoxford.rss.RSSItem;
 import org.mcsoxford.rss.RSSReader;
 import org.mcsoxford.rss.RSSReaderException;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,17 +16,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.RSSContentAdapter;
+import de.mtbnews.android.util.AppData;
 import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 public class NewsActivity extends ListActivity
 {
-	public final static String ELEMENTID = "elementid";
-	public final static String OBJECTID = "objectid";
-	// public final static String TYPE = "type";
-	public static final String CLIENT = "client";
-	private Map<String, String> properties;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -37,6 +29,15 @@ public class NewsActivity extends ListActivity
 
 		super.onCreate(savedInstanceState);
 
+		reloadFeed();
+
+	}
+
+	/**
+	 * 
+	 */
+	private void reloadFeed()
+	{
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
 
@@ -49,6 +50,7 @@ public class NewsActivity extends ListActivity
 				try
 				{
 					feed = reader.load(IBC.IBC_NEWS_RSS_URL);
+					AppData.newsFeed = feed;
 				}
 				catch (RSSReaderException e)
 				{
@@ -60,7 +62,7 @@ public class NewsActivity extends ListActivity
 			{
 				ListAdapter adapter = new RSSContentAdapter(NewsActivity.this,
 						feed);
-				NewsActivity.this.setTitle( feed.getTitle() );
+				NewsActivity.this.setTitle(feed.getTitle());
 				setListAdapter(adapter);
 			}
 		}.execute();
@@ -74,13 +76,11 @@ public class NewsActivity extends ListActivity
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
-				RSSItem item = (RSSItem) getListAdapter().getItem(position);
-				
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(item.getLink());
-				startActivity(i);
+				final Intent intent = new Intent(NewsActivity.this,
+						NewsDetailActivity.class);
+				intent.putExtra("itemid", position);
+				startActivity(intent);
 			}
 		});
-
 	}
 }

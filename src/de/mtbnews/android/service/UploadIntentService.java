@@ -53,7 +53,7 @@ public class UploadIntentService extends IntentService
 		final String tickerText = getResources()
 				.getString(R.string.upload_long);
 		final Notification notification = new Notification(
-				R.drawable.ibc_small, tickerText, System.currentTimeMillis());
+				R.drawable.ibc_logo, tickerText, System.currentTimeMillis());
 		notification.setLatestEventInfo(getApplicationContext(), getResources()
 				.getString(R.string.upload), file.getName(), contentIntent);
 		notification.flags = Notification.FLAG_ONGOING_EVENT

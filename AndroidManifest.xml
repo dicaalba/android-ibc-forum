@@ -15,6 +15,7 @@
 
 		<activity android:name="ForumActivity" android:label="@string/forum"></activity>
 		<activity android:name="NewsActivity" android:label="@string/news"></activity>
+		<activity android:name="NewsDetailActivity" android:label="@string/news"></activity>
 		<activity android:name="PhotoActivity" android:label="@string/photos"></activity>
 
 		<service android:name=".service.UploadIntentService"></service>
