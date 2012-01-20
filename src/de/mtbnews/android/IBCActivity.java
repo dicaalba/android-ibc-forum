@@ -18,11 +18,15 @@
  */
 package de.mtbnews.android;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
-import android.app.Activity;
+import org.apache.http.client.ClientProtocolException;
+import org.mcsoxford.rss.RSSFeed;
+import org.mcsoxford.rss.RSSReader;
+import org.mcsoxford.rss.RSSReaderException;
+
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,27 +36,31 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
+import de.mtbnews.android.adapter.RSSContentAdapter;
+import de.mtbnews.android.util.AppData;
+import de.mtbnews.android.util.IBC;
+import de.mtbnews.android.util.ServerAsyncTask;
 
 /**
  * @author Jan Dankert
  */
-public class IBCActivity extends Activity
+public class IBCActivity extends ListActivity
 {
-	private static final String PREFS_NAME = "OR_BLOG_PREFS";
-	private List<String> serverList;
-
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.start);
 
 		SharedPreferences globalPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		ArrayList<String> list = new ArrayList<String>();
 		if (globalPrefs.getString("username", "").equals("") )
 		{
 			// Noch kein Benutzer konfiguriert. Hinweis anzeigen!
@@ -73,17 +81,7 @@ public class IBCActivity extends Activity
 			}
 		});
 		
-		Button newsButton = (Button) findViewById(R.id.news);
-		newsButton.setOnClickListener( new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				startActivity(new Intent(IBCActivity.this, NewsActivity.class));
-			}
-		});
-		
+	
 		Button photoButton = (Button) findViewById(R.id.photo);
 		photoButton.setOnClickListener( new OnClickListener()
 		{
@@ -95,8 +93,69 @@ public class IBCActivity extends Activity
 			}
 		});
 
+		reloadFeed();
 	}
 
+	
+	/**
+	 * 
+	 */
+	private void reloadFeed()
+	{
+		if	( AppData.newsFeed != null ) {
+			// Nicht nochmal laden.
+			// TODO: Reload-Funktion.
+			return;
+		}
+		
+		new ServerAsyncTask(this, R.string.waitingforcontent)
+		{
+
+			private RSSFeed feed;
+
+			@Override
+			protected void callServer() throws IOException
+			{
+				RSSReader reader = new RSSReader();
+				try
+				{
+					feed = reader.load(IBC.IBC_NEWS_RSS_URL);
+					AppData.newsFeed = feed;
+				}
+				catch (RSSReaderException e)
+				{
+					throw new ClientProtocolException(e);
+				}
+			}
+
+			protected void doOnSuccess()
+			{
+				ListAdapter adapter = new RSSContentAdapter(IBCActivity.this,
+						feed);
+				IBCActivity.this.setTitle(feed.getTitle());
+				setListAdapter(adapter);
+			}
+		}.execute();
+
+		final ListView list = getListView();
+
+		list.setOnItemClickListener(new OnItemClickListener()
+		{
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id)
+			{
+				final Intent intent = new Intent(IBCActivity.this,
+						NewsDetailActivity.class);
+				intent.putExtra("itemid", position);
+				startActivity(intent);
+			}
+		});
+	}
+
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -114,22 +173,8 @@ public class IBCActivity extends Activity
 			case R.id.menu_preferences:
 				startActivity(new Intent(this, Configuration.class));
 				return true;
+				
 		}
 		return false;
-	}
-
-	@Override
-	protected void onStop()
-	{
-		super.onStop();
-
-		// Save user preferences. We need an Editor object to
-		// make changes. All objects are from android.context.Context
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		// editor.putBoolean("silentMode", mSilentMode);
-
-		// Don't forget to commit your edits!!!
-		editor.commit();
 	}
 }

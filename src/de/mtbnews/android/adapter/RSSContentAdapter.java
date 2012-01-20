@@ -72,8 +72,11 @@ public class RSSContentAdapter extends BaseAdapter
 		final View view = inflator.inflate(R.layout.rss_item, null);
 
 		TextView datum = (TextView) view.findViewById(R.id.item_date);
-		datum.setText(DateFormat.getTimeFormat(parent.getContext()).format(
-				e.getPubDate()));
+		datum.setText(DateFormat.getDateFormat(parent.getContext()).format(
+				e.getPubDate())
+				+ " "
+				+ DateFormat.getTimeFormat(parent.getContext()).format(
+						e.getPubDate()));
 
 		TextView name = (TextView) view.findViewById(R.id.item_title);
 		name.setText(e.getTitle());

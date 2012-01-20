@@ -13,10 +13,16 @@
 
 		<activity android:name="Configuration" android:label="@string/preferences"></activity>
 
-		<activity android:name="ForumActivity" android:label="@string/forum"></activity>
-		<activity android:name="NewsActivity" android:label="@string/news"></activity>
 		<activity android:name="NewsDetailActivity" android:label="@string/news"></activity>
 		<activity android:name="PhotoActivity" android:label="@string/photos"></activity>
+		
+		<activity android:name="ForumActivity" android:label="@string/forum"></activity>
+		<activity android:name="TopicActivity" android:label="@string/forum"></activity>
+		<activity android:name="PostActivity" android:label="@string/forum"></activity>
+		
+		<activity android:name="MailboxActivity" android:label="@string/news"></activity>
+		<activity android:name="MailActivity" android:label="@string/news"></activity>
+		<activity android:name="MessageActivity" android:label="@string/news"></activity>
 
 		<service android:name=".service.UploadIntentService"></service>
 	

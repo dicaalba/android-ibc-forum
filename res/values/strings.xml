@@ -6,6 +6,10 @@
 	<string name="username">Benutzername</string>
 	<string name="path">Pfad</string>
 
+	<string name="unread_topics">Ungelesen</string>
+	<string name="participated_topics">Meine Themen</string>
+	<string name="latest_topics">Neuste Themen</string>
+	<string name="mailbox">Nachrichten</string>
 	<string name="hostname">Hostname</string>
 	<string name="password">Kennwort</string>
 	<string name="port">Port</string>
