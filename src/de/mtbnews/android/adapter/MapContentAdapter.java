@@ -6,14 +6,13 @@ package de.mtbnews.android.adapter;
 import java.util.List;
 import java.util.Map;
 
-import org.mcsoxford.rss.RSSItem;
-
 import android.content.Context;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.mtbnews.android.R;
 
@@ -80,6 +79,13 @@ public class MapContentAdapter extends BaseAdapter
 
 		final View view = inflator.inflate(R.layout.rss_item, null);
 
+		// Linken Rand ggf. erhöhen.
+		// LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(
+		// LinearLayout.LayoutParams.FILL_PARENT,
+		// LinearLayout.LayoutParams.WRAP_CONTENT);
+		// params2.setMargins(20,0,0,0);
+		// view.setLayoutParams(params2);
+
 		if (dateKey != null)
 		{
 			TextView datum = (TextView) view.findViewById(R.id.item_date);
@@ -92,7 +98,6 @@ public class MapContentAdapter extends BaseAdapter
 
 		if (titleKey != null)
 		{
-
 			TextView name = (TextView) view.findViewById(R.id.item_title);
 			name.setText(new String((byte[]) e.get(titleKey)));
 		}

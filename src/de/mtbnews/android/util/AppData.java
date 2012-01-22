@@ -3,6 +3,8 @@ package de.mtbnews.android.util;
 import org.mcsoxford.rss.RSSFeed;
 import org.xmlrpc.android.XMLRPCClient;
 
+import de.mtbnews.android.tapatalk.TapatalkClient;
+
 /**
  * Speichert Anwendungsdaten.
  * 
@@ -15,5 +17,5 @@ public class AppData
 
 	public static RSSFeed photoFeed;
 
-	public static XMLRPCClient client;
+	public static TapatalkClient client;
 }

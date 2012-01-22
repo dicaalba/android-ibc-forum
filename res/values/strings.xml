@@ -84,6 +84,19 @@
 	<string name="release">Freigeben</string>
 	<string name="noserver">Es ist noch kein Server konfiguriert. Über die Menütaste können Sie einen neuen Server anlegen.</string>
 	<string name="www">Zur Webseite</string>
+	<string name="scroll_down">Immer an das Ende scrollen</string>
+	<string name="use_ibc_theme">Das IBC-Theme benutzen</string>
+	<string name="auto_login">Automatisch anmelden</string>
+	<string name="num_load">Anzahl Posts laden</string>
+	<string name="login">Anmelden</string>
+	<string name="logout">Abmelden</string>
+	<string-array name="num_load_list">
+		<item>5</item>
+		<item>10</item>
+		<item>20</item>
+		<item>50</item>
+	</string-array>
+	
 	
 <string name="forum">Forum</string>
 <string name="news">News</string>

@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	android:title="@string/preferences">
-	
-	<!-- 
-	<EditTextPreference android:key="timeout"
+
+	<CheckBoxPreference android:defaultValue="true"
+		android:key="ibc_theme" android:title="@string/use_ibc_theme" />
+
+	<!--
+		<EditTextPreference android:key="timeout"
 		android:title="@string/timeout" android:summary="@string/timeout_desc"
 		android:defaultValue="30"></EditTextPreference>
-	 -->
+	-->
 	<!--
 		<EditTextPreference android:key="server"
 		android:title="@string/server"></EditTextPreference>
 	-->
-	<EditTextPreference android:key="username"
-		android:title="@string/username"></EditTextPreference>
-	<EditTextPreference android:key="password"
-		android:password="true" android:title="@string/password"></EditTextPreference>
+	<PreferenceCategory android:title="@string/username">
+
+		<EditTextPreference android:key="username"
+			android:title="@string/username"></EditTextPreference>
+		<EditTextPreference android:key="password"
+			android:password="true" android:title="@string/password"></EditTextPreference>
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/forum">
+
+		<ListPreference android:defaultValue="10"
+			android:entries="@array/num_load_list" android:entryValues="@array/num_load_list"
+			android:key="num_load" android:title="@string/num_load" />
+
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="scroll_down" android:title="@string/scroll_down" />
+
+		<CheckBoxPreference android:defaultValue="true"
+			android:key="auto_login" android:title="@string/auto_login" />
+	</PreferenceCategory>
 </PreferenceScreen>

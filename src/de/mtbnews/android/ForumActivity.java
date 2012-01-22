@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.MapContentAdapter;
+import de.mtbnews.android.tapatalk.TapatalkClient;
+import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.util.AppData;
 import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
@@ -36,16 +39,24 @@ import de.mtbnews.android.util.ServerAsyncTask;
 public class ForumActivity extends ListActivity
 {
 	private Object[] forumList;
-	
+	private SharedPreferences prefs;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		if (AppData.client == null)
-			AppData.client = new XMLRPCClient(IBC.IBC_FORUM_CONNECTOR_URL);
+			AppData.client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
 
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.listing);
+
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if (prefs.getBoolean("auto_login", false))
+		{
+			login();
+		}
 
 		if (getIntent().getBooleanExtra("latest", false))
 		{
@@ -61,20 +72,47 @@ public class ForumActivity extends ListActivity
 		}
 		else
 		{
-			loadForum();
+			String forumId = getIntent().getStringExtra("forum_id");
+
+			loadForum(forumId);
 		}
+	}
+
+	private void login()
+	{
+		final TapatalkClient client = AppData.client;
+		new ServerAsyncTask(this, R.string.waitingforlogin)
+		{
+
+			@Override
+			protected void callServer() throws IOException
+			{
+
+				try
+				{
+					Map<String, Object> map = client.login(prefs.getString(
+							"username", ""), prefs.getString("password", ""));
+
+				}
+				catch (TapatalkException e)
+				{
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+
+			}
+
+		}.execute();
 	}
 
 	private void loadUnread()
 	{
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		final XMLRPCClient client = AppData.client;
+		final XMLRPCClient client = AppData.client.getXMLRPCClient();
 
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
-
-
 			@Override
 			protected void callServer() throws IOException
 			{
@@ -117,7 +155,7 @@ public class ForumActivity extends ListActivity
 					list.add((Map) o);
 				}
 				ListAdapter adapter = new MapContentAdapter(ForumActivity.this,
-						list, null, "topic_title", "short_content");
+						list, "post_time", "topic_title", "short_content");
 				// IBCActivity.this.setTitle(feed.getTitle());
 				setListAdapter(adapter);
 
@@ -134,10 +172,11 @@ public class ForumActivity extends ListActivity
 					int position, long id)
 			{
 
-				 final Intent intent = new Intent(ForumActivity.this,
-				 TopicActivity.class);
-				 intent.putExtra("topic_id", (String) ((Map)forumList[position]).get("topic_id"));
-				 startActivity(intent);
+				final Intent intent = new Intent(ForumActivity.this,
+						TopicActivity.class);
+				intent.putExtra("topic_id",
+						(String) ((Map) forumList[position]).get("topic_id"));
+				startActivity(intent);
 			}
 		});
 	}
@@ -146,25 +185,17 @@ public class ForumActivity extends ListActivity
 	{
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		final XMLRPCClient client = AppData.client;
+		final XMLRPCClient client = AppData.client.getXMLRPCClient();
 
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
-
 
 			@Override
 			protected void callServer() throws IOException
 			{
 
-				// add 2 to 4
-				Object[] params = new Object[] {
-						prefs.getString("username", "").getBytes(),
-						prefs.getString("password", "").getBytes() };
-
 				try
 				{
-					Object sum = client.callEx("login", params);
-
 					// Object l = client.call("get_inbox_stat");
 					// System.out.println(l.toString() );
 					Object l = client.call("get_latest_topic");
@@ -193,7 +224,7 @@ public class ForumActivity extends ListActivity
 					list.add((Map) o);
 				}
 				ListAdapter adapter = new MapContentAdapter(ForumActivity.this,
-						list, null, "topic_title", "short_content");
+						list, "post_time", "topic_title", "short_content");
 				// IBCActivity.this.setTitle(feed.getTitle());
 				setListAdapter(adapter);
 
@@ -222,7 +253,7 @@ public class ForumActivity extends ListActivity
 	{
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		final XMLRPCClient client = AppData.client;
+		final XMLRPCClient client = AppData.client.getXMLRPCClient();
 
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
@@ -233,26 +264,14 @@ public class ForumActivity extends ListActivity
 			protected void callServer() throws IOException
 			{
 
-				// add 2 to 4
-				Object[] params = new Object[] {
-						prefs.getString("username", "").getBytes(),
-						prefs.getString("password", "").getBytes() };
+				Object[] params = new Object[] { prefs
+						.getString("username", "").getBytes() };
 
 				try
 				{
-					Object sum = client.callEx("login", params);
+					Map map = (Map) client.call("get_participated_topic");
 
-					// Object l = client.call("get_inbox_stat");
-					// System.out.println(l.toString() );
-					Object l = client.call("get_participated_topic");
-
-					this.forumList = (Object[]) ((Map) l).get("topics");
-
-					System.out.println(l.toString());
-
-					// Object i = client.call("get_box_info");
-					// System.out.println(i.toString() );
-
+					this.forumList = (Object[]) map.get("topics");
 				}
 				catch (XMLRPCException e)
 				{
@@ -295,11 +314,10 @@ public class ForumActivity extends ListActivity
 		});
 	}
 
-	private void loadForum()
+	private void loadForum(final String forumId)
 	{
-		final SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		final XMLRPCClient client = AppData.client;
+
+		final XMLRPCClient client = AppData.client.getXMLRPCClient();
 
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
@@ -310,25 +328,11 @@ public class ForumActivity extends ListActivity
 			protected void callServer() throws IOException
 			{
 
-				// add 2 to 4
-				Object[] params = new Object[] {
-						prefs.getString("username", "").getBytes(),
-						prefs.getString("password", "").getBytes() };
-
 				try
 				{
-					Object sum = client.callEx("login", params);
+					Map map = (Map) client.call("get_topic", forumId);
 
-					// Object l = client.call("get_inbox_stat");
-					// System.out.println(l.toString() );
-					Object l = client.call("get_forum");
-
-					this.forumList = (Object[]) l;
-					System.out.println(l.toString());
-
-					// Object i = client.call("get_box_info");
-					// System.out.println(i.toString() );
-
+					this.forumList = (Object[]) map.get("topics");
 				}
 				catch (XMLRPCException e)
 				{
@@ -346,7 +350,7 @@ public class ForumActivity extends ListActivity
 					list.add((Map) o);
 				}
 				ListAdapter adapter = new MapContentAdapter(ForumActivity.this,
-						list, null, "forum_name", "description");
+						list, "last_reply_time", "topic_title", "short_content");
 				// IBCActivity.this.setTitle(feed.getTitle());
 				setListAdapter(adapter);
 
@@ -405,8 +409,29 @@ public class ForumActivity extends ListActivity
 				intent3.putExtra("unread", true);
 				startActivity(intent3);
 				return true;
+
+			case R.id.menu_logout:
+				return false;
+
+			case R.id.menu_login:
+
+				if (TextUtils.isEmpty(prefs.getString("username", "")))
+				{
+					Intent intent4 = new Intent(this, Configuration.class);
+					startActivity(intent4);
+				}
+				// Evtl. gibt es jetzt einen Benutzernamen ...
+
+				if (!TextUtils.isEmpty(prefs.getString("username", "")))
+				{
+					Intent intent4 = new Intent(this, Configuration.class);
+					startActivity(intent4);
+				}
+
+				login();
+
+				return true;
 		}
 		return false;
 	}
-
 }

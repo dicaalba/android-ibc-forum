@@ -61,31 +61,31 @@ public class IBCActivity extends ListActivity
 		SharedPreferences globalPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		if (globalPrefs.getString("username", "").equals("") )
-		{
-			// Noch kein Benutzer konfiguriert. Hinweis anzeigen!
-			final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(getResources().getString(R.string.noserver));
-			AlertDialog alert = builder.create();
-			alert.show();
-		}
-		
+		// Gast-Zugang ist ok, daher keine Meldung anzeigen...
+		// if (globalPrefs.getString("username", "").equals("") )
+		// {
+		// // Noch kein Benutzer konfiguriert. Hinweis anzeigen!
+		// final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// builder.setMessage(getResources().getString(R.string.noserver));
+		// AlertDialog alert = builder.create();
+		// alert.show();
+		// }
+
 		Button forumButton = (Button) findViewById(R.id.forum);
-		forumButton.setOnClickListener( new OnClickListener()
+		forumButton.setOnClickListener(new OnClickListener()
 		{
-			
+
 			@Override
 			public void onClick(View v)
 			{
-				startActivity(new Intent(IBCActivity.this, ForumActivity.class));
+				startActivity(new Intent(IBCActivity.this, ForumOverviewActivity.class));
 			}
 		});
-		
-	
+
 		Button photoButton = (Button) findViewById(R.id.photo);
-		photoButton.setOnClickListener( new OnClickListener()
+		photoButton.setOnClickListener(new OnClickListener()
 		{
-			
+
 			@Override
 			public void onClick(View v)
 			{
@@ -96,18 +96,18 @@ public class IBCActivity extends ListActivity
 		reloadFeed();
 	}
 
-	
 	/**
 	 * 
 	 */
 	private void reloadFeed()
 	{
-		if	( AppData.newsFeed != null ) {
+		if (AppData.newsFeed != null)
+		{
 			// Nicht nochmal laden.
 			// TODO: Reload-Funktion.
 			return;
 		}
-		
+
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
 
@@ -154,8 +154,6 @@ public class IBCActivity extends ListActivity
 		});
 	}
 
-	
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -173,7 +171,7 @@ public class IBCActivity extends ListActivity
 			case R.id.menu_preferences:
 				startActivity(new Intent(this, Configuration.class));
 				return true;
-				
+
 		}
 		return false;
 	}

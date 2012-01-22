@@ -16,6 +16,7 @@
 		<activity android:name="NewsDetailActivity" android:label="@string/news"></activity>
 		<activity android:name="PhotoActivity" android:label="@string/photos"></activity>
 		
+		<activity android:name="ForumOverviewActivity" android:label="@string/forum"></activity>
 		<activity android:name="ForumActivity" android:label="@string/forum"></activity>
 		<activity android:name="TopicActivity" android:label="@string/forum"></activity>
 		<activity android:name="PostActivity" android:label="@string/forum"></activity>

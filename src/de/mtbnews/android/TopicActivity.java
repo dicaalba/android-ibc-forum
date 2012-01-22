@@ -22,6 +22,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.MapContentAdapter;
+import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.util.AppData;
 import de.mtbnews.android.util.ServerAsyncTask;
 
@@ -54,11 +55,10 @@ public class TopicActivity extends ListActivity
 			protected void callServer() throws IOException
 			{
 
-				XMLRPCClient client = AppData.client;
+				XMLRPCClient client = AppData.client.getXMLRPCClient();
 				// add 2 to 4
 				try
 				{
-
 					// add 2 to 4
 					Object[] params = new Object[] { TopicActivity.this
 							.getIntent().getStringExtra("topic_id") };
