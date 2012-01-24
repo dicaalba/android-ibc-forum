@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.MapContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
@@ -67,7 +68,7 @@ public class ForumOverviewActivity extends ListActivity
 	private void login()
 	{
 		final TapatalkClient client = AppData.client;
-		new ServerAsyncTask(this, R.string.waitingforlogin)
+		new ServerAsyncTask(this, R.string.waitingfor_login)
 		{
 
 			@Override
@@ -97,7 +98,7 @@ public class ForumOverviewActivity extends ListActivity
 	{
 		final XMLRPCClient client = AppData.client.getXMLRPCClient();
 
-		new ServerAsyncTask(this, R.string.waitingforcontent)
+		new ServerAsyncTask(this, R.string.waitingfor_forum)
 		{
 
 			private Object[] forumList;
@@ -147,7 +148,12 @@ public class ForumOverviewActivity extends ListActivity
 						.get(position);
 
 				boolean subOnly = (Boolean) map.get("sub_only");
-				if (!subOnly)
+				if (subOnly)
+				{
+					Toast.makeText(ForumOverviewActivity.this,
+							R.string.sub_only, Toast.LENGTH_SHORT).show();
+				}
+				else
 				{
 					final Intent intent = new Intent(
 							ForumOverviewActivity.this, ForumActivity.class);
@@ -166,6 +172,17 @@ public class ForumOverviewActivity extends ListActivity
 		mi.inflate(R.menu.forum, menu);
 
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see android.app.Activity#onSearchRequested()
+	 */
+	@Override
+	public boolean onSearchRequested()
+	{
+		return super.onSearchRequested();
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -194,12 +211,15 @@ public class ForumOverviewActivity extends ListActivity
 				return true;
 
 			case R.id.menu_logout:
-				return false;
+				logout();
+				return true;
 
 			case R.id.menu_login:
 
 				if (TextUtils.isEmpty(prefs.getString("username", "")))
 				{
+					Toast.makeText(this,R.string.nousername,Toast.LENGTH_LONG).show();
+					
 					Intent intent4 = new Intent(this, Configuration.class);
 					startActivity(intent4);
 				}
@@ -207,11 +227,12 @@ public class ForumOverviewActivity extends ListActivity
 
 				if (!TextUtils.isEmpty(prefs.getString("username", "")))
 				{
-					Intent intent4 = new Intent(this, Configuration.class);
-					startActivity(intent4);
+					login();
+				}
+				else {
+					Toast.makeText(this,R.string.nousername,Toast.LENGTH_LONG).show();
 				}
 
-				login();
 
 				return true;
 		}
@@ -238,4 +259,34 @@ public class ForumOverviewActivity extends ListActivity
 		return list;
 
 	}
+	
+	
+	private void logout()
+	{
+		final TapatalkClient client = AppData.client;
+		
+		new ServerAsyncTask(this, R.string.waitingfor_logout)
+		{
+
+			@Override
+			protected synchronized void callServer() throws IOException
+			{
+
+				try
+				{
+					client.logout();
+
+				}
+				catch (TapatalkException e)
+				{
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+
+			}
+
+		}.executeSynchronized();
+	}
+
+
 }

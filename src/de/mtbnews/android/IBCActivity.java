@@ -108,7 +108,7 @@ public class IBCActivity extends ListActivity
 			return;
 		}
 
-		new ServerAsyncTask(this, R.string.waitingforcontent)
+		new ServerAsyncTask(this, R.string.waitingfor_news)
 		{
 
 			private RSSFeed feed;

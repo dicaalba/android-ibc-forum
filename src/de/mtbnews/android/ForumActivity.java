@@ -24,10 +24,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import de.mtbnews.android.adapter.ListEntryContentAdapter;
 import de.mtbnews.android.adapter.MapContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
+import de.mtbnews.android.tapatalk.wrapper.Forum;
+import de.mtbnews.android.tapatalk.wrapper.Topic;
 import de.mtbnews.android.util.AppData;
 import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
@@ -39,6 +43,7 @@ import de.mtbnews.android.util.ServerAsyncTask;
 public class ForumActivity extends ListActivity
 {
 	private Object[] forumList;
+	private Forum forum;
 	private SharedPreferences prefs;
 
 	@Override
@@ -53,7 +58,7 @@ public class ForumActivity extends ListActivity
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		if (prefs.getBoolean("auto_login", false))
+		if (!AppData.client.loggedIn && prefs.getBoolean("auto_login", false))
 		{
 			login();
 		}
@@ -81,17 +86,45 @@ public class ForumActivity extends ListActivity
 	private void login()
 	{
 		final TapatalkClient client = AppData.client;
-		new ServerAsyncTask(this, R.string.waitingforlogin)
+		new ServerAsyncTask(this, R.string.waitingfor_login)
 		{
-
+			
 			@Override
-			protected void callServer() throws IOException
+			protected synchronized void callServer() throws IOException
 			{
-
+				
 				try
 				{
 					Map<String, Object> map = client.login(prefs.getString(
 							"username", ""), prefs.getString("password", ""));
+					
+				}
+				catch (TapatalkException e)
+				{
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+				
+			}
+			
+		}.executeSynchronized();
+	}
+	
+	
+	private void logout()
+	{
+		final TapatalkClient client = AppData.client;
+		
+		new ServerAsyncTask(this, R.string.waitingfor_logout)
+		{
+
+			@Override
+			protected synchronized void callServer() throws IOException
+			{
+
+				try
+				{
+					client.logout();
 
 				}
 				catch (TapatalkException e)
@@ -102,7 +135,7 @@ public class ForumActivity extends ListActivity
 
 			}
 
-		}.execute();
+		}.executeSynchronized();
 	}
 
 	private void loadUnread()
@@ -241,10 +274,12 @@ public class ForumActivity extends ListActivity
 					int position, long id)
 			{
 
-				// final Intent intent = new Intent(ForumActivity.this,
-				// NewsDetailActivity.class);
-				// intent.putExtra("itemid", position);
-				// startActivity(intent);
+				final Intent intent = new Intent(ForumActivity.this,
+						TopicActivity.class);
+				intent.putExtra("topic_id",
+						(String) ((Map) forumList[position]).get("topic_id"));
+				startActivity(intent);
+
 			}
 		});
 	}
@@ -255,7 +290,7 @@ public class ForumActivity extends ListActivity
 				.getDefaultSharedPreferences(this);
 		final XMLRPCClient client = AppData.client.getXMLRPCClient();
 
-		new ServerAsyncTask(this, R.string.waitingforcontent)
+		new ServerAsyncTask(this, R.string.waitingfor_forum)
 		{
 
 			private Object[] forumList;
@@ -306,10 +341,12 @@ public class ForumActivity extends ListActivity
 					int position, long id)
 			{
 
-				// final Intent intent = new Intent(ForumActivity.this,
-				// NewsDetailActivity.class);
-				// intent.putExtra("itemid", position);
-				// startActivity(intent);
+				final Intent intent = new Intent(ForumActivity.this,
+						TopicActivity.class);
+				intent.putExtra("topic_id",
+						(String) ((Map) forumList[position]).get("topic_id"));
+				startActivity(intent);
+
 			}
 		});
 	}
@@ -317,12 +354,12 @@ public class ForumActivity extends ListActivity
 	private void loadForum(final String forumId)
 	{
 
-		final XMLRPCClient client = AppData.client.getXMLRPCClient();
+		final TapatalkClient client = AppData.client;
 
-		new ServerAsyncTask(this, R.string.waitingforcontent)
+		new ServerAsyncTask(this, R.string.waitingfor_forum)
 		{
 
-			private Object[] forumList;
+			// private Object[] forumList;
 
 			@Override
 			protected void callServer() throws IOException
@@ -330,13 +367,10 @@ public class ForumActivity extends ListActivity
 
 				try
 				{
-					Map map = (Map) client.call("get_topic", forumId);
-
-					this.forumList = (Object[]) map.get("topics");
+					forum = client.getForum(forumId);
 				}
-				catch (XMLRPCException e)
+				catch (TapatalkException e)
 				{
-					e.printStackTrace();
 					throw new RuntimeException(e);
 				}
 
@@ -344,33 +378,29 @@ public class ForumActivity extends ListActivity
 
 			protected void doOnSuccess()
 			{
-				List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-				for (Object o : forumList)
-				{
-					list.add((Map) o);
-				}
-				ListAdapter adapter = new MapContentAdapter(ForumActivity.this,
-						list, "last_reply_time", "topic_title", "short_content");
-				// IBCActivity.this.setTitle(feed.getTitle());
-				setListAdapter(adapter);
+				ForumActivity.this.setTitle(forum.getTitle());
 
+				ListAdapter adapter = new ListEntryContentAdapter(
+						ForumActivity.this, forum.getTopics());
+				setListAdapter(adapter);
 			}
 
 		}.execute();
+
 		final ListView list = getListView();
 
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
-
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
+				final Intent intent = new Intent(ForumActivity.this,
+						TopicActivity.class);
+				intent.putExtra("topic_id", forum.getTopics().get(position)
+						.getId());
+				startActivity(intent);
 
-				// final Intent intent = new Intent(ForumActivity.this,
-				// NewsDetailActivity.class);
-				// intent.putExtra("itemid", position);
-				// startActivity(intent);
 			}
 		});
 	}
@@ -380,7 +410,11 @@ public class ForumActivity extends ListActivity
 	{
 		super.onCreateOptionsMenu(menu);
 		MenuInflater mi = new MenuInflater(getApplication());
-		mi.inflate(R.menu.forum, menu);
+
+		if (AppData.client.loggedIn)
+			mi.inflate(R.menu.forum, menu);
+		else
+			mi.inflate(R.menu.forum_guest, menu);
 
 		return true;
 	}
@@ -411,12 +445,15 @@ public class ForumActivity extends ListActivity
 				return true;
 
 			case R.id.menu_logout:
-				return false;
+				logout();
+				return true;
 
 			case R.id.menu_login:
 
 				if (TextUtils.isEmpty(prefs.getString("username", "")))
 				{
+					Toast.makeText(this,R.string.nousername,Toast.LENGTH_LONG).show();
+					
 					Intent intent4 = new Intent(this, Configuration.class);
 					startActivity(intent4);
 				}
@@ -424,11 +461,12 @@ public class ForumActivity extends ListActivity
 
 				if (!TextUtils.isEmpty(prefs.getString("username", "")))
 				{
-					Intent intent4 = new Intent(this, Configuration.class);
-					startActivity(intent4);
+					login();
+				}
+				else {
+					Toast.makeText(this,R.string.nousername,Toast.LENGTH_LONG).show();
 				}
 
-				login();
 
 				return true;
 		}

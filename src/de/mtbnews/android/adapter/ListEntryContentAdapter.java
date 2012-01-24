@@ -15,12 +15,13 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.mtbnews.android.R;
+import de.mtbnews.android.tapatalk.wrapper.ListEntry;
 
 /**
  * @author dankert
  * 
  */
-public class MapContentAdapter extends BaseAdapter
+public class ListEntryContentAdapter extends BaseAdapter
 {
 
 	/** Remember our context so we can use it when constructing views. */
@@ -32,32 +33,24 @@ public class MapContentAdapter extends BaseAdapter
 
 	private LayoutInflater inflator;
 
-	private String dateKey;
-	private String titleKey;
-	private String descriptionKey;
+	private List<? extends ListEntry> list;
 
-	private List<Map<String, Object>> map;
-
-	public MapContentAdapter(Context context, List<Map<String, Object>> map,
-			String dateKey, String titleKey, String descriptionKey)
+	public ListEntryContentAdapter(Context context, List<? extends ListEntry> list)
 	{
 		mContext = context;
 		inflator = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		this.map = map;
-		this.dateKey = dateKey;
-		this.titleKey = titleKey;
-		this.descriptionKey = descriptionKey;
+		this.list = list;
 	}
 
 	public int getCount()
 	{
-		return map.size();
+		return list.size();
 	}
 
 	public Object getItem(int position)
 	{
-		return map.get(position);
+		return list.get(position);
 	}
 
 	/** Use the array index as a unique id. */
@@ -75,7 +68,7 @@ public class MapContentAdapter extends BaseAdapter
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
 
-		Map<String, Object> e = map.get(position);
+		ListEntry e = list.get(position);
 
 		final View view = inflator.inflate(R.layout.rss_item, null);
 
@@ -87,36 +80,31 @@ public class MapContentAdapter extends BaseAdapter
 		// view.setLayoutParams(params2);
 
 		TextView datum = (TextView) view.findViewById(R.id.item_date);
-		if (dateKey != null)
+		if (e.getDate() != null)
 		{
 			datum.setText(DateFormat.getDateFormat(parent.getContext()).format(
-					e.get(dateKey))
+					e.getDate())
 					+ " "
 					+ DateFormat.getTimeFormat(parent.getContext()).format(
-							e.get(dateKey)));
+							e.getDate()));
 		}
 		else
 		{
 			datum.setEnabled(false);
 		}
 
-		if (titleKey != null)
+		if (e.getTitle() != null)
 		{
 			TextView name = (TextView) view.findViewById(R.id.item_title);
-			name.setText(new String((byte[]) e.get(titleKey)));
+			name.setText(e.getTitle());
 		}
 
-		if (descriptionKey != null)
+		if (e.getContent() != null)
 		{
 			TextView desc = (TextView) view.findViewById(R.id.item_description);
-
-			if (e.get(descriptionKey) != null)
-				desc.setText(new String((byte[]) e.get(descriptionKey)));
-			else
-				desc.setText("");
+			desc.setText(e.getContent());
 		}
 
 		return view;
 	}
-
 }

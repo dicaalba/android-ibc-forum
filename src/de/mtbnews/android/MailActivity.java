@@ -44,7 +44,7 @@ public class MailActivity extends ListActivity
 
 				try
 				{
-					Object l = AppData.client.call("get_box");
+					Object l = AppData.client.getXMLRPCClient().call("get_box");
 
 					this.forumList = (Object[]) ((Map) l).get("list");
 

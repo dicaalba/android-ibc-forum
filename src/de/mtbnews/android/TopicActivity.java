@@ -17,12 +17,19 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
+import de.mtbnews.android.adapter.ListEntryContentAdapter;
 import de.mtbnews.android.adapter.MapContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
+import de.mtbnews.android.tapatalk.TapatalkException;
+import de.mtbnews.android.tapatalk.wrapper.ListEntry;
+import de.mtbnews.android.tapatalk.wrapper.Post;
+import de.mtbnews.android.tapatalk.wrapper.Topic;
 import de.mtbnews.android.util.AppData;
 import de.mtbnews.android.util.ServerAsyncTask;
 
@@ -35,7 +42,14 @@ public class TopicActivity extends ListActivity
 	public static final String ID = "id";
 	public static final String CLIENT = "client";
 
-	private Object[] forumList;
+	private boolean loadingMore = true;
+
+	private int displayFrom;
+	private int displayTo;
+	private int postCount;
+
+	private List<Post> posts;
+	private Topic topic;
 
 	Map<String, String> data;
 
@@ -49,28 +63,35 @@ public class TopicActivity extends ListActivity
 
 		setContentView(R.layout.listing);
 
-		new ServerAsyncTask(this, R.string.waitingforcontent)
+		new ServerAsyncTask(this, R.string.waitingfor_topic)
 		{
+
 			@Override
 			protected void callServer() throws IOException
 			{
+				TapatalkClient client = AppData.client;
 
-				XMLRPCClient client = AppData.client.getXMLRPCClient();
-				// add 2 to 4
 				try
 				{
-					// add 2 to 4
-					Object[] params = new Object[] { TopicActivity.this
-							.getIntent().getStringExtra("topic_id") };
-					Object l = client.call("get_thread",params[0]);
+					int start = 0;
+					int end = Integer.parseInt(prefs
+							.getString("num_load", "10")) - 1;
 
-					forumList = (Object[]) ((Map) l).get("posts");
+					displayFrom = start;
+					displayTo = end;
 
-//					TopicActivity.this.setTitle(((Map) l).get("topic_title")
-//							.toString());
+					String topicId = TopicActivity.this.getIntent()
+							.getStringExtra("topic_id");
 
+					topic = client.getTopic(topicId, start, end);
+
+
+					postCount = topic.getPostCount();
+					posts = topic.getPosts();
+					
+					loadingMore = false;
 				}
-				catch (XMLRPCException e)
+				catch (TapatalkException e)
 				{
 					throw new RuntimeException(e);
 				}
@@ -78,14 +99,10 @@ public class TopicActivity extends ListActivity
 
 			protected void doOnSuccess()
 			{
-				List<Map<String, Object>> list1 = new ArrayList<Map<String, Object>>();
-				for (Object o : forumList)
-				{
-					list1.add((Map) o);
-				}
-				ListAdapter adapter = new MapContentAdapter(TopicActivity.this,
-						list1, null, "post_title", "post_content");
-				// IBCActivity.this.setTitle(feed.getTitle());
+				TopicActivity.this.setTitle(topic.getTitle());
+				List p = posts;
+				ListAdapter adapter = new ListEntryContentAdapter(
+						TopicActivity.this, p);
 				setListAdapter(adapter);
 
 			}
@@ -95,7 +112,6 @@ public class TopicActivity extends ListActivity
 
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
-
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
@@ -104,6 +120,80 @@ public class TopicActivity extends ListActivity
 						PostActivity.class);
 				intent.putExtra("itemid", position);
 				startActivity(intent);
+			}
+		});
+
+		/**
+		 * Weitere List-Einträge automatisch nachladen.
+		 */
+		list.setOnScrollListener(new OnScrollListener()
+		{
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState)
+			{
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount)
+			{
+
+				// what is the bottom iten that is visible
+				int lastInScreen = firstVisibleItem + visibleItemCount;
+
+				// is the bottom item visible & not loading more already ? Load
+				// more !
+				if ((lastInScreen == totalItemCount) && !(loadingMore))
+				{
+					loadingMore = true;
+					new ServerAsyncTask(TopicActivity.this,
+							R.string.waitingfor_loadmore)
+					{
+						@Override
+						protected void callServer() throws IOException
+						{
+							TapatalkClient client = AppData.client;
+
+							try
+							{
+								int start = displayTo + 1;
+								int end = start
+										+ Integer.parseInt(prefs.getString(
+												"num_load", "10")) - 1;
+
+								displayTo = end;
+
+								String topicId = TopicActivity.this.getIntent()
+										.getStringExtra("topic_id");
+
+								Topic topic = client.getTopic(topicId, start,
+										end);
+
+
+								postCount = topic.getPostCount();
+								posts.addAll(topic.getPosts());
+
+								loadingMore = false;
+							}
+							catch (TapatalkException e)
+							{
+								throw new RuntimeException(e);
+							}
+						}
+
+						protected void doOnSuccess()
+						{
+							TopicActivity.this.setTitle(topic.getTitle());
+							
+							ListAdapter adapter = new ListEntryContentAdapter(
+									TopicActivity.this, posts);
+							setListAdapter(adapter);
+						}
+
+					}.execute();
+
+				}
 			}
 		});
 

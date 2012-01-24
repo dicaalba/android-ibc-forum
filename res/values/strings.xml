@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	
+	<string name="sub_only">Forum enthält keine Themen</string>
 	<string name="app_name">IBC</string>
 	<string name="preferences">Einstellungen</string>
 	<string name="username">Benutzername</string>
@@ -30,14 +31,17 @@
 	<string name="publish">Veröffentlichen</string>
 	<string name="properties">Eigenschaften</string>
 	<string name="loading">Warten auf Server</string>
+	<string name="waitingfor_news">Neue Nachrichten werden geladen</string>
+	<string name="waitingfor_forum">Foren werden geladen</string>
+	<string name="waitingfor_topic">Thema wird geladen</string>
 	<string name="waitingforcontent">Inhalt wird geladen</string>
 	<string name="waitingforprojects">Projekte werden geladen</string>
-	<string name="waitingforlogin">Anmeldung am Server</string>
+	<string name="waitingfor_login">Anmeldung am Server</string>
+	<string name="waitingfor_logout">Abmeldung</string>
 	<string name="waitingfordelete">Löschen</string>
 	<string name="waitingfornew">Erzeuge</string>
 	<string name="waitingforsave">Speichern</string>
-	<string name="waitingforlanguageload">Verfügbare Sprachen werden geladen</string>
-	<string name="waitingforlanguagesave">Ausgewählte Sprache wird aktiviert</string>
+	<string name="waitingfor_loadmore">Lade weitere Einträge</string>
 	<string name="language">Sprache</string>
 	<string name="model">Variante</string>
 	<string name="new1">Neu</string>
@@ -83,6 +87,7 @@
 	<string name="saved">Gespeichert</string>
 	<string name="release">Freigeben</string>
 	<string name="noserver">Es ist noch kein Server konfiguriert. Über die Menütaste können Sie einen neuen Server anlegen.</string>
+	<string name="nousername">Es ist noch kein Benutzername konfiguriert</string>
 	<string name="www">Zur Webseite</string>
 	<string name="scroll_down">Immer an das Ende scrollen</string>
 	<string name="use_ibc_theme">Das IBC-Theme benutzen</string>

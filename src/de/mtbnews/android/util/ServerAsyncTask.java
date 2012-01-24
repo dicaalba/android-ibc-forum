@@ -31,8 +31,7 @@ import android.util.Log;
  * @author dankert
  * 
  */
-public abstract class ServerAsyncTask extends
-		AsyncTask<Void, Void, Void>
+public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 {
 	private ProgressDialog progressDialog;
 	private Context context;
@@ -58,13 +57,16 @@ public abstract class ServerAsyncTask extends
 	final protected void onPreExecute()
 	{
 		progressDialog.setCancelable(true);
-		progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
-            @Override
-            public void onCancel(DialogInterface dialog) {
-            	ServerAsyncTask.this.cancel(true);
-            }
-        });
-		
+		progressDialog
+				.setOnCancelListener(new DialogInterface.OnCancelListener()
+				{
+					@Override
+					public void onCancel(DialogInterface dialog)
+					{
+						ServerAsyncTask.this.cancel(true);
+					}
+				});
+
 		progressDialog.show();
 	}
 
@@ -155,4 +157,13 @@ public abstract class ServerAsyncTask extends
 	 *             Vom Server erzeugte Fehler
 	 */
 	protected abstract void callServer() throws IOException;
+
+	/**
+	 * 
+	 * @param params
+	 */
+	public synchronized final void executeSynchronized(Void... params)
+	{
+		super.execute(params);
+	}
 }
