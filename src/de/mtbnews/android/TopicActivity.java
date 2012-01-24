@@ -19,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -85,10 +86,9 @@ public class TopicActivity extends ListActivity
 
 					topic = client.getTopic(topicId, start, end);
 
-
 					postCount = topic.getPostCount();
 					posts = topic.getPosts();
-					
+
 					loadingMore = false;
 				}
 				catch (TapatalkException e)
@@ -170,7 +170,6 @@ public class TopicActivity extends ListActivity
 								Topic topic = client.getTopic(topicId, start,
 										end);
 
-
 								postCount = topic.getPostCount();
 								posts.addAll(topic.getPosts());
 
@@ -184,11 +183,8 @@ public class TopicActivity extends ListActivity
 
 						protected void doOnSuccess()
 						{
-							TopicActivity.this.setTitle(topic.getTitle());
-							
-							ListAdapter adapter = new ListEntryContentAdapter(
-									TopicActivity.this, posts);
-							setListAdapter(adapter);
+							((BaseAdapter) getListAdapter())
+									.notifyDataSetChanged();
 						}
 
 					}.execute();
