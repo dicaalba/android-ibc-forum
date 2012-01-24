@@ -163,7 +163,7 @@ class XMLRPCSerializer implements IXMLRPCSerializer {
 			} else
 			if (typeNodeName.equals(TYPE_BASE64)) {
 				String value = parser.nextText();
-				BufferedReader reader = new BufferedReader(new StringReader(value));
+				BufferedReader reader = new BufferedReader(new StringReader(value),250);
 				String line;
 				StringBuffer sb = new StringBuffer();
 				while ((line = reader.readLine()) != null) {
