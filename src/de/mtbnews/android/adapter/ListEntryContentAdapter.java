@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.mtbnews.android.R;
+import de.mtbnews.android.adapter.MapContentAdapter.ViewHolder;
 import de.mtbnews.android.tapatalk.wrapper.ListEntry;
 
 /**
@@ -35,7 +36,8 @@ public class ListEntryContentAdapter extends BaseAdapter
 
 	private List<? extends ListEntry> list;
 
-	public ListEntryContentAdapter(Context context, List<? extends ListEntry> list)
+	public ListEntryContentAdapter(Context context,
+			List<? extends ListEntry> list)
 	{
 		mContext = context;
 		inflator = (LayoutInflater) context
@@ -68,43 +70,63 @@ public class ListEntryContentAdapter extends BaseAdapter
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
 
-		ListEntry e = list.get(position);
+		final ListEntry e = list.get(position);
+		final ViewHolder viewHolder;
 
-		final View view = inflator.inflate(R.layout.rss_item, null);
-
-		// Linken Rand ggf. erhöhen.
-		// LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(
-		// LinearLayout.LayoutParams.FILL_PARENT,
-		// LinearLayout.LayoutParams.WRAP_CONTENT);
-		// params2.setMargins(20,0,0,0);
-		// view.setLayoutParams(params2);
-
-		TextView datum = (TextView) view.findViewById(R.id.item_date);
-		if (e.getDate() != null)
+		if (convertView == null)
 		{
-			datum.setText(DateFormat.getDateFormat(parent.getContext()).format(
-					e.getDate())
-					+ " "
-					+ DateFormat.getTimeFormat(parent.getContext()).format(
-							e.getDate()));
+			convertView = inflator.inflate(R.layout.rss_item, null);
+
+			// Linken Rand ggf. erhöhen.
+			// LinearLayout.LayoutParams params2 = new
+			// LinearLayout.LayoutParams(
+			// LinearLayout.LayoutParams.FILL_PARENT,
+			// LinearLayout.LayoutParams.WRAP_CONTENT);
+			// params2.setMargins(20,0,0,0);
+			// view.setLayoutParams(params2);
+
+			viewHolder = new ViewHolder();
+
+			viewHolder.datum = (TextView) convertView
+					.findViewById(R.id.item_date);
+			viewHolder.name = (TextView) convertView
+					.findViewById(R.id.item_title);
+			viewHolder.desc = (TextView) convertView
+					.findViewById(R.id.item_description);
+			convertView.setTag(viewHolder);
 		}
 		else
 		{
-			datum.setEnabled(false);
+			viewHolder = (ViewHolder) convertView.getTag();
 		}
+
+		if (e.getDate() != null)
+			viewHolder.datum.setText(DateFormat.getDateFormat(
+					parent.getContext()).format(e.getDate())
+					+ " "
+					+ DateFormat.getTimeFormat(parent.getContext()).format(
+							e.getDate()));
+		else
+			viewHolder.datum.setEnabled(false);
 
 		if (e.getTitle() != null)
-		{
-			TextView name = (TextView) view.findViewById(R.id.item_title);
-			name.setText(e.getTitle());
-		}
+			viewHolder.name.setText(e.getTitle());
+		else
+			viewHolder.name.setEnabled(false);
 
 		if (e.getContent() != null)
-		{
-			TextView desc = (TextView) view.findViewById(R.id.item_description);
-			desc.setText(e.getContent());
-		}
+			viewHolder.desc.setText(e.getContent());
+		else
+			viewHolder.desc.setText("");
 
-		return view;
+		return convertView;
 	}
+
+	static class ViewHolder
+	{
+		TextView datum;
+		TextView name;
+		TextView desc;
+	}
+
 }

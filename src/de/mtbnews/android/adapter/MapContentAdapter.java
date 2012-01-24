@@ -77,46 +77,70 @@ public class MapContentAdapter extends BaseAdapter
 
 		Map<String, Object> e = map.get(position);
 
-		final View view = inflator.inflate(R.layout.rss_item, null);
+		final ViewHolder viewHolder;
 
-		// Linken Rand ggf. erhöhen.
-		// LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(
-		// LinearLayout.LayoutParams.FILL_PARENT,
-		// LinearLayout.LayoutParams.WRAP_CONTENT);
-		// params2.setMargins(20,0,0,0);
-		// view.setLayoutParams(params2);
+		if (convertView == null)
+		{
 
-		TextView datum = (TextView) view.findViewById(R.id.item_date);
+			convertView = inflator.inflate(R.layout.rss_item, null);
+
+			// Linken Rand ggf. erhöhen.
+			// LinearLayout.LayoutParams params2 = new
+			// LinearLayout.LayoutParams(
+			// LinearLayout.LayoutParams.FILL_PARENT,
+			// LinearLayout.LayoutParams.WRAP_CONTENT);
+			// params2.setMargins(20,0,0,0);
+			// view.setLayoutParams(params2);
+
+			viewHolder = new ViewHolder();
+			viewHolder.datum = (TextView) convertView
+					.findViewById(R.id.item_date);
+			viewHolder.name = (TextView) convertView
+					.findViewById(R.id.item_title);
+			viewHolder.desc = (TextView) convertView
+					.findViewById(R.id.item_description);
+			convertView.setTag(viewHolder);
+		}
+		else
+		{
+			viewHolder = (ViewHolder) convertView.getTag();
+		}
+
 		if (dateKey != null)
 		{
-			datum.setText(DateFormat.getDateFormat(parent.getContext()).format(
-					e.get(dateKey))
+			viewHolder.datum.setText(DateFormat.getDateFormat(
+					parent.getContext()).format(e.get(dateKey))
 					+ " "
 					+ DateFormat.getTimeFormat(parent.getContext()).format(
 							e.get(dateKey)));
 		}
 		else
 		{
-			datum.setEnabled(false);
+			viewHolder.datum.setEnabled(false);
 		}
 
 		if (titleKey != null)
 		{
-			TextView name = (TextView) view.findViewById(R.id.item_title);
-			name.setText(new String((byte[]) e.get(titleKey)));
+			viewHolder.name.setText(new String((byte[]) e.get(titleKey)));
 		}
 
 		if (descriptionKey != null)
 		{
-			TextView desc = (TextView) view.findViewById(R.id.item_description);
 
 			if (e.get(descriptionKey) != null)
-				desc.setText(new String((byte[]) e.get(descriptionKey)));
+				viewHolder.desc.setText(new String((byte[]) e.get(descriptionKey)));
 			else
-				desc.setText("");
+				viewHolder.desc.setText("");
 		}
 
-		return view;
+		return convertView;
+	}
+
+	static class ViewHolder
+	{
+		TextView datum;
+		TextView name;
+		TextView desc;
 	}
 
 }
