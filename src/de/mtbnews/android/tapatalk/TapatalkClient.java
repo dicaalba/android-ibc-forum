@@ -8,8 +8,11 @@ import java.util.Map;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
+import android.util.Log;
+
 import de.mtbnews.android.tapatalk.wrapper.Forum;
 import de.mtbnews.android.tapatalk.wrapper.Post;
+import de.mtbnews.android.tapatalk.wrapper.Search;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
 
 /**
@@ -32,6 +35,19 @@ public class TapatalkClient
 	public Map<String, Object> login(String username, String password)
 			throws TapatalkException
 	{
+		try
+		{
+
+			final Map<String, Object> map = (Map<String, Object>) toMap(getXMLRPCClient()
+					.call("get_config"));
+			Log.i("IBC Server Config", map.toString());
+			for (String key : map.keySet())
+				Log.d("IBC Server Config", key + "=" + map.get(key));
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("Load Config failed", e);
+		}
 
 		final Object[] params = new Object[] { username.getBytes(),
 				password.getBytes() };
@@ -48,6 +64,7 @@ public class TapatalkClient
 		{
 			throw new TapatalkException("Login failed", e);
 		}
+
 	}
 
 	public void logout() throws TapatalkException
@@ -101,26 +118,6 @@ public class TapatalkClient
 		}
 	}
 
-	private Map toMap(Object o) throws TapatalkException
-	{
-		if (!(o instanceof Map))
-		{
-			throw new TapatalkException("no map: " + o.toString() + " ("
-					+ o.getClass() + ")");
-		}
-		Map map = (Map) o;
-
-		Object object = map.get("result");
-		if (object == null)
-			return map;
-
-		boolean ok = (Boolean) object;
-		if (!ok)
-			throw new TapatalkException(byteArrayToString(map
-					.get("result_text")));
-		return map;
-	}
-
 	@SuppressWarnings("unchecked")
 	public Forum getForum(String forumId) throws TapatalkException
 	{
@@ -156,6 +153,124 @@ public class TapatalkClient
 		}
 	}
 
+	public Search searchTopics(String query, int start, int end, String searchId)
+			throws TapatalkException
+	{
+		try
+		{
+			final Object[] params;
+
+			if (searchId == null)
+				params = new Object[] { query.getBytes(), start, end };
+			else
+				params = new Object[] { "".getBytes(), start, end, searchId };
+
+			Map map = toMap(client.callEx("search_topic", params));
+
+			Integer topicCount = (Integer) map.get("total_topic_num");
+			String newSearchId = (String) map.get("search_id");
+			final List<Topic> topics = new ArrayList<Topic>();
+			Search search = new Search(topicCount, newSearchId, topics);
+
+			final List<Post> posts = new ArrayList<Post>();
+
+			for (Object o1 : (Object[]) map.get("topics"))
+			{
+				Map topicMap = toMap(o1);
+				Topic topic = new Topic((String) topicMap.get("topic_id"),
+						posts, //
+						byteArrayToString(topicMap.get("topic_title")),//
+						(Date) topicMap.get("post_time"), //
+						new String((byte[]) topicMap.get("short_content")),//
+						0);
+				topics.add(topic);
+			}
+
+			return search;
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("Could not search", e);
+		}
+	}
+
+	public Search getBoxContent(String boxId, int start, int end)
+			throws TapatalkException
+	{
+		try
+		{
+			final Object[] params = new Object[] { boxId, start, end };
+
+			Map map = toMap(client.callEx("get_box", params));
+
+			Integer topicCount = (Integer) map.get("total_topic_num");
+			String newSearchId = (String) map.get("search_id");
+			final List<Topic> topics = new ArrayList<Topic>();
+			Search search = new Search(topicCount, newSearchId, topics);
+
+			final List<Post> posts = new ArrayList<Post>();
+
+			for (Object o1 : (Object[]) map.get("topics"))
+			{
+				Map topicMap = toMap(o1);
+				Topic topic = new Topic((String) topicMap.get("topic_id"),
+						posts, //
+						byteArrayToString(topicMap.get("topic_title")),//
+						(Date) topicMap.get("post_time"), //
+						new String((byte[]) topicMap.get("short_content")),//
+						0);
+				topics.add(topic);
+			}
+
+			return search;
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("Could not search", e);
+		}
+	}
+
+	public Search getMessage(String query, int start, int end, String searchId)
+			throws TapatalkException
+	{
+		try
+		{
+			final Object[] params;
+
+			if (searchId == null)
+				params = new Object[] { query.getBytes(), start, end };
+			else
+				params = new Object[] { "".getBytes(), start, end, searchId };
+
+			Map map = toMap(client.callEx("search_topic", params));
+
+			Integer topicCount = (Integer) map.get("total_topic_num");
+			String newSearchId = (String) map.get("search_id");
+			final List<Topic> topics = new ArrayList<Topic>();
+			Search search = new Search(topicCount, newSearchId, topics);
+
+			final List<Post> posts = new ArrayList<Post>();
+
+			for (Object o1 : (Object[]) map.get("topics"))
+			{
+				Map topicMap = toMap(o1);
+				Topic topic = new Topic((String) topicMap.get("topic_id"),
+						posts, //
+						byteArrayToString(topicMap.get("topic_title")),//
+						(Date) topicMap.get("post_time"), //
+						new String((byte[]) topicMap.get("short_content")),//
+						0);
+				topics.add(topic);
+			}
+
+			return search;
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("Could not search", e);
+		}
+	}
+
 	public XMLRPCClient getXMLRPCClient()
 	{
 		return client;
@@ -178,4 +293,25 @@ public class TapatalkClient
 		else
 			return i.intValue();
 	}
+
+	private Map toMap(Object o) throws TapatalkException
+	{
+		if (!(o instanceof Map))
+		{
+			throw new TapatalkException("no map: " + o.toString() + " ("
+					+ o.getClass() + ")");
+		}
+		Map map = (Map) o;
+
+		Object object = map.get("result");
+		if (object == null)
+			return map;
+
+		boolean ok = (Boolean) object;
+		if (!ok)
+			throw new TapatalkException(byteArrayToString(map
+					.get("result_text")));
+		return map;
+	}
+
 }

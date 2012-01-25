@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.opengl.Visibility;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,7 +117,7 @@ public class MapContentAdapter extends BaseAdapter
 		}
 		else
 		{
-			viewHolder.datum.setEnabled(false);
+			viewHolder.datum.setVisibility(View.INVISIBLE);
 		}
 
 		if (titleKey != null)
@@ -131,6 +132,8 @@ public class MapContentAdapter extends BaseAdapter
 				viewHolder.desc.setText(new String((byte[]) e.get(descriptionKey)));
 			else
 				viewHolder.desc.setText("");
+		} else {
+			viewHolder.desc.setText("");
 		}
 
 		return convertView;

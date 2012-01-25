@@ -18,4 +18,13 @@ public class AppData
 	public static RSSFeed photoFeed;
 
 	public static TapatalkClient client;
+
+	public static TapatalkClient getTapatalkClient()
+	{
+
+		if (client == null)
+			AppData.client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
+
+		return client;
+	}
 }

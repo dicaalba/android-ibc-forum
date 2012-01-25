@@ -36,7 +36,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	private ProgressDialog progressDialog;
 	private Context context;
 	private AlertDialog alertDialog;
-	private IOException error;
+	private Exception error;
 
 	/**
 	 * @param context
@@ -97,7 +97,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	 * @param error
 	 *            Exception, die aufgetreten ist.
 	 */
-	protected void doOnError(IOException error)
+	protected void doOnError(Exception error)
 	{
 		final Builder builder = new AlertDialog.Builder(this.context);
 		alertDialog = builder.setCancelable(true).create();
@@ -140,7 +140,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 		{
 			callServer();
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			Log.e(this.getClass().getName(), e.getMessage(), e);
 			error = e;

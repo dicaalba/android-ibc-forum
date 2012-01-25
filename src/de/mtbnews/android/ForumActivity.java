@@ -49,8 +49,7 @@ public class ForumActivity extends ListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		if (AppData.client == null)
-			AppData.client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
+
 
 		super.onCreate(savedInstanceState);
 
@@ -58,7 +57,9 @@ public class ForumActivity extends ListActivity
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		if (!AppData.client.loggedIn && prefs.getBoolean("auto_login", false))
+		TapatalkClient client = AppData.getTapatalkClient();
+		
+		if (!client.loggedIn && prefs.getBoolean("auto_login", false))
 		{
 			login();
 		}

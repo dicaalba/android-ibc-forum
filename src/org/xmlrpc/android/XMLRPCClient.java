@@ -1,9 +1,12 @@
 package org.xmlrpc.android;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
@@ -28,6 +31,8 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
+
+import android.util.Log;
 
 /**
  * XMLRPCClient allows to call remote XMLRPC method.
@@ -323,10 +328,17 @@ public class XMLRPCClient extends XMLRPCCommon {
 			
 			// lets start pulling...
 			pullParser.nextTag();
+			
+			//Log.d("XMLRPC response",this.inputStreamToString(entity.getContent()));
+			//entity.getContent().reset();
+			
 			pullParser.require(XmlPullParser.START_TAG, null, Tag.METHOD_RESPONSE);
 			
 			pullParser.nextTag(); // either Tag.PARAMS (<params>) or Tag.FAULT (<fault>)  
 			String tag = pullParser.getName();
+			
+			Log.d("XMLRPC-Tag",tag);
+			
 			if (tag.equals(Tag.PARAMS)) {
 				// normal response
 				pullParser.nextTag(); // Tag.PARAM (<param>)
