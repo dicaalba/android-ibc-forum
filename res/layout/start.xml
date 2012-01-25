@@ -4,21 +4,14 @@
 	android:layout_height="fill_parent">
 
 	<LinearLayout android:orientation="horizontal"
-		android:layout_width="fill_parent" android:layout_height="wrap_content">
+		android:layout_width="fill_parent" android:layout_height="wrap_content" android:padding="10sp">
 
-		<ImageView android:src="@drawable/ibc_logo"
+		<ImageView android:src="@drawable/ibc_logo" android:padding="4sp"
 			android:layout_width="wrap_content" android:layout_height="wrap_content">
 		</ImageView>
 
-		<LinearLayout android:orientation="vertical"
-			android:layout_width="fill_parent" android:layout_height="fill_parent">
-
-			<Button android:id="@+id/forum" android:text="@string/forum"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-			<Button android:id="@+id/photo" android:text="@string/photos"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-		</LinearLayout>
-
+		<Button android:id="@+id/forum" android:text="@string/forum" android:textSize="16sp" android:padding="10sp"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical|right"></Button>
 
 	</LinearLayout>
 

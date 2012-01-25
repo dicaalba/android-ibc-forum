@@ -85,16 +85,16 @@ public class IBCActivity extends ListActivity
 			}
 		});
 
-		Button photoButton = (Button) findViewById(R.id.photo);
-		photoButton.setOnClickListener(new OnClickListener()
-		{
-
-			@Override
-			public void onClick(View v)
-			{
-				startActivity(new Intent(IBCActivity.this, PhotoActivity.class));
-			}
-		});
+		// Button photoButton = (Button) findViewById(R.id.photo);
+		// photoButton.setOnClickListener(new OnClickListener()
+		// {
+		//
+		// @Override
+		// public void onClick(View v)
+		// {
+		// startActivity(new Intent(IBCActivity.this, PhotoActivity.class));
+		// }
+		// });
 
 		reloadFeed();
 	}
@@ -173,6 +173,9 @@ public class IBCActivity extends ListActivity
 		{
 			case R.id.menu_preferences:
 				startActivity(new Intent(this, Configuration.class));
+				return true;
+			case R.id.menu_photo:
+				startActivity(new Intent(IBCActivity.this, PhotoActivity.class));
 				return true;
 
 			case R.id.www_bikemarkt:
