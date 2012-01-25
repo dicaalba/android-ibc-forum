@@ -84,6 +84,13 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 			}
 
+			@Override
+			protected void doOnSuccess()
+			{
+				Toast.makeText(ForumOverviewActivity.this, R.string.login,
+						Toast.LENGTH_SHORT).show();
+			}
+
 		}.execute();
 	}
 
@@ -107,7 +114,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 		final List<Forum> newSubForen = new ArrayList<Forum>();
 		if (subForen == null)
 			return newSubForen;
-		
+
 		for (Forum subForum : subForen)
 		{
 			newSubForen.add(subForum);
@@ -300,7 +307,6 @@ public class ForumOverviewActivity extends ExpandableListActivity
 				try
 				{
 					client.logout();
-
 				}
 				catch (TapatalkException e)
 				{
@@ -308,6 +314,13 @@ public class ForumOverviewActivity extends ExpandableListActivity
 					throw new RuntimeException(e);
 				}
 
+			}
+
+			@Override
+			protected void doOnSuccess()
+			{
+				Toast.makeText(ForumOverviewActivity.this, R.string.logout,
+						Toast.LENGTH_SHORT).show();
 			}
 
 		}.executeSynchronized();
