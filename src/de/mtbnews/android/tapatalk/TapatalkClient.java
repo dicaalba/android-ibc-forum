@@ -104,9 +104,9 @@ public class TapatalkClient
 			for (Object o1 : (Object[]) map.get("posts"))
 			{
 				Map postMap = (Map) o1;
-				Post post = new Post(new String((byte[]) postMap
-						.get("post_title")), new String((byte[]) postMap
-						.get("post_content")));
+				Post post = new Post((Date) postMap.get("post_time"),
+						new String((byte[]) postMap.get("post_title")),
+						new String((byte[]) postMap.get("post_content")));
 				posts.add(post);
 			}
 
@@ -358,8 +358,8 @@ public class TapatalkClient
 			list.add(forum);
 			forum.subOnly = (Boolean) map.get("sub_only");
 			if (map.containsKey(childName))
-				forum.subForen = createSubForen(castToMapArray((Object[])map.get(childName)),
-						childName);
+				forum.subForen = createSubForen(castToMapArray((Object[]) map
+						.get(childName)), childName);
 		}
 		return list;
 
