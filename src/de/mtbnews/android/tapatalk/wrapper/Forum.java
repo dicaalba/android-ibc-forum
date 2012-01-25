@@ -13,6 +13,10 @@ public class Forum implements ListEntry
 	private String title;
 	private Date date;
 	private String content;
+	
+	public List<Forum> subForen;
+	public boolean subOnly;
+
 
 	/**
 	 * @param id

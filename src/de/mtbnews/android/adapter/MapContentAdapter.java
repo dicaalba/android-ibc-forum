@@ -19,8 +19,9 @@ import de.mtbnews.android.R;
 
 /**
  * @author dankert
- * 
+ * @Deprecated use ListEntryContentAdapter
  */
+@Deprecated
 public class MapContentAdapter extends BaseAdapter
 {
 
@@ -129,10 +130,13 @@ public class MapContentAdapter extends BaseAdapter
 		{
 
 			if (e.get(descriptionKey) != null)
-				viewHolder.desc.setText(new String((byte[]) e.get(descriptionKey)));
+				viewHolder.desc.setText(new String((byte[]) e
+						.get(descriptionKey)));
 			else
 				viewHolder.desc.setText("");
-		} else {
+		}
+		else
+		{
 			viewHolder.desc.setText("");
 		}
 

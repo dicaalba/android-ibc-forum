@@ -118,6 +118,35 @@ public class TapatalkClient
 		}
 	}
 
+	public List<Forum> getAllForum() throws TapatalkException
+	{
+		try
+		{
+			Object l = client.call("get_forum");
+			Object[] arr = (Object[]) l;
+			Map[] mapArr = castToMapArray(arr);
+
+			List<Forum> forum = createSubForen(mapArr, "child");
+
+			return forum;
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("Could not load Forum structure", e);
+		}
+	}
+
+	private Map[] castToMapArray(Object[] arr)
+	{
+		Map[] mapArr = new Map[arr.length];
+		int i = 0;
+		for (Object object : arr)
+		{
+			mapArr[i] = (Map) arr[i++];
+		}
+		return mapArr;
+	}
+
 	@SuppressWarnings("unchecked")
 	public Forum getForum(String forumId) throws TapatalkException
 	{
@@ -312,6 +341,28 @@ public class TapatalkClient
 			throw new TapatalkException(byteArrayToString(map
 					.get("result_text")));
 		return map;
+	}
+
+	private List<Forum> createSubForen(Map[] mapArray, String childName)
+	{
+
+		final List<Forum> list = new ArrayList<Forum>();
+
+		for (Map map : mapArray)
+		{
+			String name = byteArrayToString(map.get("forum_name"));
+			String content = byteArrayToString(map.get("description"));
+			String id = (String) map.get("forum_id");
+			Forum forum = new Forum(id, new ArrayList<Topic>(), name, null,
+					content);
+			list.add(forum);
+			forum.subOnly = (Boolean) map.get("sub_only");
+			if (map.containsKey(childName))
+				forum.subForen = createSubForen(castToMapArray((Object[])map.get(childName)),
+						childName);
+		}
+		return list;
+
 	}
 
 }

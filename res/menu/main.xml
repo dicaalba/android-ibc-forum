@@ -1,5 +1,32 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
 	<item android:id="@+id/menu_preferences" android:title="@string/preferences"
 		android:icon="@android:drawable/ic_menu_preferences"></item>
+		
+	<item android:id="@+id/menu_links" android:title="@string/links"
+		android:icon="@android:drawable/ic_menu_info_details">
+		<menu>
+			<item android:id="@+id/www_bikemarkt" android:title="@string/bikemarkt"
+				android:icon="@android:drawable/ic_menu_info_details"></item>
+			<item android:id="@+id/www_forum" android:title="@string/forum"
+				android:icon="@android:drawable/ic_menu_info_details"></item>
+			<item android:id="@+id/www_news" android:title="@string/news"
+				android:icon="@android:drawable/ic_menu_info_details"></item>
+			<item android:id="@+id/www_fotos" android:title="@string/photos"
+				android:icon="@android:drawable/ic_menu_info_details"></item>
+			<item android:id="@+id/www_shop" android:title="@string/shop"
+				android:icon="@android:drawable/ic_menu_info_details"></item>
+			<item android:id="@+id/www_gewichte" android:title="@string/gewichte"
+				android:icon="@android:drawable/ic_menu_info_details"></item>
+			<item android:id="@+id/www_lmb" android:title="@string/lmb"
+				android:icon="@android:drawable/ic_menu_info_details"></item>
+			<item android:id="@+id/www_biketest" android:title="@string/biketest"
+				android:icon="@android:drawable/ic_menu_info_details"></item>
+			<item android:id="@+id/www_video" android:title="@string/video"
+				android:icon="@android:drawable/ic_menu_info_details"></item>
+			<item android:id="@+id/www_blog" android:title="@string/blog"
+				android:icon="@android:drawable/ic_menu_info_details"></item>
+		</menu>
+	</item>
 </menu>
  

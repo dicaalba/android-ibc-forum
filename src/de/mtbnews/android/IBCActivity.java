@@ -19,6 +19,7 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.apache.http.client.ClientProtocolException;
 import org.mcsoxford.rss.RSSFeed;
@@ -29,6 +30,7 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -78,7 +80,8 @@ public class IBCActivity extends ListActivity
 			@Override
 			public void onClick(View v)
 			{
-				startActivity(new Intent(IBCActivity.this, ForumOverviewActivity.class));
+				startActivity(new Intent(IBCActivity.this,
+						ForumOverviewActivity.class));
 			}
 		});
 
@@ -170,6 +173,47 @@ public class IBCActivity extends ListActivity
 		{
 			case R.id.menu_preferences:
 				startActivity(new Intent(this, Configuration.class));
+				return true;
+
+			case R.id.www_bikemarkt:
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://bikemarkt.mtb-news.de/bikemarkt/")));
+				return true;
+			case R.id.www_biketest:
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://www.mtb-news.de/biketest/")));
+				return true;
+			case R.id.www_blog:
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://schaltwerk.mtb-news.de/")));
+				return true;
+			case R.id.www_forum:
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://www.mtb-news.de/forum/")));
+				return true;
+			case R.id.www_fotos:
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://fotos.mtb-news.de/")));
+				return true;
+			case R.id.www_gewichte:
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://gewichte.mtb-news.de/")));
+				return true;
+			case R.id.www_lmb:
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://www.mtb-news.de/lmb/")));
+				return true;
+			case R.id.www_news:
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://www.mtb-news.de/")));
+				return true;
+			case R.id.www_shop:
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://shop.mtb-news.de/")));
+				return true;
+			case R.id.www_video:
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://videos.mtb-news.de/")));
 				return true;
 
 		}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	
+
 	<string name="sub_only">Forum enthält keine Themen</string>
 	<string name="app_name">IBC</string>
 	<string name="search_for_topics">Suche nach Themen</string>
@@ -28,7 +28,7 @@
 	</string-array>
 	<string name="writable">Schreibzugriff</string>
 	<string name="version_summary">Server-Version</string>
-	
+
 	<string name="publish">Veröffentlichen</string>
 	<string name="properties">Eigenschaften</string>
 	<string name="loading">Warten auf Server</string>
@@ -54,23 +54,26 @@
 	<string name="upload_file">Datei hochladen</string>
 	<string name="upload_image">Bild hochladen</string>
 	<string name="upload_ok">Hochladevorgang abgeschlossen</string>
-	<string name="upload_ok_long">Die Datei wurde erfolgreich auf den Server geladen</string>
+	<string name="upload_ok_long">Die Datei wurde erfolgreich auf den Server geladen
+	</string>
 	<string name="upload_fail">Hochladevorgang fehlerhaft</string>
-	<string name="upload_fail_long">Die Datei konnte nicht auf den Server geladen werden</string>
+	<string name="upload_fail_long">Die Datei konnte nicht auf den Server geladen
+		werden</string>
 	<string name="publish_long">Die Veröffentlichung wurde gestartet</string>
 	<string name="publish_ok">Wurde veröffentlicht</string>
 	<string name="publish_ok_long">Erfolgreich veröffentlicht</string>
 	<string name="publish_fail">Veröffentlichung nicht erfolgreich</string>
-	<string name="publish_fail_long">Leider konnte die Datei nicht veröffentlicht werden</string>
+	<string name="publish_fail_long">Leider konnte die Datei nicht veröffentlicht werden
+	</string>
 	<string name="delete">Löschen</string>
 	<string name="name">Name</string>
 	<string name="filename">Dateiname</string>
 	<string name="template">Vorlage</string>
 	<string name="save">Speichern</string>
-	
-	
-	
-	
+
+
+
+
 	<string name="description">Inhalt</string>
 	<string name="editor">Inhalt</string>
 	<string name="error_timeout">Zeitablauf</string>
@@ -88,7 +91,8 @@
 	<string name="databaseid_desc">Datenbank-Id aus der Server-Konfiguration</string>
 	<string name="saved">Gespeichert</string>
 	<string name="release">Freigeben</string>
-	<string name="noserver">Es ist noch kein Server konfiguriert. Über die Menütaste können Sie einen neuen Server anlegen.</string>
+	<string name="noserver">Es ist noch kein Server konfiguriert. Über die
+		Menütaste können Sie einen neuen Server anlegen.</string>
 	<string name="nousername">Es ist noch kein Benutzername konfiguriert</string>
 	<string name="www">Zur Webseite</string>
 	<string name="scroll_down">Immer an das Ende scrollen</string>
@@ -103,9 +107,17 @@
 		<item>20</item>
 		<item>50</item>
 	</string-array>
-	
-	
-<string name="forum">Forum</string>
-<string name="news">News</string>
-<string name="photos">Fotos</string>
+
+
+	<string name="forum">Forum</string>
+	<string name="news">News</string>
+	<string name="photos">Fotos</string>
+	<string name="bikemarkt">Bikemarkt</string>
+	<string name="shop">Shopping</string>
+	<string name="gewichte">Gewichte</string>
+	<string name="lmb">Fahrgemeinschaften</string>
+	<string name="biketest">Biketest</string>
+	<string name="video">Videos</string>
+	<string name="blog">Blog</string>
+	<string name="links">Links</string>
 </resources>
