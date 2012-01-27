@@ -54,9 +54,9 @@ public class TopicActivity extends EndlessListActivity<Post>
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
-				Toast.makeText(TopicActivity.this,
-						displayFrom + " - " + displayTo, Toast.LENGTH_SHORT)
-						.show();
+				int aktPosition = displayFrom + position + 1;
+				Toast.makeText(TopicActivity.this, ""+aktPosition,
+						Toast.LENGTH_SHORT).show();
 
 				// final Intent intent = new Intent(TopicActivity.this,
 				// PostActivity.class);

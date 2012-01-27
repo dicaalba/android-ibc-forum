@@ -113,17 +113,19 @@ public class ListEntryContentAdapter extends BaseAdapter
 					+ DateFormat.getTimeFormat(parent.getContext()).format(
 							e.getDate()));
 		else
-			viewHolder.datum.setEnabled(false);
+			// viewHolder.datum.setEnabled(false);
+			viewHolder.datum.setText("");
+
+		if (e.getName() != null)
+			viewHolder.name.setText(e.getName());
+		else
+			// viewHolder.name.setEnabled(false);
+			viewHolder.name.setText("");
 
 		if (e.getTitle() != null)
 			viewHolder.title.setText(e.getTitle());
 		else
 			viewHolder.title.setEnabled(false);
-
-		if (e.getName() != null)
-			viewHolder.name.setText(e.getName());
-		else
-			viewHolder.name.setEnabled(false);
 
 		if (e.getContent() != null)
 		{

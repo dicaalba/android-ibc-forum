@@ -117,16 +117,25 @@ public class ExpandableForumContentAdapter extends BaseExpandableListAdapter
 		view.setBackgroundColor(IBC_GELB);
 
 		TextView datum = (TextView) view.findViewById(R.id.item_date);
-		datum.setVisibility(View.INVISIBLE);
+		datum.setText("");
+		datum.setBackgroundColor(IBC_GELB);
+		// datum.setVisibility(View.INVISIBLE);
 
-		TextView name = (TextView) view.findViewById(R.id.item_title);
-		name.setGravity( Gravity.CENTER);
+		TextView name = (TextView) view.findViewById(R.id.item_name);
+		name.setText("");
 		name.setBackgroundColor(IBC_GELB);
-		name.setText(e.getTitle());
+		// name.setVisibility(View.INVISIBLE);
+
+		TextView title = (TextView) view.findViewById(R.id.item_title);
+		title.setGravity(Gravity.CENTER);
+		title.setBackgroundColor(IBC_GELB);
+		title.setText(e.getTitle());
 
 		TextView desc = (TextView) view.findViewById(R.id.item_description);
-		desc.setVisibility(View.INVISIBLE);
+		// desc.setVisibility(View.INVISIBLE);
 		// desc.setText(e.getContent());
+		desc.setText("");
+		desc.setBackgroundColor(IBC_GELB);
 
 		return view;
 	}
