@@ -3,6 +3,7 @@
  */
 package de.mtbnews.android;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
@@ -23,13 +24,21 @@ import android.widget.AbsListView.OnScrollListener;
  */
 public abstract class EndlessListActivity<T> extends ListActivity
 {
-	private boolean loadingMore = true;
+	private boolean loadingInProgress = true;
 
-	private int displayFrom;
-	private int displayTo;
+	protected int displayFrom;
+	protected int displayTo;
+	protected boolean autoScrollDown;
 
-	private SharedPreferences prefs = PreferenceManager
-			.getDefaultSharedPreferences(this);
+	/**
+	 * Die Referenz auf diese Liste darf sich nicht ändern, da der ListAdapter
+	 * mit dieser Instanz verbunden ist. Durch 'final' wird das sicher gestellt.
+	 */
+	final protected List<T> entries = new ArrayList<T>();
+
+	private SharedPreferences prefs;
+
+	private boolean firstLoad = true;
 
 	/**
 	 * Absolute Anzahl aller verfügbaren Elemente.
@@ -40,32 +49,78 @@ public abstract class EndlessListActivity<T> extends ListActivity
 
 	protected void initialLoad()
 	{
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		final int numLoad = Integer.parseInt(prefs.getString("num_load", "10"));
-		final boolean autoScrollDown = prefs.getBoolean("scroll_down", false);
+
+		if (getIntent().getBooleanExtra("first_post", false))
+			autoScrollDown = false;
+		else if (getIntent().getBooleanExtra("last_post", false))
+			autoScrollDown = true;
+		else
+			autoScrollDown = prefs.getBoolean("scroll_down", false);
 
 		if (autoScrollDown)
 		{
-			loadEntries(0, 1, true);
+			loadEntries(new OnListLoadedListener<T>()
+			{
 
-			int end = getTotalSize();
-			int start = Math.max(0, end - numLoad);
+				@Override
+				public void listLoaded(List<T> list)
+				{
+					final int end = getTotalSize();
+					final int start = Math.max(0, end - numLoad);
 
-			loadEntries(start, end, true);
+					loadEntries(new OnListLoadedListener<T>()
+					{
 
-			displayFrom = start;
-			displayTo = end;
+						@Override
+						public void listLoaded(List<T> list)
+						{
+							entries.clear();
+							entries.addAll(list);
+							((BaseAdapter) getListAdapter())
+									.notifyDataSetChanged();
+
+							displayFrom = start;
+							displayTo = end;
+
+							getListView().setSelection(entries.size() - 1);
+
+							setOnScrollListener();
+
+							loadingInProgress = false;
+						}
+					}, start, end);
+
+				}
+			}, 0, 1);
+
 		}
 		else
 		{
-			int start = 0;
-			int end = numLoad - 1;
+			final int start = 0;
+			final int end = numLoad - 1;
 
-			List<T> entries = loadEntries(start, end, true);
-			displayFrom = start;
-			displayTo = start + entries.size() - 1;
+			loadEntries(new OnListLoadedListener<T>()
+			{
+
+				@Override
+				public void listLoaded(List<T> list)
+				{
+					entries.clear();
+					entries.addAll(list);
+					((BaseAdapter) getListAdapter()).notifyDataSetChanged();
+
+					displayFrom = start;
+					displayTo = start + entries.size() - 1;
+
+					setOnScrollListener();
+
+					loadingInProgress = false;
+				}
+			}, start, end);
 		}
 
-		((BaseAdapter) getListAdapter()).notifyDataSetChanged();
 	}
 
 	/**
@@ -74,9 +129,24 @@ public abstract class EndlessListActivity<T> extends ListActivity
 	 * @param firstLoad
 	 * @return gelandene Elemente
 	 */
-	abstract protected List<T> loadEntries(int from, int to, boolean firstLoad);
+	abstract protected void loadEntries(OnListLoadedListener<T> onListLoaded,
+			int from, int to, boolean firstLoad);
 
-	protected void setOnScrollListener()
+	/**
+	 * @param onListLoaded
+	 * @param from
+	 * @param to
+	 * @param firstLoad
+	 * @return gelandene Elemente
+	 */
+	private void loadEntries(OnListLoadedListener<T> onListLoaded, int from,
+			int to)
+	{
+		loadEntries(onListLoaded, from, to, firstLoad);
+		firstLoad = false;
+	}
+
+	private void setOnScrollListener()
 	{
 		final ListView list = getListView();
 
@@ -109,34 +179,95 @@ public abstract class EndlessListActivity<T> extends ListActivity
 			 *      int, int, int)
 			 */
 			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount)
+			public void onScroll(AbsListView view, final int firstVisibleItem,
+					final int visibleItemCount, final int totalItemCount)
 			{
 
 				// Letztes Item, dass angezeigt wird.
 				int lastInScreen = firstVisibleItem + visibleItemCount;
 
-				// is the bottom item visible & not loading more already ? Load
-				// more !
-				if ((lastInScreen == totalItemCount)
-						&& (totalItemCount < getTotalSize()) && !(loadingMore))
+				if (autoScrollDown)
 				{
-					loadingMore = true;
+					// Sind wir am oberen Rand der Liste und die Liste ist noch
+					// nicht vollständig geladen?
+					if (firstVisibleItem == 0 && displayFrom > 0
+							&& !loadingInProgress)
+					{
+						loadingInProgress = true;
 
-					int start = displayTo + 1;
-					int end = start
-							+ Integer.parseInt(prefs
-									.getString("num_load", "10")) - 1;
+						int start = Math.max(0, displayFrom
+								- Integer.parseInt(prefs.getString("num_load",
+										"10")));
 
-					displayTo = end;
+						int end = displayFrom - 1;
 
-					loadEntries(start, end, false);
+						loadEntries(new OnListLoadedListener<T>()
+						{
 
-					loadingMore = false;
-					((BaseAdapter) getListAdapter()).notifyDataSetChanged();
+							@Override
+							public void listLoaded(List<T> list)
+							{
+								int loadedSize = list.size();
+								displayFrom -= loadedSize;
 
+								list.addAll(entries);
+								entries.clear();
+								entries.addAll(list);
+
+								((BaseAdapter) getListAdapter())
+										.notifyDataSetChanged();
+
+								// Zur gleichen Position springen (die jetzt
+								// aber etwas weiter nach hinten verschoben
+								// ist).
+								getListView().setSelection(
+										firstVisibleItem + loadedSize);
+
+								loadingInProgress = false;
+							}
+						}, start, end);
+
+					}
+				}
+				else
+				{
+					// Sind wir am unterenRand der Liste?
+					if ((lastInScreen == totalItemCount)
+							&& (totalItemCount < getTotalSize())
+							&& !(loadingInProgress))
+					{
+						loadingInProgress = true;
+
+						int start = displayTo + 1;
+						int end = start
+								+ Integer.parseInt(prefs.getString("num_load",
+										"10")) - 1;
+
+						loadEntries(new OnListLoadedListener<T>()
+						{
+							@Override
+							public void listLoaded(List<T> list)
+							{
+								int loadedSize = list.size();
+								entries.addAll(list);
+
+								displayTo += loadedSize;
+
+								((BaseAdapter) getListAdapter())
+										.notifyDataSetChanged();
+
+								loadingInProgress = false;
+							}
+						}, start, end);
+
+					}
 				}
 			}
 		});
+	}
+
+	interface OnListLoadedListener<T>
+	{
+		abstract void listLoaded(List<T> list);
 	}
 }

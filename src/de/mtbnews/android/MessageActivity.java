@@ -1,28 +1,15 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
-import java.util.Map;
-
-import org.apache.http.client.ClientProtocolException;
-import org.mcsoxford.rss.RSSFeed;
-import org.mcsoxford.rss.RSSReader;
-import org.mcsoxford.rss.RSSReaderException;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.TextView;
-import de.mtbnews.android.NewsDetailActivity.ImageGetter;
-import de.mtbnews.android.adapter.RSSContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
-import de.mtbnews.android.util.AppData;
-import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 public class MessageActivity extends Activity
@@ -41,7 +28,7 @@ public class MessageActivity extends Activity
 			@Override
 			protected void callServer() throws IOException
 			{
-				client = AppData.getTapatalkClient();
+				client = ((IBCApplication)getApplication()).getTapatalkClient();
 			}
 
 			protected void doOnSuccess()

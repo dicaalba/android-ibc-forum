@@ -17,7 +17,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.MapContentAdapter;
-import de.mtbnews.android.util.AppData;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 public class MailActivity extends ListActivity
@@ -44,7 +43,7 @@ public class MailActivity extends ListActivity
 
 				try
 				{
-					Object l = AppData.client.getXMLRPCClient().call("get_box");
+					Object l = ((IBCApplication)getApplication()).client.getXMLRPCClient().call("get_box");
 
 					this.forumList = (Object[]) ((Map) l).get("list");
 

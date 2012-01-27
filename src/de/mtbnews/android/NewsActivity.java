@@ -16,7 +16,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.RSSContentAdapter;
-import de.mtbnews.android.util.AppData;
 import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
@@ -50,7 +49,7 @@ public class NewsActivity extends ListActivity
 				try
 				{
 					feed = reader.load(IBC.IBC_NEWS_RSS_URL);
-					AppData.newsFeed = feed;
+					((IBCApplication)getApplication()).newsFeed = feed;
 				}
 				catch (RSSReaderException e)
 				{

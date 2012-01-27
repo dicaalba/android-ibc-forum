@@ -27,7 +27,6 @@ import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Search;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
-import de.mtbnews.android.util.AppData;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 /**
@@ -75,7 +74,7 @@ public class SearchActivity extends ListActivity
 			@Override
 			protected void callServer() throws IOException
 			{
-				TapatalkClient client = AppData.getTapatalkClient();
+				TapatalkClient client = ((IBCApplication)getApplication()).getTapatalkClient();
 
 				try
 				{
@@ -156,7 +155,7 @@ public class SearchActivity extends ListActivity
 						@Override
 						protected void callServer() throws IOException
 						{
-							TapatalkClient client = AppData.client;
+							TapatalkClient client = ((IBCApplication)getApplication()).client;
 
 							try
 							{

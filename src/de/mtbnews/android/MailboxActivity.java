@@ -5,16 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.client.ClientProtocolException;
-import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSItem;
-import org.mcsoxford.rss.RSSReader;
-import org.mcsoxford.rss.RSSReaderException;
 import org.xmlrpc.android.XMLRPCException;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,9 +17,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.MapContentAdapter;
-import de.mtbnews.android.adapter.RSSContentAdapter;
-import de.mtbnews.android.util.AppData;
-import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 public class MailboxActivity extends ListActivity
@@ -49,7 +41,7 @@ public class MailboxActivity extends ListActivity
 
 				try
 				{
-					Object l = AppData.client.getXMLRPCClient().call("get_box_info");
+					Object l = ((IBCApplication)getApplication()).client.getXMLRPCClient().call("get_box_info");
 
 					this.forumList = (Object[]) ((Map) l).get("list");
 

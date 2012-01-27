@@ -19,14 +19,12 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
-import java.net.URI;
 
 import org.apache.http.client.ClientProtocolException;
 import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSReader;
 import org.mcsoxford.rss.RSSReaderException;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,7 +42,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.RSSContentAdapter;
-import de.mtbnews.android.util.AppData;
 import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
@@ -104,7 +101,7 @@ public class IBCActivity extends ListActivity
 	 */
 	private void reloadFeed()
 	{
-		if (AppData.newsFeed != null)
+		if (((IBCApplication)getApplication()).newsFeed != null)
 		{
 			// Nicht nochmal laden.
 			// TODO: Reload-Funktion.
@@ -123,7 +120,7 @@ public class IBCActivity extends ListActivity
 				try
 				{
 					feed = reader.load(IBC.IBC_NEWS_RSS_URL);
-					AppData.newsFeed = feed;
+					((IBCApplication)getApplication()).newsFeed = feed;
 				}
 				catch (RSSReaderException e)
 				{

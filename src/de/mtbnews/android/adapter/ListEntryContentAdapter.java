@@ -4,18 +4,18 @@
 package de.mtbnews.android.adapter;
 
 import java.util.List;
-import java.util.Map;
 
+import ru.perm.kefir.bbcode.BBProcessorFactory;
+import ru.perm.kefir.bbcode.TextProcessor;
 import android.content.Context;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.mtbnews.android.R;
-import de.mtbnews.android.adapter.MapContentAdapter.ViewHolder;
 import de.mtbnews.android.tapatalk.wrapper.ListEntry;
 
 /**
@@ -115,7 +115,13 @@ public class ListEntryContentAdapter extends BaseAdapter
 			viewHolder.name.setEnabled(false);
 
 		if (e.getContent() != null)
+		{
+			//if	( prefs parse_bbcode ) {}
+			// TextProcessor create = BBProcessorFactory.getInstance().create();
+			// CharSequence html = create.process("[b]...");
+			// Html.fromHtml(html);
 			viewHolder.desc.setText(e.getContent());
+		}
 		else
 			viewHolder.desc.setText("");
 

@@ -4,7 +4,6 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
-import java.lang.reflect.ReflectPermission;
 import java.util.Map;
 
 import org.xmlrpc.android.XMLRPCClient;

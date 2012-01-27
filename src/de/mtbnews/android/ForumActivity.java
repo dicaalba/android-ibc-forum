@@ -17,10 +17,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -31,9 +34,6 @@ import de.mtbnews.android.adapter.MapContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
-import de.mtbnews.android.tapatalk.wrapper.Topic;
-import de.mtbnews.android.util.AppData;
-import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 /**
@@ -50,15 +50,14 @@ public class ForumActivity extends ListActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 
-
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.listing);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		TapatalkClient client = AppData.getTapatalkClient();
-		
+		TapatalkClient client = ((IBCApplication)getApplication()).getTapatalkClient();
+
 		if (!client.loggedIn && prefs.getBoolean("auto_login", false))
 		{
 			login();
@@ -84,38 +83,69 @@ public class ForumActivity extends ListActivity
 		}
 	}
 
+	@Override
+	public boolean onContextItemSelected(MenuItem item)
+	{
+		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+
+		switch (item.getItemId())
+		{
+			case R.id.menu_goto_top:
+
+				final Intent intent = new Intent(ForumActivity.this,
+						TopicActivity.class);
+				intent.putExtra("topic_id", forum.getTopics().get(
+						menuInfo.position).getId());
+				intent.putExtra("first_post", true);
+				startActivity(intent);
+				return true;
+
+			case R.id.menu_goto_bottom:
+
+				final Intent intent2 = new Intent(ForumActivity.this,
+						TopicActivity.class);
+				intent2.putExtra("topic_id", forum.getTopics().get(
+						menuInfo.position).getId());
+				intent2.putExtra("last_post", true);
+				startActivity(intent2);
+				return true;
+		}
+
+		return super.onContextItemSelected(item);
+	}
+
 	private void login()
 	{
-		final TapatalkClient client = AppData.client;
+		final TapatalkClient client = ((IBCApplication)getApplication()).client;
 		new ServerAsyncTask(this, R.string.waitingfor_login)
 		{
-			
+
 			@Override
 			protected synchronized void callServer() throws IOException
 			{
-				
+
 				try
 				{
 					Map<String, Object> map = client.login(prefs.getString(
 							"username", ""), prefs.getString("password", ""));
-					
+
 				}
 				catch (TapatalkException e)
 				{
 					e.printStackTrace();
 					throw new RuntimeException(e);
 				}
-				
+
 			}
-			
+
 		}.executeSynchronized();
 	}
-	
-	
+
 	private void logout()
 	{
-		final TapatalkClient client = AppData.client;
-		
+		final TapatalkClient client = ((IBCApplication)getApplication()).client;
+
 		new ServerAsyncTask(this, R.string.waitingfor_logout)
 		{
 
@@ -143,7 +173,7 @@ public class ForumActivity extends ListActivity
 	{
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		final XMLRPCClient client = AppData.client.getXMLRPCClient();
+		final XMLRPCClient client = ((IBCApplication)getApplication()).client.getXMLRPCClient();
 
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
@@ -219,7 +249,7 @@ public class ForumActivity extends ListActivity
 	{
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		final XMLRPCClient client = AppData.client.getXMLRPCClient();
+		final XMLRPCClient client = ((IBCApplication)getApplication()).client.getXMLRPCClient();
 
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
@@ -289,7 +319,7 @@ public class ForumActivity extends ListActivity
 	{
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		final XMLRPCClient client = AppData.client.getXMLRPCClient();
+		final XMLRPCClient client = ((IBCApplication)getApplication()).client.getXMLRPCClient();
 
 		new ServerAsyncTask(this, R.string.waitingfor_forum)
 		{
@@ -355,7 +385,7 @@ public class ForumActivity extends ListActivity
 	private void loadForum(final String forumId)
 	{
 
-		final TapatalkClient client = AppData.client;
+		final TapatalkClient client = ((IBCApplication)getApplication()).client;
 
 		new ServerAsyncTask(this, R.string.waitingfor_forum)
 		{
@@ -404,6 +434,19 @@ public class ForumActivity extends ListActivity
 
 			}
 		});
+
+		list.setOnCreateContextMenuListener(new OnCreateContextMenuListener()
+		{
+
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v,
+					ContextMenuInfo menuInfo)
+			{
+				MenuInflater menuInflater = new MenuInflater(getApplication());
+				menuInflater.inflate(R.menu.topic_context, menu);
+
+			}
+		});
 	}
 
 	@Override
@@ -412,7 +455,7 @@ public class ForumActivity extends ListActivity
 		super.onCreateOptionsMenu(menu);
 		MenuInflater mi = new MenuInflater(getApplication());
 
-		if (AppData.client.loggedIn)
+		if (((IBCApplication)getApplication()).client.loggedIn)
 			mi.inflate(R.menu.forum, menu);
 		else
 			mi.inflate(R.menu.forum_guest, menu);
@@ -453,8 +496,10 @@ public class ForumActivity extends ListActivity
 
 				if (TextUtils.isEmpty(prefs.getString("username", "")))
 				{
-					Toast.makeText(this,R.string.nousername,Toast.LENGTH_LONG).show();
-					
+					Toast
+							.makeText(this, R.string.nousername,
+									Toast.LENGTH_LONG).show();
+
 					Intent intent4 = new Intent(this, Configuration.class);
 					startActivity(intent4);
 				}
@@ -464,10 +509,12 @@ public class ForumActivity extends ListActivity
 				{
 					login();
 				}
-				else {
-					Toast.makeText(this,R.string.nousername,Toast.LENGTH_LONG).show();
+				else
+				{
+					Toast
+							.makeText(this, R.string.nousername,
+									Toast.LENGTH_LONG).show();
 				}
-
 
 				return true;
 		}
