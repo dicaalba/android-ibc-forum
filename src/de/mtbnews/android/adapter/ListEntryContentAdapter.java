@@ -7,7 +7,9 @@ import java.util.List;
 
 import ru.perm.kefir.bbcode.BBProcessorFactory;
 import ru.perm.kefir.bbcode.TextProcessor;
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -15,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import de.mtbnews.android.IBCApplication;
 import de.mtbnews.android.R;
+import de.mtbnews.android.image.ImageGetter;
 import de.mtbnews.android.tapatalk.wrapper.ListEntry;
 
 /**
@@ -123,11 +127,26 @@ public class ListEntryContentAdapter extends BaseAdapter
 
 		if (e.getContent() != null)
 		{
-			// if ( prefs parse_bbcode ) {}
-			// TextProcessor create = BBProcessorFactory.getInstance().create();
-			// CharSequence html = create.process("[b]...");
-			// Html.fromHtml(html);
-			viewHolder.desc.setText(e.getContent());
+			SharedPreferences prefs = ((IBCApplication) ((Activity) mContext)
+					.getApplication()).prefs;
+			if (prefs.getBoolean("parse_bbcode", false))
+			{
+
+				TextProcessor create = BBProcessorFactory.getInstance()
+						.create();
+				CharSequence html = create.process(e.getContent());
+
+				ImageGetter imageGetter = null;
+				if (prefs.getBoolean("load_images", false))
+					imageGetter = new ImageGetter();
+
+				viewHolder.desc.setText(Html.fromHtml(html.toString(),
+						imageGetter, null));
+			}
+			else
+			{
+				viewHolder.desc.setText(e.getContent());
+			}
 		}
 		else
 			viewHolder.desc.setText("");

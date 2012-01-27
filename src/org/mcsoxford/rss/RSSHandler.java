@@ -128,7 +128,7 @@ class RSSHandler extends org.xml.sax.helpers.DefaultHandler {
     @Override
     public void set(String content) {
       if (item != null) {
-        item.setContent(content);
+        item.setFullContent(content);
       }
     }
   };

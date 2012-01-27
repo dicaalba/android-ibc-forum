@@ -48,12 +48,12 @@ public class RSSItem extends RSSBase {
    * Returns the value of the optional &lt;content:encoded&gt; tag
    * @return string value of the element data
    */
-  public String getContent() {
+  public String getFullContent() {
     return content;
   }
 
   /* Internal method for RSSHandler */
-  void setContent(String content) {
+  void setFullContent(String content) {
     this.content = content;
   }
 }

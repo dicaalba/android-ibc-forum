@@ -3,7 +3,7 @@
 	android:title="@string/preferences">
 
 	<CheckBoxPreference android:defaultValue="true"
-		android:key="ibc_theme" android:title="@string/use_ibc_theme" />
+		android:key="ibc_theme" android:title="@string/use_ibc_theme" android:enabled="false" />
 
 	<!--
 		<EditTextPreference android:key="timeout"
@@ -14,31 +14,42 @@
 		<EditTextPreference android:key="server"
 		android:title="@string/server"></EditTextPreference>
 	-->
+	
+	
 	<PreferenceCategory android:title="@string/username">
 
 		<EditTextPreference android:key="username"
 			android:title="@string/username"></EditTextPreference>
 		<EditTextPreference android:key="password"
 			android:password="true" android:title="@string/password"></EditTextPreference>
-			
-		<CheckBoxPreference android:defaultValue="true"
-			android:key="auto_login" android:title="@string/auto_login" android:dependency="username" />
-			
+
+		<CheckBoxPreference android:defaultValue="false"
+			android:summary="@string/auto_login_desc" android:key="auto_login"
+			android:title="@string/auto_login" android:dependency="username" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="@string/forum">
 
 		<ListPreference android:defaultValue="10"
-			android:entries="@array/num_load_list" android:entryValues="@array/num_load_list"
-			android:key="num_load" android:title="@string/num_load" />
+			android:summary="@string/num_load_desc" android:entries="@array/num_load_list"
+			android:entryValues="@array/num_load_list" android:key="num_load"
+			android:title="@string/num_load" />
+
+		<CheckBoxPreference android:defaultValue="true"
+			android:summary="@string/auto_load_next_desc" android:key="auto_load_next"
+			android:title="@string/auto_load_next" android:enabled="false" />
 
 		<CheckBoxPreference android:defaultValue="false"
-			android:key="scroll_down" android:title="@string/scroll_down" />
+			android:summary="@string/scroll_down_desc" android:key="scroll_down"
+			android:title="@string/scroll_down" />
 
-		<CheckBoxPreference android:defaultValue="true"
-			android:key="parse_bbcode" android:title="@string/parse_bbcode" />
-			
-		<CheckBoxPreference android:defaultValue="true"
-			android:key="load_images" android:title="@string/load_images" android:dependency="parse_bbcode" />
+		<CheckBoxPreference android:defaultValue="false"
+			android:summary="@string/parse_bbcode_desc" android:key="parse_bbcode"
+			android:title="@string/parse_bbcode" />
+
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="load_images" android:summary="@string/load_images_desc"
+			android:title="@string/load_images" android:dependency="parse_bbcode" />
 	</PreferenceCategory>
 </PreferenceScreen>

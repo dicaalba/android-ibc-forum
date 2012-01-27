@@ -6,6 +6,9 @@ import java.net.URL;
 
 import org.mcsoxford.rss.RSSItem;
 
+import de.mtbnews.android.image.ImageGetter;
+import de.mtbnews.android.image.ImageGetterAsyncTask;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,7 +47,7 @@ public class NewsDetailActivity extends Activity
 		final TextView desc = (TextView) findViewById(R.id.item_description);
 
 		// if (e.getContent() != null)
-		final String html = item.getContent();
+		final String html = item.getFullContent();
 
 		ImageGetter imageGetter = null;
 		if (prefs.getBoolean("load_images", false))
@@ -70,45 +73,5 @@ public class NewsDetailActivity extends Activity
 
 	}
 
-	protected class ImageGetter implements Html.ImageGetter
-	{
-
-		public Drawable getDrawable(String source)
-		{
-			Drawable d = null;
-			String imageSource;
-			// if (!source.startsWith("http://www"))
-			// {
-			// imageSource = "http://www.minhembio.com" + source;
-			// }
-			// else
-			// {
-			imageSource = source;
-			// }
-
-			try
-			{
-				URL myFileUrl = new URL(imageSource);
-
-				HttpURLConnection conn = (HttpURLConnection) myFileUrl
-						.openConnection();
-				conn.setDoInput(true);
-				conn.connect();
-				InputStream is = conn.getInputStream();
-				BitmapDrawable a = new BitmapDrawable(is);
-				d = a.getCurrent();
-				d
-						.setBounds(0, 0, d.getIntrinsicWidth(), d
-								.getIntrinsicHeight());
-			}
-			catch (Exception e)
-			{
-				throw new RuntimeException(e);
-				// d = null;
-			}
-
-			return d;
-		}
-	};
 
 }
