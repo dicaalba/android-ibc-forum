@@ -337,7 +337,7 @@ public class ForumActivity extends ListActivity
 
 				try
 				{
-					Map map = (Map) client.call("get_participated_topic");
+					Map map = (Map) client.callEx("get_participated_topic",params);
 
 					this.forumList = (Object[]) map.get("topics");
 				}
