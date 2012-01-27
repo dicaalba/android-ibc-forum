@@ -8,17 +8,22 @@ public class Post implements ListEntry
 	private Date time;
 	private String title;
 	private String content;
+	private String name;
+
 
 	/**
+	 * @param time
 	 * @param title
 	 * @param content
+	 * @param name
 	 */
-	public Post(Date time, String title, String content)
+	public Post(Date time, String title, String content, String name)
 	{
 		super();
 		this.time = time;
 		this.title = title;
 		this.content = content;
+		this.name = name;
 	}
 
 	/**
@@ -43,4 +48,13 @@ public class Post implements ListEntry
 		return time;
 	}
 
+	/**
+	 * @return the name
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	
 }

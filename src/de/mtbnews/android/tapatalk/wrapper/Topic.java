@@ -13,6 +13,7 @@ public class Topic implements ListEntry
 	private String title;
 	private Date date;
 	private String content;
+	private String name;
 	private int postCount;
 
 	/**
@@ -21,10 +22,11 @@ public class Topic implements ListEntry
 	 * @param title
 	 * @param date
 	 * @param content
+	 * @param name
 	 * @param postCount
 	 */
 	public Topic(String id, List<Post> posts, String title, Date date,
-			String content, int postCount)
+			String content, String name, int postCount)
 	{
 		super();
 		this.id = id;
@@ -32,6 +34,7 @@ public class Topic implements ListEntry
 		this.title = title;
 		this.date = date;
 		this.content = content;
+		this.name = name;
 		this.postCount = postCount;
 	}
 
@@ -81,6 +84,14 @@ public class Topic implements ListEntry
 	public List<Post> getPosts()
 	{
 		return posts;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName()
+	{
+		return name;
 	}
 
 }

@@ -78,4 +78,15 @@ public class Forum implements ListEntry
 		return topics;
 	}
 
+
+	/**
+	 * Forum hat keinen Namen
+	 * @see de.mtbnews.android.tapatalk.wrapper.ListEntry#getName()
+	 */
+	@Override
+	public String getName()
+	{
+		return null;
+	}
+
 }

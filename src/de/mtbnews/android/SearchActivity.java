@@ -53,6 +53,9 @@ public class SearchActivity extends ListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		if	( ((IBCApplication)getApplication()).ibcTheme )
+			setTheme(R.style.IBC);
+
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 

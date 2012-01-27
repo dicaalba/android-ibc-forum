@@ -99,14 +99,14 @@ public class TapatalkClient
 			int postCount = toInt(map.get("total_post_num"));
 
 			List<Post> posts = new ArrayList<Post>();
-			Topic topic = new Topic(id, posts, title, null, null, postCount);
+			Topic topic = new Topic(id, posts, title, null, null,null, postCount);
 
 			for (Object o1 : (Object[]) map.get("posts"))
 			{
 				Map postMap = (Map) o1;
 				Post post = new Post((Date) postMap.get("post_time"),
 						new String((byte[]) postMap.get("post_title")),
-						new String((byte[]) postMap.get("post_content")));
+						new String((byte[]) postMap.get("post_content")),new String((byte[]) postMap.get("post_author_name")));
 				posts.add(post);
 			}
 
@@ -170,7 +170,7 @@ public class TapatalkClient
 						byteArrayToString(topicMap.get("topic_title")),//
 						(Date) topicMap.get("last_reply_time"), //
 						new String((byte[]) topicMap.get("short_content")),//
-						0);
+						new String((byte[]) topicMap.get("topic_author_name")), 0);
 				topics.add(topic);
 			}
 
@@ -211,7 +211,7 @@ public class TapatalkClient
 						byteArrayToString(topicMap.get("topic_title")),//
 						(Date) topicMap.get("post_time"), //
 						new String((byte[]) topicMap.get("short_content")),//
-						0);
+						new String((byte[]) topicMap.get("post_author_name")), 0);
 				topics.add(topic);
 			}
 
@@ -247,7 +247,7 @@ public class TapatalkClient
 						byteArrayToString(topicMap.get("topic_title")),//
 						(Date) topicMap.get("post_time"), //
 						new String((byte[]) topicMap.get("short_content")),//
-						0);
+						"", 0);
 				topics.add(topic);
 			}
 
@@ -288,7 +288,7 @@ public class TapatalkClient
 						byteArrayToString(topicMap.get("topic_title")),//
 						(Date) topicMap.get("post_time"), //
 						new String((byte[]) topicMap.get("short_content")),//
-						0);
+						"", 0);
 				topics.add(topic);
 			}
 

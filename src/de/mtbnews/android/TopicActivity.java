@@ -33,6 +33,9 @@ public class TopicActivity extends EndlessListActivity<Post>
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		if (((IBCApplication) getApplication()).ibcTheme)
+			setTheme(R.style.IBC);
+
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.listing);
@@ -63,7 +66,6 @@ public class TopicActivity extends EndlessListActivity<Post>
 		});
 	}
 
-
 	@Override
 	protected int getTotalSize()
 	{
@@ -85,7 +87,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 			@Override
 			protected void callServer() throws IOException
 			{
-				TapatalkClient client = ((IBCApplication)getApplication()).client;
+				TapatalkClient client = ((IBCApplication) getApplication()).client;
 
 				try
 				{

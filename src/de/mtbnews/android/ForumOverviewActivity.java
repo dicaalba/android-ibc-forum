@@ -26,7 +26,6 @@ import de.mtbnews.android.adapter.ExpandableForumContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
-import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 /**
@@ -41,13 +40,16 @@ public class ForumOverviewActivity extends ExpandableListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		if (((IBCApplication) getApplication()).ibcTheme)
+			setTheme(R.style.IBC);
+
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.exp_listing);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		if (!((IBCApplication)getApplication()).getTapatalkClient().loggedIn
+		if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
 				&& prefs.getBoolean("auto_login", false))
 			login();
 
@@ -56,7 +58,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 	private void login()
 	{
-		final TapatalkClient client = ((IBCApplication)getApplication()).client;
+		final TapatalkClient client = ((IBCApplication) getApplication()).client;
 		new ServerAsyncTask(this, R.string.waitingfor_login)
 		{
 
@@ -121,7 +123,8 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 	private void loadForum()
 	{
-		final TapatalkClient client = ((IBCApplication)getApplication()).getTapatalkClient();
+		final TapatalkClient client = ((IBCApplication) getApplication())
+				.getTapatalkClient();
 
 		new ServerAsyncTask(this, R.string.waitingfor_forum)
 		{
@@ -210,7 +213,8 @@ public class ForumOverviewActivity extends ExpandableListActivity
 		super.onCreateOptionsMenu(menu);
 		MenuInflater mi = new MenuInflater(getApplication());
 
-		TapatalkClient client = ((IBCApplication)getApplication()).getTapatalkClient();
+		TapatalkClient client = ((IBCApplication) getApplication())
+				.getTapatalkClient();
 
 		if (client.loggedIn)
 			mi.inflate(R.menu.forum, menu);
@@ -291,7 +295,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 	private void logout()
 	{
-		final TapatalkClient client = ((IBCApplication)getApplication()).client;
+		final TapatalkClient client = ((IBCApplication) getApplication()).client;
 
 		new ServerAsyncTask(this, R.string.waitingfor_logout)
 		{

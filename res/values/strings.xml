@@ -95,11 +95,13 @@
 		Menütaste können Sie einen neuen Server anlegen.</string>
 	<string name="nousername">Es ist noch kein Benutzername konfiguriert</string>
 	<string name="www">Zur Webseite</string>
-	<string name="scroll_down">Immer an das Ende scrollen</string>
+	<string name="scroll_down">Zum Ende springen</string>
 	<string name="use_ibc_theme">Das IBC-Theme benutzen</string>
 	<string name="auto_login">Automatisch anmelden</string>
 	<string name="num_load">Anzahl Posts laden</string>
 	<string name="login">Anmelden</string>
+	<string name="login_success">Benutzeranmeldung erfolgreich</string>
+	<string name="login_failed">Benutzeranmeldung nicht erfolgreich</string>
 	<string name="logout">Abmelden</string>
 	<string-array name="num_load_list">
 		<item>5</item>
@@ -120,4 +122,12 @@
 	<string name="video">Videos</string>
 	<string name="blog">Blog</string>
 	<string name="links">Links</string>
+	<string name="load_images">Bilder anzeigen</string>
+	<string name="goto_first_post">Zum ersten Beitrag</string>
+	<string name="goto_last_post">Zum letzten Beitrag</string>
+	<string name="goto_top">Nach oben</string>
+	<string name="goto_buttom">Nach unten</string>
+	<string name="reply">Antworten</string>
+	<string name="new_topic">Neues Thema</string>
+	<string name="parse_bbcode">BB-Code auswerten</string>
 </resources>

@@ -10,4 +10,6 @@ public interface ListEntry
 	String getContent();
 
 	Date getDate();
+	
+	String getName();
 }

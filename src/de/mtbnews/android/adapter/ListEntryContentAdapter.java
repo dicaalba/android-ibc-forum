@@ -90,6 +90,8 @@ public class ListEntryContentAdapter extends BaseAdapter
 			viewHolder.datum = (TextView) convertView
 					.findViewById(R.id.item_date);
 			viewHolder.name = (TextView) convertView
+					.findViewById(R.id.item_name);
+			viewHolder.title = (TextView) convertView
 					.findViewById(R.id.item_title);
 			viewHolder.desc = (TextView) convertView
 					.findViewById(R.id.item_description);
@@ -110,13 +112,18 @@ public class ListEntryContentAdapter extends BaseAdapter
 			viewHolder.datum.setEnabled(false);
 
 		if (e.getTitle() != null)
-			viewHolder.name.setText(e.getTitle());
+			viewHolder.title.setText(e.getTitle());
+		else
+			viewHolder.title.setEnabled(false);
+
+		if (e.getName() != null)
+			viewHolder.name.setText(e.getName());
 		else
 			viewHolder.name.setEnabled(false);
 
 		if (e.getContent() != null)
 		{
-			//if	( prefs parse_bbcode ) {}
+			// if ( prefs parse_bbcode ) {}
 			// TextProcessor create = BBProcessorFactory.getInstance().create();
 			// CharSequence html = create.process("[b]...");
 			// Html.fromHtml(html);
@@ -131,6 +138,7 @@ public class ListEntryContentAdapter extends BaseAdapter
 	static class ViewHolder
 	{
 		TextView datum;
+		TextView title;
 		TextView name;
 		TextView desc;
 	}

@@ -20,6 +20,10 @@
 			android:title="@string/username"></EditTextPreference>
 		<EditTextPreference android:key="password"
 			android:password="true" android:title="@string/password"></EditTextPreference>
+			
+		<CheckBoxPreference android:defaultValue="true"
+			android:key="auto_login" android:title="@string/auto_login" android:dependency="username" />
+			
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="@string/forum">
@@ -32,6 +36,9 @@
 			android:key="scroll_down" android:title="@string/scroll_down" />
 
 		<CheckBoxPreference android:defaultValue="true"
-			android:key="auto_login" android:title="@string/auto_login" />
+			android:key="parse_bbcode" android:title="@string/parse_bbcode" />
+			
+		<CheckBoxPreference android:defaultValue="true"
+			android:key="load_images" android:title="@string/load_images" android:dependency="parse_bbcode" />
 	</PreferenceCategory>
 </PreferenceScreen>

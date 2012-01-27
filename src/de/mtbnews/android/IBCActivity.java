@@ -27,10 +27,8 @@ import org.mcsoxford.rss.RSSReaderException;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,7 +39,7 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
-import de.mtbnews.android.adapter.RSSContentAdapter;
+import de.mtbnews.android.adapter.ListEntryContentAdapter;
 import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
@@ -54,11 +52,11 @@ public class IBCActivity extends ListActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+		if	( ((IBCApplication)getApplication()).ibcTheme )
+			setTheme(R.style.IBC);
+			
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start);
-
-		SharedPreferences globalPrefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
 
 		// Gast-Zugang ist ok, daher keine Meldung anzeigen...
 		// if (globalPrefs.getString("username", "").equals("") )
@@ -101,7 +99,7 @@ public class IBCActivity extends ListActivity
 	 */
 	private void reloadFeed()
 	{
-		if (((IBCApplication)getApplication()).newsFeed != null)
+		if (((IBCApplication) getApplication()).newsFeed != null)
 		{
 			// Nicht nochmal laden.
 			// TODO: Reload-Funktion.
@@ -120,7 +118,7 @@ public class IBCActivity extends ListActivity
 				try
 				{
 					feed = reader.load(IBC.IBC_NEWS_RSS_URL);
-					((IBCApplication)getApplication()).newsFeed = feed;
+					((IBCApplication) getApplication()).newsFeed = feed;
 				}
 				catch (RSSReaderException e)
 				{
@@ -130,9 +128,10 @@ public class IBCActivity extends ListActivity
 
 			protected void doOnSuccess()
 			{
-				ListAdapter adapter = new RSSContentAdapter(IBCActivity.this,
-						feed);
 				IBCActivity.this.setTitle(feed.getTitle());
+
+				ListAdapter adapter = new ListEntryContentAdapter(
+						IBCActivity.this, this.feed.getItems());
 				setListAdapter(adapter);
 			}
 		}.execute();

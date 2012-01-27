@@ -24,6 +24,9 @@ public class MailboxActivity extends ListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		if (((IBCApplication) getApplication()).ibcTheme)
+			setTheme(R.style.IBC);
+
 		setContentView(R.layout.listing);
 
 		super.onCreate(savedInstanceState);
@@ -41,7 +44,8 @@ public class MailboxActivity extends ListActivity
 
 				try
 				{
-					Object l = ((IBCApplication)getApplication()).client.getXMLRPCClient().call("get_box_info");
+					Object l = ((IBCApplication) getApplication()).client
+							.getXMLRPCClient().call("get_box_info");
 
 					this.forumList = (Object[]) ((Map) l).get("list");
 
@@ -59,8 +63,8 @@ public class MailboxActivity extends ListActivity
 				{
 					list1.add((Map) o);
 				}
-				ListAdapter adapter = new MapContentAdapter(MailboxActivity.this,
-						list1, null, "box_name", null);
+				ListAdapter adapter = new MapContentAdapter(
+						MailboxActivity.this, list1, null, "box_name", null);
 				// IBCActivity.this.setTitle(feed.getTitle());
 				setListAdapter(adapter);
 
@@ -76,7 +80,6 @@ public class MailboxActivity extends ListActivity
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
-				
 
 				// final Intent intent = new Intent(ForumActivity.this,
 				// NewsDetailActivity.class);
@@ -95,7 +98,7 @@ public class MailboxActivity extends ListActivity
 					int position, long id)
 			{
 				RSSItem item = (RSSItem) getListAdapter().getItem(position);
-				
+
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(item.getLink());
 				startActivity(i);
