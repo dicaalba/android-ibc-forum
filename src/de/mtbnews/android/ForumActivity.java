@@ -326,8 +326,6 @@ public class ForumActivity extends ListActivity
 		new ServerAsyncTask(this, R.string.waitingfor_forum)
 		{
 
-			private Object[] forumList;
-
 			@Override
 			protected void callServer() throws IOException
 			{
@@ -339,7 +337,7 @@ public class ForumActivity extends ListActivity
 				{
 					Map map = (Map) client.callEx("get_participated_topic",params);
 
-					this.forumList = (Object[]) map.get("topics");
+					forumList = (Object[]) map.get("topics");
 				}
 				catch (XMLRPCException e)
 				{
