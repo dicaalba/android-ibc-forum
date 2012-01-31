@@ -137,4 +137,6 @@
 	<string name="new_topic">Neues Thema</string>
 	<string name="parse_bbcode">BB-Code auswerten</string>
 	<string name="parse_bbcode_desc">In Forumbeiträgen den BB-Code auflösen. Kann die Anzeige von Beiträgen stark verlangsamen.</string>
+	<string name="show_hints">Tipps anzeigen</string>
+	<string name="hint_press_long">Lange drücken um weitere Funktionen zu erhalten</string>
 </resources>

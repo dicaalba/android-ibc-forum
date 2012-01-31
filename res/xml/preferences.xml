@@ -5,6 +5,9 @@
 	<CheckBoxPreference android:defaultValue="true"
 		android:key="ibc_theme" android:title="@string/use_ibc_theme" android:enabled="false" />
 
+	<CheckBoxPreference android:defaultValue="true"
+		android:key="show_hints" android:title="@string/show_hints" />
+
 	<!--
 		<EditTextPreference android:key="timeout"
 		android:title="@string/timeout" android:summary="@string/timeout_desc"

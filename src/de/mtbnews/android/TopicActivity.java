@@ -29,7 +29,7 @@ import de.mtbnews.android.util.ServerAsyncTask;
 public class TopicActivity extends EndlessListActivity<Post>
 {
 	public static final String TOPIC_ID = "topic_id";
-	
+
 	private int totalSize;
 
 	@Override
@@ -57,7 +57,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 					int position, long id)
 			{
 				int aktPosition = displayFrom + position + 1;
-				Toast.makeText(TopicActivity.this, ""+aktPosition,
+				Toast.makeText(TopicActivity.this, "" + aktPosition,
 						Toast.LENGTH_SHORT).show();
 
 				// final Intent intent = new Intent(TopicActivity.this,
@@ -66,6 +66,9 @@ public class TopicActivity extends EndlessListActivity<Post>
 				// startActivity(intent);
 			}
 		});
+
+		Toast.makeText(this, R.string.hint_press_long, Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	@Override
