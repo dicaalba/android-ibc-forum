@@ -1,14 +1,8 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.mcsoxford.rss.RSSItem;
-import org.xmlrpc.android.XMLRPCException;
-
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,75 +10,37 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
-import de.mtbnews.android.adapter.MapContentAdapter;
+import de.mtbnews.android.adapter.ListEntryContentAdapter;
+import de.mtbnews.android.tapatalk.TapatalkClient;
+import de.mtbnews.android.tapatalk.TapatalkException;
+import de.mtbnews.android.tapatalk.wrapper.Mailbox;
+import de.mtbnews.android.tapatalk.wrapper.Message;
 import de.mtbnews.android.util.ServerAsyncTask;
 
-public class MailActivity extends ListActivity
+public class MailActivity extends EndlessListActivity<Message>
 {
+	private int totalMessageCount;
+	private String boxId;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		if (((IBCApplication) getApplication()).ibcTheme)
+			setTheme(R.style.IBC);
+
 		setContentView(R.layout.listing);
 
 		super.onCreate(savedInstanceState);
 
-		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.listing);
 
-		new ServerAsyncTask(this, R.string.waitingforcontent)
-		{
+		boxId = getIntent().getStringExtra("box_id");
 
-			private Object[] forumList;
+		ListAdapter adapter = new ListEntryContentAdapter(MailActivity.this,
+				super.entries);
+		setListAdapter(adapter);
 
-			@Override
-			protected void callServer() throws IOException
-			{
-
-				try
-				{
-					Object l = ((IBCApplication)getApplication()).client.getXMLRPCClient().call("get_box");
-
-					this.forumList = (Object[]) ((Map) l).get("list");
-
-				}
-				catch (XMLRPCException e)
-				{
-					throw new RuntimeException(e);
-				}
-			}
-
-			protected void doOnSuccess()
-			{
-				List<Map<String, Object>> list1 = new ArrayList<Map<String, Object>>();
-				for (Object o : forumList)
-				{
-					list1.add((Map) o);
-				}
-				ListAdapter adapter = new MapContentAdapter(MailActivity.this,
-						list1, null, "box_name", null);
-				// IBCActivity.this.setTitle(feed.getTitle());
-				setListAdapter(adapter);
-
-			}
-
-		}.execute();
-		final ListView list = getListView();
-
-		list.setOnItemClickListener(new OnItemClickListener()
-		{
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
-			{
-
-				// final Intent intent = new Intent(ForumActivity.this,
-				// NewsDetailActivity.class);
-				// intent.putExtra("itemid", position);
-				// startActivity(intent);
-			}
-		});
+		initialLoad();
 
 		final ListView list2 = getListView();
 
@@ -95,13 +51,58 @@ public class MailActivity extends ListActivity
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
-				RSSItem item = (RSSItem) getListAdapter().getItem(position);
-
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(item.getLink());
+				Intent i = new Intent(MailActivity.this, MessageActivity.class);
+				i.putExtra("box_id", boxId);
+				i.putExtra("message_id", MailActivity.super.entries.get(position).id);
 				startActivity(i);
 			}
 		});
+
+	}
+
+	@Override
+	protected int getTotalSize()
+	{
+		return totalMessageCount;
+	}
+
+	@Override
+	protected void loadEntries(
+			final OnListLoadedListener<Message> onListLoaded, final int from,
+			final int to, boolean firstLoad)
+	{
+
+		new ServerAsyncTask(this, R.string.waitingforcontent)
+		{
+
+			private Mailbox mailbox;
+
+			@Override
+			protected void callServer() throws IOException
+			{
+
+				try
+				{
+					TapatalkClient client = ((IBCApplication) getApplication())
+							.getTapatalkClient();
+					mailbox = client.getBoxContent(boxId, from, to);
+
+					totalMessageCount = mailbox.countAll;
+
+				}
+				catch (TapatalkException e)
+				{
+					throw new RuntimeException(e);
+				}
+			}
+
+			protected void doOnSuccess()
+			{
+				// MailActivity.this.setTitle(mailbox.getName());
+				onListLoaded.listLoaded(mailbox.messages);
+			}
+
+		}.execute();
 
 	}
 }

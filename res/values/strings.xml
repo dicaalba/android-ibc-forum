@@ -44,6 +44,7 @@
 	<string name="waitingfornew">Erzeuge</string>
 	<string name="waitingforsave">Speichern</string>
 	<string name="waitingfor_loadmore">Lade weitere Einträge</string>
+	<string name="waitingfor_mailbox">Nachrichten werden geladen</string>
 	<string name="language">Sprache</string>
 	<string name="model">Variante</string>
 	<string name="new1">Neu</string>

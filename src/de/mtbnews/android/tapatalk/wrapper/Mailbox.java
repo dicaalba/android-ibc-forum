@@ -8,8 +8,8 @@ public class Mailbox implements ListEntry
 
 	private String id;
 	private String name;
-	private int countAll;
-	private int countUnread;
+	public int countAll;
+	public int countUnread;
 	public List<Message> messages;
 
 	public Mailbox(String id, String name, Integer countAll, Integer countUnread)
@@ -40,13 +40,13 @@ public class Mailbox implements ListEntry
 	@Override
 	public String getName()
 	{
-		return name;
+		return "" + countAll + " (" + countUnread + ")";
 	}
 
 	@Override
 	public String getTitle()
 	{
-		return "" + countAll + " (" + countUnread + ")";
+		return name;
 	}
 
 }
