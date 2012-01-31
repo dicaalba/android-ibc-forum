@@ -21,13 +21,15 @@ import de.mtbnews.android.tapatalk.wrapper.Topic;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 /**
- * Anzeige eines Themas.
+ * Anzeige aller Beiträge eines Themas.
  * 
  * @author dankert
  * 
  */
 public class TopicActivity extends EndlessListActivity<Post>
 {
+	public static final String TOPIC_ID = "topic_id";
+	
 	private int totalSize;
 
 	@Override
@@ -92,7 +94,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 				try
 				{
 					String topicId = TopicActivity.this.getIntent()
-							.getStringExtra("topic_id");
+							.getStringExtra(TOPIC_ID);
 
 					topic = client.getTopic(topicId, from, to);
 

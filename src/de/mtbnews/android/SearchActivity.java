@@ -4,23 +4,21 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
-import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.ListEntryContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
@@ -33,67 +31,153 @@ import de.mtbnews.android.util.ServerAsyncTask;
  * @author dankert
  * 
  */
-public class SearchActivity extends ListActivity
+public class SearchActivity extends EndlessListActivity<Topic>
 {
-	public static final String ID = "id";
-	public static final String CLIENT = "client";
+	public static final String ACTION_SEARCH_UNREAD_TOPICS = "de.mtbnews.android.UNREAD_TOPICS";
+	public static final String ACTION_SEARCH_PARTICIPATED_TOPICS = "de.mtbnews.android.PARTICIPATED_TOPICS";
+	public static final String ACTION_SEARCH_LATEST_TOPICS = "de.mtbnews.android.LATEST_TOPICS";
+	private static final String ACTION_SEARCH_TOPICS_BY_QUERY = Intent.ACTION_SEARCH;
 
-	private boolean loadingMore = true;
-
-	private int displayFrom;
-	private int displayTo;
-	private int postCount;
-
-	private List<Topic> topics;
-	private Search search;
-
-	Map<String, String> data;
+	private int totalSize;
+	private String searchId;
+	private SharedPreferences prefs;
 	private String query;
+	private int searchType;
+	private String username;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		if	( ((IBCApplication)getApplication()).ibcTheme )
+		if (((IBCApplication) getApplication()).ibcTheme)
 			setTheme(R.style.IBC);
-
-		final SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listing);
 
-		Intent intent = getIntent();
+		username = prefs.getString("username", "");
 
-		if (Intent.ACTION_SEARCH.equals(intent.getAction()))
+		final Intent intent = getIntent();
+
+		if (ACTION_SEARCH_TOPICS_BY_QUERY.equals(intent.getAction()))
 		{
+			searchType = TapatalkClient.SEARCHTYPE_QUERY;
 			query = intent.getStringExtra(SearchManager.QUERY);
 		}
-
-		Log.d("IBC", "Searching for '" + query + "'");
-
-		new ServerAsyncTask(this, R.string.waitingfor_search)
+		else if (ACTION_SEARCH_LATEST_TOPICS.equals(intent.getAction()))
 		{
+			searchType = TapatalkClient.SEARCHTYPE_LATEST;
+			query = null;
+		}
+		else if (ACTION_SEARCH_PARTICIPATED_TOPICS.equals(intent.getAction()))
+		{
+			searchType = TapatalkClient.SEARCHTYPE_PARTICIPATED;
+			query = null;
+		}
+		else if (ACTION_SEARCH_UNREAD_TOPICS.equals(intent.getAction()))
+		{
+			searchType = TapatalkClient.SEARCHTYPE_UNREAD;
+			query = null;
+		}
+		else
+		{
+			throw new RuntimeException("Unknown search action: "
+					+ intent.getAction());
+		}
+
+		ListAdapter adapter = new ListEntryContentAdapter(SearchActivity.this,
+				entries);
+		setListAdapter(adapter);
+
+		initialLoad();
+
+		ListView list = getListView();
+		list.setOnCreateContextMenuListener(new OnCreateContextMenuListener()
+		{
+
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v,
+					ContextMenuInfo menuInfo)
+			{
+				MenuInflater menuInflater = new MenuInflater(getApplication());
+				menuInflater.inflate(R.menu.topic_context, menu);
+
+			}
+		});
+		list.setOnItemClickListener(new OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id)
+			{
+				// int aktPosition = displayFrom + position + 1;
+				final Intent intent = new Intent(SearchActivity.this,
+						TopicActivity.class);
+				Topic topic = SearchActivity.super.entries.get(position);
+				intent.putExtra(TopicActivity.TOPIC_ID, topic.getId());
+				startActivity(intent);
+			}
+		});
+	}
+
+	@Override
+	protected int getTotalSize()
+	{
+		return totalSize;
+	}
+
+	// TODO: Das auch in die anderen Listviews einbauen.
+	@Override
+	public boolean onContextItemSelected(MenuItem item)
+	{
+		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+
+		switch (item.getItemId())
+		{
+			case R.id.menu_goto_top:
+
+				final Intent intent = new Intent(SearchActivity.this,
+						TopicActivity.class);
+				intent.putExtra(TopicActivity.TOPIC_ID, super.entries
+						.get(menuInfo.position).getId());
+				intent.putExtra("first_post", true);
+				startActivity(intent);
+				return true;
+
+			case R.id.menu_goto_bottom:
+
+				final Intent intent2 = new Intent(SearchActivity.this,
+						TopicActivity.class);
+				intent2.putExtra(TopicActivity.TOPIC_ID, super.entries.get(
+						menuInfo.position).getId());
+				intent2.putExtra("last_post", true);
+				startActivity(intent2);
+				return true;
+		}
+
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	protected void loadEntries(final OnListLoadedListener<Topic> onListLoaded,
+			final int from, final int to, boolean firstLoad)
+	{
+		new ServerAsyncTask(SearchActivity.this, R.string.waitingfor_loadmore)
+		{
+			private Search search;
 
 			@Override
 			protected void callServer() throws IOException
 			{
-				TapatalkClient client = ((IBCApplication)getApplication()).getTapatalkClient();
+				TapatalkClient client = ((IBCApplication) getApplication()).client;
 
 				try
 				{
-					int start = 0;
-					int end = Integer.parseInt(prefs
-							.getString("num_load", "10")) - 1;
+					search = client.searchTopics(searchType, query, username,
+							from, to, searchId);
 
-					displayFrom = start;
-					displayTo = end;
-
-					search = client.searchTopics(query, start, end, null);
-
-					postCount = search.topicCount;
-					topics = search.getTopics();
-
-					loadingMore = false;
+					totalSize = search.topicCount;
+					searchId = search.searchId;
 				}
 				catch (TapatalkException e)
 				{
@@ -103,95 +187,9 @@ public class SearchActivity extends ListActivity
 
 			protected void doOnSuccess()
 			{
-				SearchActivity.this.setTitle(query);
-				ListAdapter adapter = new ListEntryContentAdapter(
-						SearchActivity.this, topics);
-				setListAdapter(adapter);
-
+				onListLoaded.listLoaded(search.getTopics());
 			}
 
 		}.execute();
-		final ListView list = getListView();
-
-		list.setOnItemClickListener(new OnItemClickListener()
-		{
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
-			{
-				final Intent intent = new Intent(SearchActivity.this,
-						TopicActivity.class);
-				Topic topic = topics.get(position);
-				intent.putExtra("topic_id", topic.getId());
-				startActivity(intent);
-			}
-		});
-
-		/**
-		 * Weitere List-Einträge automatisch nachladen.
-		 */
-		list.setOnScrollListener(new OnScrollListener()
-		{
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState)
-			{
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount)
-			{
-
-				// what is the bottom iten that is visible
-				int lastInScreen = firstVisibleItem + visibleItemCount;
-
-				// is the bottom item visible & not loading more already ? Load
-				// more !
-				if ((lastInScreen == totalItemCount) && !(loadingMore)
-						/*&& !(totalItemCount >= search.topicCount)*/)
-				{
-					loadingMore = true;
-					new ServerAsyncTask(SearchActivity.this,
-							R.string.waitingfor_loadmore)
-					{
-						@Override
-						protected void callServer() throws IOException
-						{
-							TapatalkClient client = ((IBCApplication)getApplication()).client;
-
-							try
-							{
-								int start = displayTo + 1;
-								int end = start
-										+ Integer.parseInt(prefs.getString(
-												"num_load", "10")) - 1;
-								displayTo = end;
-
-								search = client.searchTopics(null, start, end,
-										search.searchId);
-
-								topics.addAll(search.getTopics());
-
-								loadingMore = false;
-							}
-							catch (TapatalkException e)
-							{
-								throw new RuntimeException(e);
-							}
-						}
-
-						protected void doOnSuccess()
-						{
-							((BaseAdapter) getListAdapter())
-									.notifyDataSetChanged();
-						}
-
-					}.execute();
-
-				}
-			}
-		});
-
 	}
 }

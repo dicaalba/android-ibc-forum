@@ -9,6 +9,7 @@ public class Forum implements ListEntry
 	private String id;
 
 	private List<Topic> topics;
+	public int topicCount;
 
 	private String title;
 	private Date date;

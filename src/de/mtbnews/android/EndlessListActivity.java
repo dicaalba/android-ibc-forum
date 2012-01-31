@@ -130,7 +130,7 @@ public abstract class EndlessListActivity<T> extends ListActivity
 	 * @return gelandene Elemente
 	 */
 	abstract protected void loadEntries(OnListLoadedListener<T> onListLoaded,
-			int from, int to, boolean firstLoad);
+			final int from, final int to, boolean firstLoad);
 
 	/**
 	 * @param onListLoaded

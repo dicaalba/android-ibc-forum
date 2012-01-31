@@ -244,21 +244,24 @@ public class ForumOverviewActivity extends ExpandableListActivity
 				return true;
 
 			case R.id.menu_participated_topics:
-				Intent intent = new Intent(this, ForumActivity.class);
-				intent.putExtra("participated", true);
+				Intent intent = new Intent(this, SearchActivity.class);
+				intent
+						.setAction(SearchActivity.ACTION_SEARCH_PARTICIPATED_TOPICS);
 				startActivity(intent);
 				return true;
 
 			case R.id.menu_latest_topics:
-				Intent intent2 = new Intent(this, ForumActivity.class);
-				intent2.putExtra("latest", true);
+				Intent intent2 = new Intent(this, SearchActivity.class);
+				intent2.setAction(SearchActivity.ACTION_SEARCH_LATEST_TOPICS);
 				startActivity(intent2);
 				return true;
+				
 			case R.id.menu_unread_topics:
-				Intent intent3 = new Intent(this, ForumActivity.class);
-				intent3.putExtra("unread", true);
+				Intent intent3 = new Intent(this, SearchActivity.class);
+				intent3.setAction(SearchActivity.ACTION_SEARCH_UNREAD_TOPICS);
 				startActivity(intent3);
 				return true;
+
 
 			case R.id.menu_logout:
 				logout();
