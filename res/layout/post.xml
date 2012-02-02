@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:paddingLeft="5sp" android:background="#E3E3E3">
+
+
+		<TextView android:layout_width="wrap_content" android:text="@string/subject"
+			android:layout_height="wrap_content" style="@style/normalText"></TextView>
+		<EditText android:id="@+id/subject" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" />
+
+		<TextView android:layout_width="wrap_content" android:text="@string/recipient"
+			android:layout_height="wrap_content" style="@style/normalText"></TextView>
+		<EditText android:id="@+id/recipient" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" />
+
+		<TextView android:text="@string/text" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" style="@style/titleText"></TextView>
+		<EditText android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:id="@+id/content"></EditText>
+
+		<Button android:text="@string/send" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/send" style="@style/normalText"></Button>
+
+	</LinearLayout>
+
+</ScrollView>

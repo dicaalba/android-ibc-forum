@@ -6,11 +6,7 @@ package de.mtbnews.android;
 import java.io.IOException;
 import java.util.List;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -30,16 +26,12 @@ import de.mtbnews.android.util.ServerAsyncTask;
  * @author dankert
  * 
  */
-public class TopicActivity extends EndlessListActivity<Post>
+public class SubscriptionTopicsActivity extends EndlessListActivity<Post>
 {
 	public static final String TOPIC_ID = "topic_id";
 
-	private String forumId;
-	private String topicId;
-	private String topicTitle;
-
 	private int totalSize;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -48,12 +40,9 @@ public class TopicActivity extends EndlessListActivity<Post>
 
 		super.onCreate(savedInstanceState);
 
-		topicId = TopicActivity.this.getIntent().getStringExtra(TOPIC_ID);
-		//forumId = TopicActivity.this.getIntent().getStringExtra("forum_id");
-
 		setContentView(R.layout.listing);
 
-		ListAdapter adapter = new ListEntryContentAdapter(TopicActivity.this,
+		ListAdapter adapter = new ListEntryContentAdapter(SubscriptionTopicsActivity.this,
 				entries);
 		setListAdapter(adapter);
 
@@ -68,7 +57,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 					int position, long id)
 			{
 				int aktPosition = displayFrom + position + 1;
-				Toast.makeText(TopicActivity.this, "" + aktPosition,
+				Toast.makeText(SubscriptionTopicsActivity.this, "" + aktPosition,
 						Toast.LENGTH_SHORT).show();
 
 				// final Intent intent = new Intent(TopicActivity.this,
@@ -93,7 +82,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 			final OnListLoadedListener<Post> onListLoadedListener,
 			final int from, final int to, boolean firstLoad)
 	{
-		new ServerAsyncTask(TopicActivity.this,
+		new ServerAsyncTask(SubscriptionTopicsActivity.this,
 				firstLoad ? R.string.waitingfor_topic
 						: R.string.waitingfor_loadmore)
 		{
@@ -107,11 +96,11 @@ public class TopicActivity extends EndlessListActivity<Post>
 
 				try
 				{
+					String topicId = SubscriptionTopicsActivity.this.getIntent()
+							.getStringExtra(TOPIC_ID);
 
 					topic = client.getTopic(topicId, from, to);
 
-					forumId = topic.forumId;
-					topicTitle = topic.getTitle();
 					totalSize = topic.getPostCount();
 					this.posts = topic.getPosts();
 				}
@@ -123,38 +112,10 @@ public class TopicActivity extends EndlessListActivity<Post>
 
 			protected void doOnSuccess()
 			{
-				TopicActivity.this.setTitle(topic.getTitle());
+				SubscriptionTopicsActivity.this.setTitle(topic.getTitle());
 				onListLoadedListener.listLoaded(this.posts);
 			}
 
 		}.execute();
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		super.onCreateOptionsMenu(menu);
-		MenuInflater mi = new MenuInflater(getApplication());
-
-		mi.inflate(R.menu.message, menu);
-
-		return true;
-	}
-
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case R.id.menu_reply:
-				Intent intent = new Intent(this, ReplyPostActivity.class);
-				intent.putExtra("topic_id", topicId);
-				intent.putExtra("forum_id", forumId);
-				intent.putExtra("subject", topicTitle);
-				startActivity(intent);
-				return true;
-
-		}
-		return false;
-	}
-
 }

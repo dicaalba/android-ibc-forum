@@ -103,6 +103,7 @@ public class TapatalkClient
 			List<Post> posts = new ArrayList<Post>();
 			Topic topic = new Topic(id, posts, title, null, null, null,
 					postCount);
+			topic.forumId = (String) map.get("forum_id");
 
 			for (Object o1 : (Object[]) map.get("posts"))
 			{
@@ -415,7 +416,19 @@ public class TapatalkClient
 			final Object[] params = new Object[] { forumId, subject.getBytes(),
 					content.getBytes() };
 
-			Map mapMap = toMap(client.callEx("new_topic", params));
+			Object o  = client.callEx("new_topic", params);
+			Map map = (Map) o;
+
+			Object object = map.get("result");
+
+			boolean ok = (Boolean) object;
+			if (!ok)
+				throw new TapatalkException(byteArrayToString(map
+						.get("result_text")));
+			
+			@SuppressWarnings("unused")
+			// the newly generated post ID for this new topic.
+			String msgId = (String) map.get("post_id");
 		}
 		catch (XMLRPCException e)
 		{
@@ -440,10 +453,18 @@ public class TapatalkClient
 			final Object[] params = new Object[] { forumId, topicId,
 					subject.getBytes(), content.getBytes() };
 
-			Map mapMap = toMap(client.callEx("reply_post", params));
+			Object o = client.callEx("reply_post", params);
+			Map map = (Map) o;
+
+			Object object = map.get("result");
+
+			boolean ok = (Boolean) object;
+			if (!ok)
+				throw new TapatalkException(byteArrayToString(map
+						.get("result_text")));
 
 			@SuppressWarnings("unused")
-			String msgId = (String) mapMap.get("msg_id");
+			String msgId = (String) map.get("topic_id");
 		}
 		catch (XMLRPCException e)
 		{
@@ -468,7 +489,16 @@ public class TapatalkClient
 			final Object[] params = new Object[] { to, subject.getBytes(),
 					content.getBytes() };
 
-			Map mapMap = toMap(client.callEx("create_message", params));
+			Object o = client.callEx("create_message", params);
+			
+			Map map = (Map) o;
+
+			Object object = map.get("result");
+
+			boolean ok = (Boolean) object;
+			if (!ok)
+				throw new TapatalkException(byteArrayToString(map
+						.get("result_text")));
 		}
 		catch (XMLRPCException e)
 		{

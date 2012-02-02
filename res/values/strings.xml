@@ -14,6 +14,10 @@
 	<string name="mailbox">Nachrichten</string>
 	<string name="hostname">Hostname</string>
 	<string name="password">Kennwort</string>
+	<string name="subject">Betreff</string>
+	<string name="text">Text</string>
+	<string name="send">Senden</string>
+	<string name="recipient">Empfänger</string>
 	<string name="port">Port</string>
 	<string name="version">Version</string>
 	<string name="connect">Mit Server verbinden</string>
@@ -135,6 +139,8 @@
 	<string name="goto_top">Nach oben</string>
 	<string name="goto_buttom">Nach unten</string>
 	<string name="reply">Antworten</string>
+	<string name="sent_ok">Nachricht wurde veschickt</string>
+	<string name="sent_fail">Nicht verschickt</string>
 	<string name="new_topic">Neues Thema</string>
 	<string name="parse_bbcode">BB-Code auswerten</string>
 	<string name="parse_bbcode_desc">In Forumbeiträgen den BB-Code auflösen. Kann die Anzeige von Beiträgen stark verlangsamen.</string>

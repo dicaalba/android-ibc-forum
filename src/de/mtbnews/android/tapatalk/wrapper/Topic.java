@@ -15,6 +15,8 @@ public class Topic implements ListEntry
 	private String content;
 	private String name;
 	private int postCount;
+	
+	public String forumId;
 
 	/**
 	 * @param id

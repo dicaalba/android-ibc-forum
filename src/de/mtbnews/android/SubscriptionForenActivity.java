@@ -34,7 +34,7 @@ import de.mtbnews.android.util.ServerAsyncTask;
  * @author dankert
  * 
  */
-public class ForumActivity extends EndlessListActivity<Topic>
+public class SubscriptionForenActivity extends EndlessListActivity<Topic>
 {
 	private SharedPreferences prefs;
 	private int totalSize;
@@ -62,7 +62,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 		forumId = getIntent().getStringExtra("forum_id");
 
-		ListAdapter adapter = new ListEntryContentAdapter(ForumActivity.this,
+		ListAdapter adapter = new ListEntryContentAdapter(SubscriptionForenActivity.this,
 				entries);
 		setListAdapter(adapter);
 		initialLoad();
@@ -88,9 +88,9 @@ public class ForumActivity extends EndlessListActivity<Topic>
 					int position, long id)
 			{
 				// int aktPosition = displayFrom + position + 1;
-				final Intent intent = new Intent(ForumActivity.this,
+				final Intent intent = new Intent(SubscriptionForenActivity.this,
 						TopicActivity.class);
-				Topic topic = ForumActivity.super.entries.get(position);
+				Topic topic = SubscriptionForenActivity.super.entries.get(position);
 				intent.putExtra(TopicActivity.TOPIC_ID, topic.getId());
 				startActivity(intent);
 			}
@@ -108,7 +108,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		{
 			case R.id.menu_goto_top:
 
-				final Intent intent = new Intent(ForumActivity.this,
+				final Intent intent = new Intent(SubscriptionForenActivity.this,
 						TopicActivity.class);
 				intent.putExtra("topic_id", super.entries
 						.get(menuInfo.position).getId());
@@ -118,7 +118,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 			case R.id.menu_goto_bottom:
 
-				final Intent intent2 = new Intent(ForumActivity.this,
+				final Intent intent2 = new Intent(SubscriptionForenActivity.this,
 						TopicActivity.class);
 				intent2.putExtra("topic_id", super.entries.get(
 						menuInfo.position).getId());
@@ -204,12 +204,6 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		{
 			case R.id.menu_mailbox:
 				startActivity(new Intent(this, MailboxActivity.class));
-				return true;
-				
-			case R.id.menu_create_topic:
-				Intent intent5 = new Intent(this, CreateTopicActivity.class);
-				intent5.putExtra("forum_id",forumId);
-				startActivity(intent5);
 				return true;
 
 			case R.id.menu_participated_topics:
@@ -297,7 +291,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 			protected void doOnSuccess()
 			{
-				ForumActivity.this.setTitle(forum.getTitle());
+				SubscriptionForenActivity.this.setTitle(forum.getTitle());
 				onListLoaded.listLoaded(this.forum.getTopics());
 			}
 

@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import de.mtbnews.android.adapter.ListEntryContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
@@ -32,8 +33,6 @@ public class MailActivity extends EndlessListActivity<Message>
 
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.listing);
-
 		boxId = getIntent().getStringExtra("box_id");
 
 		ListAdapter adapter = new ListEntryContentAdapter(MailActivity.this,
@@ -42,9 +41,9 @@ public class MailActivity extends EndlessListActivity<Message>
 
 		initialLoad();
 
-		final ListView list2 = getListView();
+		final ListView list = getListView();
 
-		list2.setOnItemClickListener(new OnItemClickListener()
+		list.setOnItemClickListener(new OnItemClickListener()
 		{
 
 			@Override
@@ -53,8 +52,24 @@ public class MailActivity extends EndlessListActivity<Message>
 			{
 				Intent i = new Intent(MailActivity.this, MessageActivity.class);
 				i.putExtra("box_id", boxId);
-				i.putExtra("message_id", MailActivity.super.entries.get(position).id);
+				i.putExtra("message_id", MailActivity.super.entries
+						.get(position).id);
 				startActivity(i);
+			}
+		});
+		list.setOnItemLongClickListener(new OnItemLongClickListener()
+		{
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3)
+			{
+				Intent i = new Intent(MailActivity.this,
+						ReplyMailActivity.class);
+				i.putExtra("box_id", boxId);
+				i.putExtra("message_id",
+						MailActivity.super.entries.get(arg2).id);
+				startActivity(i);
+				return true;
 			}
 		});
 

@@ -5,11 +5,16 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Message;
@@ -86,4 +91,31 @@ public class MessageActivity extends Activity
 		}.execute();
 
 	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		super.onCreateOptionsMenu(menu);
+		MenuInflater mi = new MenuInflater(getApplication());
+
+		mi.inflate(R.menu.message, menu);
+
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.menu_reply:
+				Intent intent = new Intent(this, ReplyMailActivity.class);
+				intent.putExtra("message_id", messageId);
+				intent.putExtra("box_id", boxId);
+				startActivity(intent);
+				return true;
+
+		}
+		return false;
+	}
+
 }
