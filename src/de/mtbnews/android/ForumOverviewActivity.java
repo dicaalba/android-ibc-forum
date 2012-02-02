@@ -89,7 +89,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 						Toast.LENGTH_SHORT).show();
 			}
 
-		}.execute();
+		}.executeSynchronized();
 	}
 
 	private void unterforenFlachkloppen()
@@ -98,6 +98,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 		{
 			final List<Forum> newSubForen = new ArrayList<Forum>();
 
+			// Wenn Forum Themen enthalten kann, dann mit aufnehmen in die 2. Hierarchie.
 			if (!forum.subOnly)
 				newSubForen.add(forum);
 
@@ -153,7 +154,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 				setListAdapter(adapter);
 			}
 
-		}.execute();
+		}.executeSynchronized();
 
 		final ExpandableListView list = getExpandableListView();
 
@@ -255,13 +256,12 @@ public class ForumOverviewActivity extends ExpandableListActivity
 				intent2.setAction(SearchActivity.ACTION_SEARCH_LATEST_TOPICS);
 				startActivity(intent2);
 				return true;
-				
+
 			case R.id.menu_unread_topics:
 				Intent intent3 = new Intent(this, SearchActivity.class);
 				intent3.setAction(SearchActivity.ACTION_SEARCH_UNREAD_TOPICS);
 				startActivity(intent3);
 				return true;
-
 
 			case R.id.menu_logout:
 				logout();
