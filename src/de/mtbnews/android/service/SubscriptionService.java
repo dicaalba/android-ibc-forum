@@ -20,14 +20,14 @@ import de.mtbnews.android.R;
  * @author dankert
  * 
  */
-public class UploadIntentService extends IntentService
+public class SubscriptionService extends IntentService
 {
 
 	public static final String EXTRA_REQUEST = "request";
 	public static final String EXTRA_FILENAME = "file";
 	private static final int NOTIFICATION_UPLOAD = 1;
 
-	public UploadIntentService()
+	public SubscriptionService()
 	{
 		super("UploadIntentService");
 	}
