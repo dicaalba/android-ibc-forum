@@ -8,6 +8,7 @@ import java.util.Map;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import de.mtbnews.android.tapatalk.wrapper.Forum;
@@ -33,23 +34,26 @@ public class TapatalkClient
 		this.client = new XMLRPCClient(connectorUrl);
 	}
 
-	@SuppressWarnings("unchecked")
-	public Map<String, Object> login(String username, String password)
+	public void login(String username, String password)
 			throws TapatalkException
 	{
-		try
-		{
+		if (TextUtils.isEmpty(username))
+			throw new TapatalkException("Username empty");
 
-			final Map<String, Object> map = (Map<String, Object>) toMap(getXMLRPCClient()
-					.call("get_config"));
-			Log.i("IBC Server Config", map.toString());
-			for (String key : map.keySet())
-				Log.d("IBC Server Config", key + "=" + map.get(key));
-		}
-		catch (XMLRPCException e)
-		{
-			throw new TapatalkException("Load Config failed", e);
-		}
+		// try
+		// {
+		//
+		// final Map<String, Object> map = (Map<String, Object>)
+		// toMap(getXMLRPCClient()
+		// .call("get_config"));
+		// Log.i("IBC Server Config", map.toString());
+		// for (String key : map.keySet())
+		// Log.d("IBC Server Config", key + "=" + map.get(key));
+		// }
+		// catch (XMLRPCException e)
+		// {
+		// throw new TapatalkException("Load Config failed", e);
+		// }
 
 		final Object[] params = new Object[] { username.getBytes(),
 				password.getBytes() };
@@ -57,10 +61,8 @@ public class TapatalkClient
 		try
 		{
 
-			final Map<String, Object> map = (Map<String, Object>) toMap(getXMLRPCClient()
-					.callEx("login", params));
+			toMap(client.callEx("login", params));
 			this.loggedIn = true;
-			return map;
 		}
 		catch (XMLRPCException e)
 		{
@@ -75,7 +77,7 @@ public class TapatalkClient
 		try
 		{
 			@SuppressWarnings("unused")
-			Object result = getXMLRPCClient().call("logout_user");
+			Object result = client.call("logout_user");
 			this.loggedIn = false;
 		}
 		catch (XMLRPCException e)

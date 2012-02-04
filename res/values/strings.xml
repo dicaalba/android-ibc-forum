@@ -99,6 +99,7 @@
 
 	<string name="unread_topic">Ungelesenes Thema</string>
 	<string name="unread_forum">Ungelesenes Forum</string>
+	<string name="unread_messages">Ungelesene Nachrichten</string>
 	<string name="forum">Forum</string>
 	<string name="news">News</string>
 	<string name="photos">Fotos</string>
@@ -133,6 +134,7 @@
 	<string name="subscription_service_desc">Informiert bei ungelesenen, abonnierten Foren oder Themen</string>
 	<string name="interval">Intervall</string>
 	<string-array name="interval_list">
+		<item>1</item>
 		<item>5</item>
 		<item>15</item>
 		<item>30</item>
@@ -143,6 +145,7 @@
 		<item>2880</item>
 	</string-array>
 	<string-array name="interval_list_label">
+		<item>1 Minute</item>
 		<item>5 Minuten</item>
 		<item>15 Minuten</item>
 		<item>30 Minuten</item>

@@ -142,7 +142,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 				try
 				{
-					Map<String, Object> map = client.login(prefs.getString(
+					client.login(prefs.getString(
 							"username", ""), prefs.getString("password", ""));
 
 				}

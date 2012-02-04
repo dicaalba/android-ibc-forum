@@ -70,8 +70,8 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 				try
 				{
-					Map<String, Object> map = client.login(prefs.getString(
-							"username", ""), prefs.getString("password", ""));
+					client.login(prefs.getString("username", ""), prefs
+							.getString("password", ""));
 
 				}
 				catch (TapatalkException e)
@@ -98,7 +98,8 @@ public class ForumOverviewActivity extends ExpandableListActivity
 		{
 			final List<Forum> newSubForen = new ArrayList<Forum>();
 
-			// Wenn Forum Themen enthalten kann, dann mit aufnehmen in die 2. Hierarchie.
+			// Wenn Forum Themen enthalten kann, dann mit aufnehmen in die 2.
+			// Hierarchie.
 			if (!forum.subOnly)
 				newSubForen.add(forum);
 
