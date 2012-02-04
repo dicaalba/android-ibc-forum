@@ -4,6 +4,7 @@
 package de.mtbnews.android.util;
 
 import java.io.IOException;
+import java.util.concurrent.locks.ReentrantLock;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -162,9 +163,12 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	 * 
 	 * @param params
 	 */
-	public synchronized final void executeSynchronized(Void... params)
+	public final void executeSynchronized(Void... params)
 	{
-		super.execute(params);
+		synchronized (ServerAsyncTask.class)
+		{
+			super.execute(params);
+		}
 	}
-	
+
 }
