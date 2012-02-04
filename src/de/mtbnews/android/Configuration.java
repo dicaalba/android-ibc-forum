@@ -44,6 +44,24 @@ public class Configuration extends PreferenceActivity
 								Toast.LENGTH_SHORT).show();
 					}
 				}
+
+				// Wenn Intervall für Abodienst geändert, dann den Service neu
+				// starten.
+				if (key.equals("subscription_service_interval"))
+				{
+					if (prefs.getBoolean("autostart_subscription_service",
+							false))
+					{
+						// Restart
+						stopService(new Intent(getApplicationContext(),
+								SubscriptionService.class));
+						startService(new Intent(getApplicationContext(),
+								SubscriptionService.class));
+						Toast.makeText(Configuration.this,
+								R.string.subscription_service_started,
+								Toast.LENGTH_SHORT).show();
+					}
+				}
 			}
 		};
 
