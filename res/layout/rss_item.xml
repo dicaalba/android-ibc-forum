@@ -9,10 +9,10 @@
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/item_date"
-			style="@style/normalText"></TextView>
+			style="@style/infoText"></TextView>
 		<TextView android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:id="@+id/item_name"
-			style="@style/normalText" android:gravity="right"></TextView>
+			style="@style/infoText" android:gravity="right"></TextView>
 	</LinearLayout>
 
 	<TextView android:text="@+id/TextView03" android:layout_width="fill_parent"
