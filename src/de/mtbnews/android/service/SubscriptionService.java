@@ -40,9 +40,11 @@ public class SubscriptionService extends Service
 	private IBCApplication ibcApp;
 	private static Timer timer;
 	private SharedPreferences prefs;
-	private static final int NOTIFICATION_UPLOAD = 1;
 	private Date startDate;
 
+	private static final int NOTIFICATION_TOPIC = 1;
+	private static final int NOTIFICATION_FORUM = 2;
+	
 	public IBinder onBind(Intent arg0)
 	{
 		return null;
@@ -61,10 +63,11 @@ public class SubscriptionService extends Service
 
 	private class TestSubscriptionTask extends TimerTask
 	{
-		int nId = 0;
+
 
 		public void run()
 		{
+			long currentTimeMillis = System.currentTimeMillis();
 			Log.d(this.getClass().getSimpleName(),
 					"Testing for unread subscriptions");
 			final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -90,12 +93,12 @@ public class SubscriptionService extends Service
 							R.drawable.ibc_logo, tickerText, System
 									.currentTimeMillis());
 					notification.setLatestEventInfo(getApplicationContext(),
-							getResources().getString(R.string.unread_forum),
+							getResources().getString(R.string.unread_forum)+ " ("+subscribedForum.size()+")",
 							forum.getTitle(), contentIntent);
 					notification.flags = Notification.FLAG_AUTO_CANCEL;
 					// notification.flags = Notification.FLAG_ONGOING_EVENT
 					// | Notification.FLAG_NO_CLEAR;
-					nm.notify(++nId, notification);
+					nm.notify(NOTIFICATION_FORUM, notification);
 
 					Log.d(this.getClass().getName(), "forum unread: "
 							+ forum.getName() + forum.getId());
@@ -129,17 +132,16 @@ public class SubscriptionService extends Service
 							R.string.unread_topic);
 
 					final Notification notification = new Notification(
-							R.drawable.ibc_logo, tickerText, System
-									.currentTimeMillis());
+							R.drawable.ibc_logo, tickerText, currentTimeMillis);
 					notification.setLatestEventInfo(getApplicationContext(),
-							getResources().getString(R.string.unread_topic),
+							getResources().getString(R.string.unread_topic)+ " ("+subscribedTopic.size()+")",
 							topic.getTitle(), contentIntent);
 					notification.flags = Notification.FLAG_AUTO_CANCEL;
 					// notification.flags = Notification.FLAG_ONGOING_EVENT
 					// | Notification.FLAG_NO_CLEAR;
-					nm.notify(++nId, notification);
+					nm.notify(NOTIFICATION_TOPIC, notification);
 
-					Log.d(this.getClass().getSimpleName(), "forum unread: "
+					Log.d(this.getClass().getSimpleName(), "topic unread: "
 							+ topic.getName() + topic.getId());
 				}
 			}
