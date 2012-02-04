@@ -9,6 +9,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 import de.mtbnews.android.service.SubscriptionService;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.util.IBC;
@@ -49,8 +50,13 @@ public class IBCApplication extends Application
 		ibcTheme = prefs.getBoolean("ibc_theme", false);
 
 		if (prefs.getBoolean("autostart_subscription_service", false))
+		{
 			startService(new Intent(getApplicationContext(),
 					SubscriptionService.class));
+
+			Toast.makeText(this, R.string.subscription_service_started,
+					Toast.LENGTH_SHORT).show();
+		}
 
 		super.onCreate();
 	}
