@@ -31,8 +31,6 @@ public class MailboxActivity extends ListActivity
 
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.listing);
-
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
 
