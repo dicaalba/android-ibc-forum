@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="more">Mehr</string>
 	<string name="sub_only">Forum enthält keine Themen</string>
 	<string name="app_name">IBC</string>
 	<string name="search_for_topics">Suche nach Themen</string>
+	<string name="search">Suche</string>
 	<string name="preferences">Einstellungen</string>
 	<string name="username">Benutzername</string>
 	<string name="path">Pfad</string>
@@ -136,6 +138,14 @@
 	<string name="subscription_service_desc">Informiert bei ungelesenen, abonnierten Foren oder Themen</string>
 	<string name="subscription_forums">Abbonierte Foren</string>
 	<string name="subscription_topics">Abbonierte Themen</string>
+	
+	<string name="mark_all_forum_read">Alle Foren als gelesen markieren</string>
+	<string name="mark_forum_read">Forum als gelesen markieren</string>
+	<string name="mark_topic_read">Thema als gelesen markieren</string>
+	<string name="mark_unread">Als ungelesen markieren</string>
+	<string name="subscribe_forum">Forum abbonieren</string>
+	<string name="subscribe_topic">Thema abbonieren</string>
+	
 	<string name="interval">Intervall</string>
 	<string-array name="interval_list">
 		<item>1</item>

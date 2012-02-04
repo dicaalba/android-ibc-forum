@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:id="@+id/menu_mailbox" android:title="@string/mailbox"
+		android:icon="@android:drawable/ic_menu_send"></item>
+
+	<item android:id="@+id/menu_search" android:title="@string/search"
+		android:icon="@android:drawable/ic_menu_search"></item>
+
+	<item android:id="@+id/menu_participated_topics" android:title="@string/participated_topics"
+		android:icon="@android:drawable/ic_menu_view"></item>
+
+	<item android:id="@+id/menu_latest_topics" android:title="@string/latest_topics"
+		android:icon="@android:drawable/ic_menu_today"></item>
+	<item android:id="@+id/menu_unread_topics" android:title="@string/unread_topics"
+		android:icon="@android:drawable/ic_menu_info_details"></item>
+
+	<!--
+		Android zeigt nur max. 6 Menüpunkte an: Die nächsten Menüpunkte werden
+		in einem Submenü angezeigt.
+	-->
+
+	<item android:id="@+id/menu_subscribed_forums" android:title="@string/subscription_forums"
+		android:icon="@android:drawable/ic_input_get"></item>
+	<item android:id="@+id/menu_subscribed_topics" android:title="@string/subscription_topics"
+		android:icon="@android:drawable/ic_input_get"></item>
+
+	<item android:id="@+id/menu_logout" android:title="@string/logout"
+		android:icon="@android:drawable/ic_lock_lock"></item>
+</menu>
+ 

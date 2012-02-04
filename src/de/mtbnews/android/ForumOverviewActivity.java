@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ExpandableListActivity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -219,7 +220,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 				.getTapatalkClient();
 
 		if (client.loggedIn)
-			mi.inflate(R.menu.forum, menu);
+			mi.inflate(R.menu.forumoverview, menu);
 		else
 			mi.inflate(R.menu.forum_guest, menu);
 
@@ -243,6 +244,18 @@ public class ForumOverviewActivity extends ExpandableListActivity
 		{
 			case R.id.menu_mailbox:
 				startActivity(new Intent(this, MailboxActivity.class));
+				return true;
+				
+			case R.id.menu_search:
+				onSearchRequested();
+				return true;
+
+			case R.id.menu_subscribed_forums:
+				startActivity(new Intent(this, SubscriptionForenActivity.class));
+				return true;
+
+			case R.id.menu_subscribed_topics:
+				startActivity(new Intent(this, SubscriptionTopicsActivity.class));
 				return true;
 
 			case R.id.menu_participated_topics:

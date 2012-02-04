@@ -1,10 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<item android:id="@+id/menu_preferences" android:title="@string/preferences"
-		android:icon="@android:drawable/ic_menu_preferences"></item>
-
+	<item android:id="@+id/menu_mailbox" android:title="@string/mailbox"
+		android:icon="@android:drawable/ic_menu_send"></item>
+		
 	<item android:id="@+id/menu_photo" android:title="@string/photos"
 		android:icon="@android:drawable/ic_menu_gallery"></item>
+
+	<item android:id="@+id/menu_preferences" android:title="@string/preferences"
+		android:icon="@android:drawable/ic_menu_preferences"></item>
 
 	<item android:id="@+id/menu_links" android:title="@string/links"
 		android:icon="@android:drawable/ic_menu_info_details">

@@ -173,6 +173,9 @@ public class IBCActivity extends ListActivity
 			case R.id.menu_photo:
 				startActivity(new Intent(IBCActivity.this, PhotoActivity.class));
 				return true;
+			case R.id.menu_mailbox:
+				startActivity(new Intent(IBCActivity.this, MailboxActivity.class));
+				return true;
 
 			case R.id.www_bikemarkt:
 				startActivity(new Intent(Intent.ACTION_VIEW, Uri
