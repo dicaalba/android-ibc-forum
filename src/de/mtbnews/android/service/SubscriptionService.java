@@ -141,8 +141,6 @@ public class SubscriptionService extends Service
 				}
 				if (!forumNameList.isEmpty())
 				{
-					String forumNames = TextUtils.join(", ", forumNameList);
-
 					final Intent notificationIntent = new Intent(
 							SubscriptionService.this,
 							SubscriptionForenActivity.class);
@@ -151,14 +149,15 @@ public class SubscriptionService extends Service
 									notificationIntent, 0);
 
 					final String tickerText = getResources().getString(
-							R.string.unread_forum);
+							R.string.unread_forum)
+							+ "\n" + TextUtils.join("\n", forumNameList);
 
 					final Notification notification = new Notification(
 							R.drawable.ibc_logo, tickerText, actualTime);
 					notification.setLatestEventInfo(getApplicationContext(),
 							getResources().getString(R.string.unread_forum)
 									+ " (" + subscribedForum.size() + ")",
-							forumNames, contentIntent);
+							TextUtils.join(", ", forumNameList), contentIntent);
 					notification.flags = Notification.FLAG_AUTO_CANCEL;
 					// notification.flags = Notification.FLAG_ONGOING_EVENT
 					// | Notification.FLAG_NO_CLEAR;
@@ -188,8 +187,6 @@ public class SubscriptionService extends Service
 				if (!topicNameList.isEmpty())
 				{
 
-					String topicNames = TextUtils.join(", ", topicNameList);
-
 					final Intent notificationIntent = new Intent(
 							SubscriptionService.this,
 							SubscriptionTopicsActivity.class);
@@ -199,14 +196,14 @@ public class SubscriptionService extends Service
 
 					final String tickerText = getResources().getString(
 							R.string.unread_topic)
-							+ ": " + topicNames;
+							+ "\n" + TextUtils.join("\n", topicNameList);
 
 					final Notification notification = new Notification(
 							R.drawable.ibc_logo, tickerText, actualTime);
 					notification.setLatestEventInfo(getApplicationContext(),
 							getResources().getString(R.string.unread_topic)
 									+ " (" + subscribedTopic.size() + ")",
-							topicNames, contentIntent);
+							TextUtils.join(", ", topicNameList), contentIntent);
 					notification.flags = Notification.FLAG_AUTO_CANCEL;
 					// notification.flags = Notification.FLAG_ONGOING_EVENT
 					// | Notification.FLAG_NO_CLEAR;
@@ -240,7 +237,6 @@ public class SubscriptionService extends Service
 						unreadCount += mailbox.countUnread;
 					}
 				}
-				final String unreadBoxes = TextUtils.join(", ", unreadBoxNames);
 
 				if (unreadCount > 0)
 				{
@@ -252,14 +248,14 @@ public class SubscriptionService extends Service
 
 					final String tickerText = getResources().getString(
 							R.string.unread_messages)
-							+ unreadBoxes;
+							+ "\n" + TextUtils.join("\n", unreadBoxNames);
 
 					final Notification notification = new Notification(
 							R.drawable.ibc_logo, tickerText, actualTime);
 					notification.setLatestEventInfo(getApplicationContext(),
 							getResources().getString(R.string.unread_messages)
-									+ " (" + unreadCount + ")", unreadBoxes,
-							contentIntent);
+									+ " (" + unreadCount + ")", TextUtils.join(
+									", ", unreadBoxNames), contentIntent);
 
 					notification.flags = Notification.FLAG_AUTO_CANCEL;
 					// notification.flags = Notification.FLAG_ONGOING_EVENT
