@@ -6,8 +6,10 @@ package de.mtbnews.android;
 import org.mcsoxford.rss.RSSFeed;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import de.mtbnews.android.service.SubscriptionService;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.util.IBC;
 
@@ -44,7 +46,11 @@ public class IBCApplication extends Application
 	{
 		client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		ibcTheme = prefs.getBoolean("ibc_theme",false);
+		ibcTheme = prefs.getBoolean("ibc_theme", false);
+
+		if (prefs.getBoolean("autostart_subscription_service", false))
+			startService(new Intent(getApplicationContext(),
+					SubscriptionService.class));
 
 		super.onCreate();
 	}

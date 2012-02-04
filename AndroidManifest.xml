@@ -42,7 +42,7 @@
 		<meta-data android:name="android.app.default_searchable"
 			android:value=".SearchActivity" />
 
-		<service android:name=".service.UploadIntentService"></service>
+		<service android:name=".service.SubscriptionService"></service>
 
 	</application>
 

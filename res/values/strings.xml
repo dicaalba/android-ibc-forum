@@ -49,34 +49,7 @@
 	<string name="waitingforsave">Speichern</string>
 	<string name="waitingfor_loadmore">Lade weitere Einträge</string>
 	<string name="waitingfor_mailbox">Nachrichten werden geladen</string>
-	<string name="language">Sprache</string>
-	<string name="model">Variante</string>
-	<string name="new1">Neu</string>
-	<string name="new_folder">Neuer Unterordner</string>
-	<string name="new_page">Neue Seite</string>
-	<string name="upload">Hochladen</string>
-	<string name="upload_long">Die Datei wird jetzt hochladen</string>
-	<string name="upload_file">Datei hochladen</string>
-	<string name="upload_image">Bild hochladen</string>
-	<string name="upload_ok">Hochladevorgang abgeschlossen</string>
-	<string name="upload_ok_long">Die Datei wurde erfolgreich auf den Server geladen
-	</string>
-	<string name="upload_fail">Hochladevorgang fehlerhaft</string>
-	<string name="upload_fail_long">Die Datei konnte nicht auf den Server geladen
-		werden</string>
-	<string name="publish_long">Die Veröffentlichung wurde gestartet</string>
-	<string name="publish_ok">Wurde veröffentlicht</string>
-	<string name="publish_ok_long">Erfolgreich veröffentlicht</string>
-	<string name="publish_fail">Veröffentlichung nicht erfolgreich</string>
-	<string name="publish_fail_long">Leider konnte die Datei nicht veröffentlicht werden
-	</string>
-	<string name="delete">Löschen</string>
 	<string name="name">Name</string>
-	<string name="filename">Dateiname</string>
-	<string name="template">Vorlage</string>
-	<string name="save">Speichern</string>
-
-
 
 
 	<string name="description">Inhalt</string>
@@ -101,14 +74,18 @@
 	<string name="nousername">Es ist noch kein Benutzername konfiguriert</string>
 	<string name="www">Zur Webseite</string>
 	<string name="scroll_down">Zum Ende springen</string>
-	<string name="scroll_down_desc">Beim Laden von Themen automatisch zum letzten Beitrag springen</string>
+	<string name="scroll_down_desc">Beim Laden von Themen automatisch zum letzten
+		Beitrag springen</string>
 	<string name="use_ibc_theme">Das IBC-Theme benutzen</string>
 	<string name="auto_login">Automatisch anmelden</string>
-	<string name="auto_login_desc">Beim Starten des Forums automatisch anmelden.</string>
+	<string name="auto_login_desc">Beim Starten des Forums automatisch anmelden.
+	</string>
 	<string name="num_load">Anzahl Posts laden</string>
-	<string name="num_load_desc">Anzahl der Themen/Beiträge, die initial geladen werden</string>
+	<string name="num_load_desc">Anzahl der Themen/Beiträge, die initial geladen
+		werden</string>
 	<string name="auto_load_next">Automatisch nachladen</string>
-	<string name="auto_load_next_desc">Beim Scrollen die nächsten Einträge automatisch laden</string>
+	<string name="auto_load_next_desc">Beim Scrollen die nächsten Einträge automatisch
+		laden</string>
 	<string name="login">Anmelden</string>
 	<string name="login_success">Benutzeranmeldung erfolgreich</string>
 	<string name="login_failed">Benutzeranmeldung nicht erfolgreich</string>
@@ -120,7 +97,8 @@
 		<item>50</item>
 	</string-array>
 
-
+	<string name="unread_topic">Ungelesenes Thema</string>
+	<string name="unread_forum">Ungelesenes Forum</string>
 	<string name="forum">Forum</string>
 	<string name="news">News</string>
 	<string name="photos">Fotos</string>
@@ -133,7 +111,8 @@
 	<string name="blog">Blog</string>
 	<string name="links">Links</string>
 	<string name="load_images">Bilder anzeigen</string>
-	<string name="load_images_desc">Automatisches Anzeigen von Bildern in Beiträgen. Dadurch wird die App langsamer und der Datenverbrauch steigt.</string>
+	<string name="load_images_desc">Automatisches Anzeigen von Bildern in Beiträgen.
+		Dadurch wird die App langsamer und der Datenverbrauch steigt.</string>
 	<string name="goto_first_post">Zum ersten Beitrag</string>
 	<string name="goto_last_post">Zum letzten Beitrag</string>
 	<string name="goto_top">Nach oben</string>
@@ -143,7 +122,35 @@
 	<string name="sent_fail">Nicht verschickt</string>
 	<string name="new_topic">Neues Thema</string>
 	<string name="parse_bbcode">BB-Code auswerten</string>
-	<string name="parse_bbcode_desc">In Forumbeiträgen den BB-Code auflösen. Kann die Anzeige von Beiträgen stark verlangsamen.</string>
+	<string name="parse_bbcode_desc">In Forumbeiträgen den BB-Code auflösen. Kann die
+		Anzeige von Beiträgen stark verlangsamen.</string>
 	<string name="show_hints">Tipps anzeigen</string>
-	<string name="hint_press_long">Lange drücken um weitere Funktionen zu erhalten</string>
+	<string name="hint_press_long">Lange drücken um weitere Funktionen zu erhalten
+	</string>
+	<string name="subscription_service">Abo-Dienst</string>
+	<string name="subscription_service_started">Abo-Dienst gestartet</string>
+	<string name="subscription_service_stopped">Abo-Dienst gestoppt</string>
+	<string name="subscription_service_desc">Informiert bei ungelesenen, abonnierten Foren oder Themen</string>
+	<string name="interval">Intervall</string>
+	<string-array name="interval_list">
+		<item>5</item>
+		<item>15</item>
+		<item>30</item>
+		<item>60</item>
+		<item>180</item>
+		<item>360</item>
+		<item>1440</item>
+		<item>2880</item>
+	</string-array>
+	<string-array name="interval_list_label">
+		<item>5 Minuten</item>
+		<item>15 Minuten</item>
+		<item>30 Minuten</item>
+		<item>1 Stunde</item>
+		<item>3 Stunden</item>
+		<item>6 Stunden</item>
+		<item>1 Tag</item>
+		<item>2 Tage</item>
+	</string-array>
+
 </resources>

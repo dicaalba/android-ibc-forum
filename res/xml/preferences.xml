@@ -3,7 +3,8 @@
 	android:title="@string/preferences">
 
 	<CheckBoxPreference android:defaultValue="true"
-		android:key="ibc_theme" android:title="@string/use_ibc_theme" android:enabled="false" />
+		android:key="ibc_theme" android:title="@string/use_ibc_theme"
+		android:enabled="false" />
 
 	<CheckBoxPreference android:defaultValue="true"
 		android:key="show_hints" android:title="@string/show_hints" />
@@ -17,8 +18,8 @@
 		<EditTextPreference android:key="server"
 		android:title="@string/server"></EditTextPreference>
 	-->
-	
-	
+
+
 	<PreferenceCategory android:title="@string/username">
 
 		<EditTextPreference android:key="username"
@@ -54,5 +55,18 @@
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="load_images" android:summary="@string/load_images_desc"
 			android:title="@string/load_images" android:dependency="parse_bbcode" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/subscription_service">
+
+		<CheckBoxPreference android:defaultValue="true"
+			android:key="autostart_subscription_service" android:summary="@string/subscription_service_desc"
+			android:title="@string/subscription_service" />
+
+		<ListPreference android:defaultValue="60"
+			android:entries="@array/interval_list_label" android:entryValues="@array/interval_list"
+			android:key="subscription_service_interval" android:title="@string/interval"
+			android:dependency="autostart_subscription_service" />
 	</PreferenceCategory>
 </PreferenceScreen>

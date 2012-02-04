@@ -194,6 +194,84 @@ public class TapatalkClient
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Topic> getSubscribedTopics(int from, int to, boolean onlyUnread)
+			throws TapatalkException
+	{
+		try
+		{
+			final Object[] params = new Object[] { from, to };
+			Object o = client.callEx("get_subscribed_topic", params);
+
+			Map map = (Map) o;
+
+			@SuppressWarnings("unused")
+			int topicCount = (Integer) map.get("total_topic_num");
+
+			final List<Topic> topics = new ArrayList<Topic>();
+
+			for (Object o1 : (Object[]) map.get("topics"))
+			{
+				Map topicMap = (Map) o1;
+				if (!onlyUnread || (Boolean) topicMap.get("new_post"))
+				{
+
+					Topic topic = new Topic((String) topicMap.get("topic_id"),
+							new ArrayList<Post>(), //
+							byteArrayToString(topicMap.get("topic_title")),//
+							(Date) topicMap.get("post_time"), //
+							new String((byte[]) topicMap.get("short_content")),//
+							new String((byte[]) topicMap
+									.get("post_author_name")), 0);
+					topics.add(topic);
+				}
+			}
+
+			return topics;
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("Could not load subscribe topics", e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Forum> getSubscribedForum(boolean onlyUnread)
+			throws TapatalkException
+	{
+		try
+		{
+			Object o = client.call("get_subscribed_forum");
+
+			Map map = (Map) o;
+
+			@SuppressWarnings("unused")
+			int forumCount = (Integer) map.get("total_forums_num");
+
+			final List<Forum> forums = new ArrayList<Forum>();
+
+			for (Object o1 : (Object[]) map.get("forums"))
+			{
+				Map map2 = (Map) o1;
+				if (!onlyUnread || (Boolean) map2.get("new_post"))
+				{
+					String id = (String) map2.get("forum_id");
+					String name = byteArrayToString(map2.get("forum_name"));
+					Forum forum = new Forum(id, new ArrayList<Topic>(), name,
+							null, null);
+
+					forums.add(forum);
+				}
+			}
+
+			return forums;
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("Could not load subscribe topics", e);
+		}
+	}
+
 	public static final int SEARCHTYPE_QUERY = 1;
 	public static final int SEARCHTYPE_LATEST = 2;
 	public static final int SEARCHTYPE_PARTICIPATED = 3;
@@ -416,7 +494,7 @@ public class TapatalkClient
 			final Object[] params = new Object[] { forumId, subject.getBytes(),
 					content.getBytes() };
 
-			Object o  = client.callEx("new_topic", params);
+			Object o = client.callEx("new_topic", params);
 			Map map = (Map) o;
 
 			Object object = map.get("result");
@@ -425,7 +503,7 @@ public class TapatalkClient
 			if (!ok)
 				throw new TapatalkException(byteArrayToString(map
 						.get("result_text")));
-			
+
 			@SuppressWarnings("unused")
 			// the newly generated post ID for this new topic.
 			String msgId = (String) map.get("post_id");
@@ -490,7 +568,7 @@ public class TapatalkClient
 					content.getBytes() };
 
 			Object o = client.callEx("create_message", params);
-			
+
 			Map map = (Map) o;
 
 			Object object = map.get("result");
