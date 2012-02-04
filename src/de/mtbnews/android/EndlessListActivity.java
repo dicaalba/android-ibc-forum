@@ -24,6 +24,18 @@ import android.widget.AbsListView.OnScrollListener;
  */
 public abstract class EndlessListActivity<T> extends ListActivity
 {
+	/**
+	 * boolean-Parameter der ansagt, dass die Anzeige mit dem letzten Element
+	 * beginnen soll.
+	 */
+	public static final String LAST_POST = "last_post";
+
+	/**
+	 * boolean-Parameter der ansagt, dass die Anzeige mit dem ersten Element
+	 * beginnen soll.
+	 */
+	public static final String FIRST_POST = "first_post";
+
 	private boolean loadingInProgress = true;
 
 	protected int displayFrom;
@@ -31,6 +43,7 @@ public abstract class EndlessListActivity<T> extends ListActivity
 	protected boolean autoScrollDown;
 
 	/**
+	 * Die in dieser ListActivity enthaltene Liste.<br>
 	 * Die Referenz auf diese Liste darf sich nicht ändern, da der ListAdapter
 	 * mit dieser Instanz verbunden ist. Durch 'final' wird das sicher gestellt.
 	 */
@@ -52,9 +65,9 @@ public abstract class EndlessListActivity<T> extends ListActivity
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		final int numLoad = Integer.parseInt(prefs.getString("num_load", "10"));
 
-		if (getIntent().getBooleanExtra("first_post", false))
+		if (getIntent().getBooleanExtra(FIRST_POST, false))
 			autoScrollDown = false;
-		else if (getIntent().getBooleanExtra("last_post", false))
+		else if (getIntent().getBooleanExtra(LAST_POST, false))
 			autoScrollDown = true;
 		else
 			autoScrollDown = prefs.getBoolean("scroll_down", false);

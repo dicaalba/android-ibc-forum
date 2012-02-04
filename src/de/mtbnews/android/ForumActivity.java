@@ -36,6 +36,8 @@ import de.mtbnews.android.util.ServerAsyncTask;
  */
 public class ForumActivity extends EndlessListActivity<Topic>
 {
+	public static final String FORUM_ID = "forum_id";
+	
 	private SharedPreferences prefs;
 	private int totalSize;
 	private String forumId;
@@ -60,7 +62,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			login();
 		}
 
-		forumId = getIntent().getStringExtra("forum_id");
+		forumId = getIntent().getStringExtra(FORUM_ID);
 
 		ListAdapter adapter = new ListEntryContentAdapter(ForumActivity.this,
 				entries);
@@ -208,7 +210,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				
 			case R.id.menu_create_topic:
 				Intent intent5 = new Intent(this, CreateTopicActivity.class);
-				intent5.putExtra("forum_id",forumId);
+				intent5.putExtra(FORUM_ID,forumId);
 				startActivity(intent5);
 				return true;
 

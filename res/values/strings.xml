@@ -49,6 +49,8 @@
 	<string name="waitingforsave">Speichern</string>
 	<string name="waitingfor_loadmore">Lade weitere Einträge</string>
 	<string name="waitingfor_mailbox">Nachrichten werden geladen</string>
+	<string name="waitingfor_subscription_forums">Abbonierte Foren werden geladen</string>
+	<string name="waitingfor_subscription_topics">Abbonierte Themen werden geladen</string>
 	<string name="name">Name</string>
 
 
@@ -132,6 +134,8 @@
 	<string name="subscription_service_started">Abo-Dienst gestartet</string>
 	<string name="subscription_service_stopped">Abo-Dienst gestoppt</string>
 	<string name="subscription_service_desc">Informiert bei ungelesenen, abonnierten Foren oder Themen</string>
+	<string name="subscription_forums">Abbonierte Foren</string>
+	<string name="subscription_topics">Abbonierte Themen</string>
 	<string name="interval">Intervall</string>
 	<string-array name="interval_list">
 		<item>1</item>

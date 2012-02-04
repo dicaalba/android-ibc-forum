@@ -33,6 +33,7 @@ import de.mtbnews.android.TopicActivity;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
+import de.mtbnews.android.tapatalk.wrapper.ListHolder;
 import de.mtbnews.android.tapatalk.wrapper.Mailbox;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
 
@@ -177,10 +178,10 @@ public class SubscriptionService extends Service
 
 			try
 			{
-				List<Topic> subscribedTopic = client.getSubscribedTopics(0, 10,
-						true);
+				ListHolder<Topic> subscribedTopic = client.getSubscribedTopics(
+						0, 10, true);
 				final List<String> topicNameList = new ArrayList<String>();
-				for (Topic topic : subscribedTopic)
+				for (Topic topic : subscribedTopic.getChildren())
 				{
 					topicNameList.add(topic.getTitle());
 				}
@@ -200,10 +201,13 @@ public class SubscriptionService extends Service
 
 					final Notification notification = new Notification(
 							R.drawable.ibc_logo, tickerText, actualTime);
+					final String title = getResources().getString(
+							R.string.unread_topic)
+							+ " (" + subscribedTopic.getChildren().size() + ")";
+					final String content = TextUtils.join(", ", topicNameList);
+					
 					notification.setLatestEventInfo(getApplicationContext(),
-							getResources().getString(R.string.unread_topic)
-									+ " (" + subscribedTopic.size() + ")",
-							TextUtils.join(", ", topicNameList), contentIntent);
+							title, content, contentIntent);
 					notification.flags = Notification.FLAG_AUTO_CANCEL;
 					// notification.flags = Notification.FLAG_ONGOING_EVENT
 					// | Notification.FLAG_NO_CLEAR;

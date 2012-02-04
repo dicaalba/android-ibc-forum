@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import de.mtbnews.android.tapatalk.wrapper.Forum;
+import de.mtbnews.android.tapatalk.wrapper.ListHolder;
 import de.mtbnews.android.tapatalk.wrapper.Mailbox;
 import de.mtbnews.android.tapatalk.wrapper.Message;
 import de.mtbnews.android.tapatalk.wrapper.Post;
@@ -197,8 +198,8 @@ public class TapatalkClient
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Topic> getSubscribedTopics(int from, int to, boolean onlyUnread)
-			throws TapatalkException
+	public ListHolder<Topic> getSubscribedTopics(int from, int to,
+			boolean onlyUnread) throws TapatalkException
 	{
 		try
 		{
@@ -207,7 +208,6 @@ public class TapatalkClient
 
 			Map map = (Map) o;
 
-			@SuppressWarnings("unused")
 			int topicCount = (Integer) map.get("total_topic_num");
 
 			final List<Topic> topics = new ArrayList<Topic>();
@@ -229,7 +229,9 @@ public class TapatalkClient
 				}
 			}
 
-			return topics;
+			ListHolder<Topic> topicHolder = new ListHolder<Topic>(topics,
+					topicCount, from, to);
+			return topicHolder;
 		}
 		catch (XMLRPCException e)
 		{

@@ -4,10 +4,15 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
-import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -16,7 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.ListEntryContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
-import de.mtbnews.android.tapatalk.wrapper.Post;
+import de.mtbnews.android.tapatalk.wrapper.ListHolder;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
 import de.mtbnews.android.util.ServerAsyncTask;
 
@@ -26,10 +31,8 @@ import de.mtbnews.android.util.ServerAsyncTask;
  * @author dankert
  * 
  */
-public class SubscriptionTopicsActivity extends EndlessListActivity<Post>
+public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 {
-	public static final String TOPIC_ID = "topic_id";
-
 	private int totalSize;
 
 	@Override
@@ -49,28 +52,68 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Post>
 		initialLoad();
 
 		final ListView list = getListView();
+		list.setOnCreateContextMenuListener(new OnCreateContextMenuListener()
+		{
 
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v,
+					ContextMenuInfo menuInfo)
+			{
+				MenuInflater menuInflater = new MenuInflater(getApplication());
+				menuInflater.inflate(R.menu.topic_context, menu);
+
+			}
+		});
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
-				int aktPosition = displayFrom + position + 1;
-				Toast.makeText(SubscriptionTopicsActivity.this, "" + aktPosition,
-						Toast.LENGTH_SHORT).show();
-
-				// final Intent intent = new Intent(TopicActivity.this,
-				// PostActivity.class);
-				// intent.putExtra("itemid", position);
-				// startActivity(intent);
+				// int aktPosition = displayFrom + position + 1;
+				final Intent intent = new Intent(SubscriptionTopicsActivity.this,
+						TopicActivity.class);
+				Topic topic = SubscriptionTopicsActivity.super.entries.get(position);
+				intent.putExtra(TopicActivity.TOPIC_ID, topic.getId());
+				startActivity(intent);
 			}
 		});
+
 
 		Toast.makeText(this, R.string.hint_press_long, Toast.LENGTH_SHORT)
 				.show();
 	}
+	@Override
+	public boolean onContextItemSelected(MenuItem item)
+	{
+		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
 
+		switch (item.getItemId())
+		{
+			case R.id.menu_goto_top:
+
+				final Intent intent = new Intent(
+						SubscriptionTopicsActivity.this, TopicActivity.class);
+				intent.putExtra(TopicActivity.TOPIC_ID, super.entries.get(menuInfo.position)
+						.getId());
+				intent.putExtra(EndlessListActivity.FIRST_POST, true);
+				startActivity(intent);
+				return true;
+
+			case R.id.menu_goto_bottom:
+
+				final Intent intent2 = new Intent(
+						SubscriptionTopicsActivity.this, TopicActivity.class);
+				intent2.putExtra(TopicActivity.TOPIC_ID, super.entries.get(menuInfo.position)
+						.getId());
+				intent2.putExtra(EndlessListActivity.LAST_POST, true);
+				startActivity(intent2);
+				return true;
+		}
+
+		return super.onContextItemSelected(item);
+	}
 	@Override
 	protected int getTotalSize()
 	{
@@ -79,15 +122,14 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Post>
 
 	@Override
 	protected void loadEntries(
-			final OnListLoadedListener<Post> onListLoadedListener,
+			final OnListLoadedListener<Topic> onListLoadedListener,
 			final int from, final int to, boolean firstLoad)
 	{
 		new ServerAsyncTask(SubscriptionTopicsActivity.this,
-				firstLoad ? R.string.waitingfor_topic
+				firstLoad ? R.string.waitingfor_subscription_topics
 						: R.string.waitingfor_loadmore)
 		{
-			private List<Post> posts;
-			private Topic topic;
+			private ListHolder<Topic> topicHolder;
 
 			@Override
 			protected void callServer() throws IOException
@@ -96,13 +138,9 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Post>
 
 				try
 				{
-					String topicId = SubscriptionTopicsActivity.this.getIntent()
-							.getStringExtra(TOPIC_ID);
+					topicHolder = client.getSubscribedTopics(from, to,false);
 
-					topic = client.getTopic(topicId, from, to);
-
-					totalSize = topic.getPostCount();
-					this.posts = topic.getPosts();
+					totalSize = topicHolder.totalCount;
 				}
 				catch (TapatalkException e)
 				{
@@ -112,8 +150,8 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Post>
 
 			protected void doOnSuccess()
 			{
-				SubscriptionTopicsActivity.this.setTitle(topic.getTitle());
-				onListLoadedListener.listLoaded(this.posts);
+				//SubscriptionTopicsActivity.this.setTitle(topicHolder.getTitle());
+				onListLoadedListener.listLoaded(this.topicHolder.getChildren());
 			}
 
 		}.execute();

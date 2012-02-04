@@ -4,13 +4,14 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,26 +20,25 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.ListEntryContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
-import de.mtbnews.android.tapatalk.wrapper.Topic;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 /**
  * @author dankert
  * 
  */
-public class SubscriptionForenActivity extends EndlessListActivity<Topic>
+public class SubscriptionForenActivity extends ListActivity
 {
 	private SharedPreferences prefs;
-	private int totalSize;
-	private String forumId;
+
+	private final List<Forum> forumList = new ArrayList<Forum>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -55,19 +55,10 @@ public class SubscriptionForenActivity extends EndlessListActivity<Topic>
 		TapatalkClient client = ((IBCApplication) getApplication())
 				.getTapatalkClient();
 
-		if (!client.loggedIn && prefs.getBoolean("auto_login", false))
-		{
-			login();
-		}
-
-		forumId = getIntent().getStringExtra("forum_id");
-
-		ListAdapter adapter = new ListEntryContentAdapter(SubscriptionForenActivity.this,
-				entries);
+		ListAdapter adapter = new ListEntryContentAdapter(
+				SubscriptionForenActivity.this, forumList);
 		setListAdapter(adapter);
-		initialLoad();
 
-		// TODO: ggf. das hier in die Oberklasse?
 		ListView list = getListView();
 		list.setOnCreateContextMenuListener(new OnCreateContextMenuListener()
 		{
@@ -81,23 +72,60 @@ public class SubscriptionForenActivity extends EndlessListActivity<Topic>
 
 			}
 		});
+
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
-				// int aktPosition = displayFrom + position + 1;
-				final Intent intent = new Intent(SubscriptionForenActivity.this,
-						TopicActivity.class);
-				Topic topic = SubscriptionForenActivity.super.entries.get(position);
-				intent.putExtra(TopicActivity.TOPIC_ID, topic.getId());
+				final Intent intent = new Intent(
+						SubscriptionForenActivity.this, ForumActivity.class);
+				intent.putExtra(ForumActivity.FORUM_ID, forumList.get(position)
+						.getId());
 				startActivity(intent);
 			}
 		});
+
+		loadForumList();
 	}
 
-	// TODO: Das auch in die anderen Listviews einbauen.
+	private void loadForumList()
+	{
+		new ServerAsyncTask(this, R.string.waitingfor_subscription_forums)
+		{
+
+			private List<Forum> newForumList;
+
+			@Override
+			protected void callServer() throws IOException
+			{
+
+				TapatalkClient client = ((IBCApplication) getApplication()).client;
+				try
+				{
+					newForumList = client.getSubscribedForum(false);
+				}
+				catch (TapatalkException e)
+				{
+					throw new RuntimeException(e);
+				}
+			}
+
+			protected void doOnSuccess()
+			{
+				// Die Referenz der Liste darf nicht geändert werden, da der
+				// ListAdapter mit der Instanz verknüpft ist!
+				forumList.clear();
+				forumList.addAll(newForumList);
+
+				((BaseAdapter) SubscriptionForenActivity.this.getListAdapter())
+						.notifyDataSetChanged();
+			}
+
+		}.executeSynchronized();
+	}
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item)
 	{
@@ -108,20 +136,20 @@ public class SubscriptionForenActivity extends EndlessListActivity<Topic>
 		{
 			case R.id.menu_goto_top:
 
-				final Intent intent = new Intent(SubscriptionForenActivity.this,
-						TopicActivity.class);
-				intent.putExtra("topic_id", super.entries
-						.get(menuInfo.position).getId());
+				final Intent intent = new Intent(
+						SubscriptionForenActivity.this, ForumActivity.class);
+				intent.putExtra("forum_id", forumList.get(menuInfo.position)
+						.getId());
 				intent.putExtra("first_post", true);
 				startActivity(intent);
 				return true;
 
 			case R.id.menu_goto_bottom:
 
-				final Intent intent2 = new Intent(SubscriptionForenActivity.this,
-						TopicActivity.class);
-				intent2.putExtra("topic_id", super.entries.get(
-						menuInfo.position).getId());
+				final Intent intent2 = new Intent(
+						SubscriptionForenActivity.this, ForumActivity.class);
+				intent2.putExtra("forum_id", forumList.get(menuInfo.position)
+						.getId());
 				intent2.putExtra("last_post", true);
 				startActivity(intent2);
 				return true;
@@ -130,61 +158,6 @@ public class SubscriptionForenActivity extends EndlessListActivity<Topic>
 		return super.onContextItemSelected(item);
 	}
 
-	private void login()
-	{
-		final TapatalkClient client = ((IBCApplication) getApplication()).client;
-		new ServerAsyncTask(this, R.string.waitingfor_login)
-		{
-
-			@Override
-			protected synchronized void callServer() throws IOException
-			{
-
-				try
-				{
-					Map<String, Object> map = client.login(prefs.getString(
-							"username", ""), prefs.getString("password", ""));
-
-				}
-				catch (TapatalkException e)
-				{
-					e.printStackTrace();
-					throw new RuntimeException(e);
-				}
-
-			}
-
-		}.executeSynchronized();
-	}
-
-	private void logout()
-	{
-		final TapatalkClient client = ((IBCApplication) getApplication()).client;
-
-		new ServerAsyncTask(this, R.string.waitingfor_logout)
-		{
-
-			@Override
-			protected synchronized void callServer() throws IOException
-			{
-
-				try
-				{
-					client.logout();
-
-				}
-				catch (TapatalkException e)
-				{
-					e.printStackTrace();
-					throw new RuntimeException(e);
-				}
-
-			}
-
-		}.executeSynchronized();
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		super.onCreateOptionsMenu(menu);
@@ -224,79 +197,8 @@ public class SubscriptionForenActivity extends EndlessListActivity<Topic>
 				startActivity(intent3);
 				return true;
 
-			case R.id.menu_logout:
-				logout();
-				return true;
-
-			case R.id.menu_login:
-
-				if (TextUtils.isEmpty(prefs.getString("username", "")))
-				{
-					Toast
-							.makeText(this, R.string.nousername,
-									Toast.LENGTH_LONG).show();
-
-					Intent intent4 = new Intent(this, Configuration.class);
-					startActivity(intent4);
-				}
-				// Evtl. gibt es jetzt einen Benutzernamen ...
-
-				if (!TextUtils.isEmpty(prefs.getString("username", "")))
-				{
-					login();
-				}
-				else
-				{
-					Toast
-							.makeText(this, R.string.nousername,
-									Toast.LENGTH_LONG).show();
-				}
-
-				return true;
 		}
 		return false;
-	}
-
-	@Override
-	protected int getTotalSize()
-	{
-		return totalSize;
-	}
-
-	@Override
-	protected void loadEntries(
-			final de.mtbnews.android.EndlessListActivity.OnListLoadedListener<Topic> onListLoaded,
-			final int from, final int to, boolean firstLoad)
-	{
-
-		new ServerAsyncTask(this, R.string.waitingfor_forum)
-		{
-			private Forum forum;
-
-			@Override
-			protected void callServer() throws IOException
-			{
-
-				TapatalkClient client = ((IBCApplication) getApplication()).client;
-				try
-				{
-					this.forum = client.getForum(forumId, from, to);
-					totalSize = this.forum.topicCount;
-				}
-				catch (TapatalkException e)
-				{
-					throw new RuntimeException(e);
-				}
-			}
-
-			protected void doOnSuccess()
-			{
-				SubscriptionForenActivity.this.setTitle(forum.getTitle());
-				onListLoaded.listLoaded(this.forum.getTopics());
-			}
-
-		}.execute();
-
 	}
 
 }
