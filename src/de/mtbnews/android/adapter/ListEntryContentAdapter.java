@@ -10,6 +10,7 @@ import ru.perm.kefir.bbcode.TextProcessor;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -127,6 +128,9 @@ public class ListEntryContentAdapter extends BaseAdapter
 		else
 			viewHolder.title.setEnabled(false);
 
+		if	(e.isUnread() )
+			viewHolder.title.setTypeface(null, Typeface.BOLD);
+		
 		if (e.getContent() != null)
 		{
 			SharedPreferences prefs = ((IBCApplication) ((Activity) mContext)

@@ -25,6 +25,12 @@ public class RSSItem extends RSSBase {
   private final java.util.List<MediaThumbnail> thumbnails;
   private String content;
 
+	@Override
+	public boolean isUnread()
+	{
+		return false;
+	}
+
   /* Internal constructor for RSSHandler */
   RSSItem(byte categoryCapacity, byte thumbnailCapacity) {
     super(categoryCapacity);

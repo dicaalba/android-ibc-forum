@@ -154,14 +154,26 @@ public class TapatalkClient
 		return mapArr;
 	}
 
+	public final static int TOPIC_STANDARD = 1;
+	public final static int TOPIC_STICKY = 2;
+	public final static int TOPIC_ANNOUNCEMENT = 3;
+
 	@SuppressWarnings("unchecked")
-	public Forum getForum(String forumId, int from, int to)
+	public Forum getForum(String forumId, int from, int to, int mode)
 			throws TapatalkException
 	{
 		try
 		{
-			final Object[] params = new Object[] { forumId, from, to };
-			// TODO Paging!
+			final String mode2;
+
+			if (mode == TOPIC_ANNOUNCEMENT)
+				mode2 = "ANN";
+			else if (mode == TOPIC_STICKY)
+				mode2 = "TOP";
+			else
+				mode2 = "";
+
+			final Object[] params = new Object[] { forumId, from, to, mode2 };
 			Object o = client.callEx("get_topic", params);
 
 			Map map = (Map) o;
@@ -185,6 +197,7 @@ public class TapatalkClient
 						new String((byte[]) topicMap.get("short_content")),//
 						new String((byte[]) topicMap.get("topic_author_name")),
 						0);
+				topic.unread = (Boolean) topicMap.get("new_post");
 				topics.add(topic);
 			}
 
@@ -224,6 +237,7 @@ public class TapatalkClient
 							new String((byte[]) topicMap.get("short_content")),//
 							new String((byte[]) topicMap
 									.get("post_author_name")), 0);
+					topic.unread = (Boolean) topicMap.get("new_post");
 					topics.add(topic);
 				}
 			}
@@ -262,6 +276,7 @@ public class TapatalkClient
 					String name = byteArrayToString(map2.get("forum_name"));
 					Forum forum = new Forum(id, new ArrayList<Topic>(), name,
 							null, null);
+					forum.unread = (Boolean) map2.get("new_post");
 
 					forums.add(forum);
 				}
@@ -313,8 +328,10 @@ public class TapatalkClient
 	{
 		try
 		{
-			Object param = new String[] { topicId };
-			toMap(client.call("mark_topic_read", param));
+			// Object param = new String[] { topicId };
+			// toMap(client.call("mark_topic_read", param));
+			Object[] params = new String[] { topicId };
+			toMap(client.callEx("mark_topic_read", params));
 
 		}
 		catch (XMLRPCException e)
@@ -460,6 +477,7 @@ public class TapatalkClient
 						new String((byte[]) topicMap.get("short_content")),//
 						new String((byte[]) topicMap.get("post_author_name")),
 						0);
+				topic.unread = (Boolean) topicMap.get("new_post");
 				topics.add(topic);
 			}
 

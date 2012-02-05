@@ -109,7 +109,6 @@ public class TopicActivity extends EndlessListActivity<Post>
 
 				try
 				{
-
 					topic = client.getTopic(topicId, from, to);
 
 					forumId = topic.forumId;
@@ -156,49 +155,49 @@ public class TopicActivity extends EndlessListActivity<Post>
 				return true;
 
 			case R.id.menu_subscribe:
-
+				
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setTitle(R.string.subscribe_topic);
 				builder.setItems(R.array.subscription_modes,
 						new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog,
+							final int item)
+					{
+						new ServerAsyncTask(TopicActivity.this,
+								R.string.mark_topic_read)
 						{
-							public void onClick(DialogInterface dialog,
-									final int item)
+							
+							@Override
+							protected void callServer()
+							throws IOException
 							{
-								new ServerAsyncTask(TopicActivity.this,
-										R.string.mark_topic_read)
+								TapatalkClient client = ((IBCApplication) getApplication())
+								.getTapatalkClient();
+								try
 								{
-
-									@Override
-									protected void callServer()
-											throws IOException
-									{
-										TapatalkClient client = ((IBCApplication) getApplication())
-												.getTapatalkClient();
-										try
-										{
-											client.subscribeTopic(topicId,
-													item - 1);
-										}
-										catch (TapatalkException e)
-										{
-											throw new RuntimeException(e);
-										}
-									}
-
-									@Override
-									protected void doOnSuccess()
-									{
-										Toast.makeText(getApplicationContext(),
-												R.string.subscription_saved,
-												Toast.LENGTH_SHORT).show();
-									}
-								}.execute();
+									client.subscribeTopic(topicId,
+											item - 1);
+								}
+								catch (TapatalkException e)
+								{
+									throw new RuntimeException(e);
+								}
 							}
-						});
+							
+							@Override
+							protected void doOnSuccess()
+							{
+								Toast.makeText(getApplicationContext(),
+										R.string.subscription_saved,
+										Toast.LENGTH_SHORT).show();
+							}
+						}.execute();
+					}
+				});
 				builder.create().show();
 				return true;
-
+				
 			case R.id.menu_mark_read:
 
 				new ServerAsyncTask(TopicActivity.this,

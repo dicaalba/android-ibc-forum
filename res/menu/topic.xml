@@ -2,12 +2,14 @@
 
 	<item android:id="@+id/menu_subscribe" android:title="@string/subscribe_topic"
 		android:icon="@android:drawable/ic_input_get"></item>
-		
-	<item android:id="@+id/menu_mark_read" android:title="@string/mark_topic_read"
+	<!--
+		Erst ab Tapatalk-API-Version 4 <item android:id="@+id/menu_mark_read"
+		android:title="@string/mark_topic_read"
 		android:icon="@android:drawable/ic_menu_agenda"></item>
+	-->
 
 	<item android:id="@+id/menu_reply" android:title="@string/reply"
 		android:icon="@android:drawable/ic_menu_gallery"></item>
-		
+
 </menu>
  

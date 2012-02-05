@@ -14,10 +14,16 @@ public class Forum implements ListEntry
 	private String title;
 	private Date date;
 	private String content;
-	
+
 	public List<Forum> subForen;
 	public boolean subOnly;
+	public boolean unread;
 
+	@Override
+	public boolean isUnread()
+	{
+		return this.unread;
+	}
 
 	/**
 	 * @param id
@@ -37,7 +43,6 @@ public class Forum implements ListEntry
 		this.date = date;
 		this.content = content;
 	}
-
 
 	/**
 	 * @return the id
@@ -79,9 +84,9 @@ public class Forum implements ListEntry
 		return topics;
 	}
 
-
 	/**
 	 * Forum hat keinen Namen
+	 * 
 	 * @see de.mtbnews.android.tapatalk.wrapper.ListEntry#getName()
 	 */
 	@Override

@@ -42,6 +42,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 	private SharedPreferences prefs;
 	private int totalSize;
 	private String forumId;
+	private int topicMode = TapatalkClient.TOPIC_STANDARD;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -335,7 +336,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				}.execute();
 
 				return true;
-				
+
 			case R.id.menu_mark_all_read:
 
 				new ServerAsyncTask(ForumActivity.this,
@@ -362,6 +363,25 @@ public class ForumActivity extends EndlessListActivity<Topic>
 					}
 				}.execute();
 
+				return true;
+				
+			case R.id.menu_mode:
+
+				// Den Topic-Mode ändern (Standard,Wichtig,Ankündigungen)
+				AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+				builder2.setTitle(R.string.mode);
+				builder2.setItems(R.array.topic_modes,
+						new DialogInterface.OnClickListener()
+						{
+
+							public void onClick(DialogInterface dialog,
+									final int item)
+							{
+								topicMode = item + 1;
+								initialLoad();
+							}
+						});
+				builder2.create().show();
 				return true;
 		}
 		return false;
@@ -390,7 +410,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				TapatalkClient client = ((IBCApplication) getApplication()).client;
 				try
 				{
-					this.forum = client.getForum(forumId, from, to);
+					this.forum = client.getForum(forumId, from, to, topicMode);
 					totalSize = this.forum.topicCount;
 				}
 				catch (TapatalkException e)

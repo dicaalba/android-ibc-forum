@@ -60,6 +60,9 @@ public abstract class EndlessListActivity<T> extends ListActivity
 	 */
 	protected abstract int getTotalSize();
 
+	/**
+	 * Initiales Laden der ersten Listeneinträge.
+	 */
 	protected void initialLoad()
 	{
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);

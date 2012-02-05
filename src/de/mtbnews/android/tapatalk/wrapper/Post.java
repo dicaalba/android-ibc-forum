@@ -10,6 +10,13 @@ public class Post implements ListEntry
 	private String content;
 	private String name;
 
+	public boolean unread;
+
+	@Override
+	public boolean isUnread()
+	{
+		return this.unread;
+	}
 
 	/**
 	 * @param time

@@ -5,12 +5,19 @@ import java.util.Date;
 public class Message implements ListEntry
 {
 	public String id;
-	public boolean unread;
 	private Date date;
 	public String from;
 	public String[] to;
 	public String subject;
 	public String content;
+	public boolean unread;
+
+	
+	@Override
+	public boolean isUnread()
+	{
+		return this.unread;
+	}
 
 	/**
 	 * @param id

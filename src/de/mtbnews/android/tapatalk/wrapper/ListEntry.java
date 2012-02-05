@@ -12,4 +12,6 @@ public interface ListEntry
 	Date getDate();
 	
 	String getName();
+	
+	boolean isUnread();
 }

@@ -30,6 +30,12 @@ public class RSSFeed extends RSSBase {
     items = new java.util.LinkedList<RSSItem>();
   }
 
+	@Override
+	public boolean isUnread()
+	{
+		return false;
+	}
+
   /**
    * Returns an unmodifiable list of RSS items.
    */

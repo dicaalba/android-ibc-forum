@@ -17,6 +17,13 @@ public class Topic implements ListEntry
 	private int postCount;
 	
 	public String forumId;
+	public boolean unread;
+
+	@Override
+	public boolean isUnread()
+	{
+		return this.unread;
+	}
 
 	/**
 	 * @param id

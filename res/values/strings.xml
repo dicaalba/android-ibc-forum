@@ -147,6 +147,7 @@
 	<string name="mark_unread">Als ungelesen markieren</string>
 	<string name="subscribe_forum">Forum abonnieren</string>
 	<string name="subscribe_topic">Thema abonnieren</string>
+	<string name="mode">Modus</string>
 
 
 	<string name="interval">Intervall</string>
@@ -179,6 +180,12 @@
 		<item>Sofortige E-Mail</item>
 		<item>Tägliche E-Mail</item>
 		<item>Wöchentliche E-Mail</item>
+	</string-array>
+
+	<string-array name="topic_modes">
+		<item>Standard-Themen</item>
+		<item>Wichtige Themen</item>
+		<item>Ankündigungen</item>
 	</string-array>
 
 </resources>
