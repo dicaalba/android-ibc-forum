@@ -138,7 +138,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 		super.onCreateOptionsMenu(menu);
 		MenuInflater mi = new MenuInflater(getApplication());
 
-		mi.inflate(R.menu.message, menu);
+		mi.inflate(R.menu.topic, menu);
 
 		return true;
 	}
@@ -158,7 +158,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 			case R.id.menu_subscribe:
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle(R.string.subscribe_forum);
+				builder.setTitle(R.string.subscribe_topic);
 				builder.setItems(R.array.subscription_modes,
 						new DialogInterface.OnClickListener()
 						{
@@ -177,7 +177,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 												.getTapatalkClient();
 										try
 										{
-											client.subscribeForum(forumId,
+											client.subscribeTopic(topicId,
 													item - 1);
 										}
 										catch (TapatalkException e)
