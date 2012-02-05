@@ -4,8 +4,9 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
-import java.util.Map;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -37,7 +38,7 @@ import de.mtbnews.android.util.ServerAsyncTask;
 public class ForumActivity extends EndlessListActivity<Topic>
 {
 	public static final String FORUM_ID = "forum_id";
-	
+
 	private SharedPreferences prefs;
 	private int totalSize;
 	private String forumId;
@@ -144,8 +145,8 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 				try
 				{
-					client.login(prefs.getString(
-							"username", ""), prefs.getString("password", ""));
+					client.login(prefs.getString("username", ""), prefs
+							.getString("password", ""));
 
 				}
 				catch (TapatalkException e)
@@ -207,10 +208,10 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			case R.id.menu_mailbox:
 				startActivity(new Intent(this, MailboxActivity.class));
 				return true;
-				
+
 			case R.id.menu_create_topic:
 				Intent intent5 = new Intent(this, CreateTopicActivity.class);
-				intent5.putExtra(FORUM_ID,forumId);
+				intent5.putExtra(FORUM_ID, forumId);
 				startActivity(intent5);
 				return true;
 
@@ -260,6 +261,49 @@ public class ForumActivity extends EndlessListActivity<Topic>
 									Toast.LENGTH_LONG).show();
 				}
 
+				return true;
+
+			case R.id.menu_subscribe:
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle(R.string.subscribe_forum);
+				builder.setItems(R.array.subscription_modes,
+						new DialogInterface.OnClickListener()
+						{
+							public void onClick(DialogInterface dialog, final int item)
+							{
+
+								new ServerAsyncTask(ForumActivity.this,R.string.waitingfor_subscription_forums)
+								{
+
+									@Override
+									protected void callServer()
+											throws IOException
+									{
+										TapatalkClient client = ((IBCApplication) getApplication())
+												.getTapatalkClient();
+										try
+										{
+											client.subscribeForum(forumId,
+													item - 1);
+										}
+										catch (TapatalkException e)
+										{
+											throw new RuntimeException(e);
+										}
+									}
+
+									@Override
+									protected void doOnSuccess()
+									{
+										Toast.makeText(getApplicationContext(),
+												R.string.subscription_saved,
+												Toast.LENGTH_SHORT).show();
+									}
+								};
+							}
+						});
+				builder.create().show();
 				return true;
 		}
 		return false;

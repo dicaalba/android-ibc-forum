@@ -6,8 +6,12 @@
 	<item android:id="@+id/menu_search" android:title="@string/search"
 		android:icon="@android:drawable/ic_menu_search"></item>
 
+	<item android:id="@+id/menu_subscribe" android:title="@string/subscribe_forum"
+		android:icon="@android:drawable/ic_input_get"></item>
+<!-- 
 	<item android:id="@+id/menu_mailbox" android:title="@string/mailbox"
 		android:icon="@android:drawable/ic_menu_send"></item>
+ -->
 
 	<item android:id="@+id/menu_subscribed_forums" android:title="@string/subscription_forums"
 		android:icon="@android:drawable/ic_input_get"></item>

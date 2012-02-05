@@ -6,6 +6,8 @@ package de.mtbnews.android;
 import java.io.IOException;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -151,6 +153,48 @@ public class TopicActivity extends EndlessListActivity<Post>
 				intent.putExtra("forum_id", forumId);
 				intent.putExtra("subject", topicTitle);
 				startActivity(intent);
+				return true;
+				
+			case R.id.menu_subscribe:
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle(R.string.subscribe_forum);
+				builder.setItems(R.array.subscription_modes,
+						new DialogInterface.OnClickListener()
+						{
+							public void onClick(DialogInterface dialog, final int item)
+							{
+								new ServerAsyncTask(TopicActivity.this,R.string.waitingfor_subscription_forums)
+								{
+
+									@Override
+									protected void callServer()
+											throws IOException
+									{
+										TapatalkClient client = ((IBCApplication) getApplication())
+												.getTapatalkClient();
+										try
+										{
+											client.subscribeForum(forumId,
+													item - 1);
+										}
+										catch (TapatalkException e)
+										{
+											throw new RuntimeException(e);
+										}
+									}
+
+									@Override
+									protected void doOnSuccess()
+									{
+										Toast.makeText(getApplicationContext(),
+												R.string.subscription_saved,
+												Toast.LENGTH_SHORT).show();
+									}
+								};
+							}
+						});
+				builder.create().show();
 				return true;
 
 		}

@@ -9,8 +9,6 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import android.text.TextUtils;
-import android.util.Log;
-
 import de.mtbnews.android.tapatalk.wrapper.Forum;
 import de.mtbnews.android.tapatalk.wrapper.ListHolder;
 import de.mtbnews.android.tapatalk.wrapper.Mailbox;
@@ -20,14 +18,15 @@ import de.mtbnews.android.tapatalk.wrapper.Search;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
 
 /**
- * Tapatalk-kompatibler Client.
+ * Tapatalk-compatible client.
  * 
- * @author dankert
+ * @author Jan Dankert
  * 
  */
 public class TapatalkClient
 {
 	private XMLRPCClient client;
+
 	public boolean loggedIn;
 
 	public TapatalkClient(String connectorUrl)
@@ -276,6 +275,76 @@ public class TapatalkClient
 		}
 	}
 
+	public final static int SUBSCRIBE_NONE = -1;
+	public final static int SUBSCRIBE_WITHOUT_EMAIL = 0;
+	public final static int SUBSCRIBE_INSTANT_EMAIL = 1;
+	public final static int SUBSCRIBE_DAILY_EMAIL = 2;
+	public final static int SUBSCRIBE_WEEKLY_EMAIL = 3;
+
+	/**
+	 * Subscribes to a forum.
+	 * 
+	 * @param forumId
+	 *            The forum-Id
+	 * @param mode
+	 *            One of the SUBSCRIBE_*-constants
+	 * @throws TapatalkException
+	 */
+	public void subscribeForum(String forumId, int mode)
+			throws TapatalkException
+	{
+		try
+		{
+			if (mode == SUBSCRIBE_NONE)
+			{
+				Object[] params = new Object[] { forumId };
+				toMap(client.callEx("unsubscribe_forum", params));
+			}
+			else
+			{
+				Object[] params = new Object[] { forumId, mode };
+				toMap(client.callEx("subscribe_forum", params));
+			}
+
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("Could not load subscribe topics", e);
+		}
+	}
+
+	/**
+	 * Subscribes to a topic.
+	 * 
+	 * @param topicId
+	 *            The topic-id
+	 * @param mode
+	 *            One of the SUBSCRIBE_*-constants
+	 * @throws TapatalkException
+	 */
+	public void subscribeTopic(String topicId, int mode)
+			throws TapatalkException
+	{
+		try
+		{
+			if (mode == SUBSCRIBE_NONE)
+			{
+				Object[] params = new Object[] { topicId };
+				toMap(client.callEx("unsubscribe_topic", params));
+			}
+			else
+			{
+				Object[] params = new Object[] { topicId, mode };
+				toMap(client.callEx("subscribe_topic", params));
+			}
+
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("Could not load subscribe topics", e);
+		}
+	}
+
 	public static final int SEARCHTYPE_QUERY = 1;
 	public static final int SEARCHTYPE_LATEST = 2;
 	public static final int SEARCHTYPE_PARTICIPATED = 3;
@@ -458,7 +527,8 @@ public class TapatalkClient
 		{
 			final Object[] params = new Object[] { messageId, boxId };
 
-			Map mapMap = toMap(client.callEx("get_message", params));
+			Map<String, Object> mapMap = toMap(client.callEx("get_message",
+					params));
 
 			Object[] objects = (Object[]) mapMap.get("msg_to");
 			String[] msgTo = new String[objects.length];
@@ -484,10 +554,9 @@ public class TapatalkClient
 	/**
 	 * Create a topic
 	 * 
-	 * @param boxId
-	 * @param messageId
-	 * @param asHtml
-	 * @return
+	 * @param forumId
+	 * @param subject
+	 * @param content
 	 * @throws TapatalkException
 	 */
 	public void createTopic(String forumId, String subject, String content)
@@ -498,15 +567,7 @@ public class TapatalkClient
 			final Object[] params = new Object[] { forumId, subject.getBytes(),
 					content.getBytes() };
 
-			Object o = client.callEx("new_topic", params);
-			Map map = (Map) o;
-
-			Object object = map.get("result");
-
-			boolean ok = (Boolean) object;
-			if (!ok)
-				throw new TapatalkException(byteArrayToString(map
-						.get("result_text")));
+			Map<?, ?> map = toMap(client.callEx("new_topic", params));
 
 			@SuppressWarnings("unused")
 			// the newly generated post ID for this new topic.
@@ -535,15 +596,7 @@ public class TapatalkClient
 			final Object[] params = new Object[] { forumId, topicId,
 					subject.getBytes(), content.getBytes() };
 
-			Object o = client.callEx("reply_post", params);
-			Map map = (Map) o;
-
-			Object object = map.get("result");
-
-			boolean ok = (Boolean) object;
-			if (!ok)
-				throw new TapatalkException(byteArrayToString(map
-						.get("result_text")));
+			Map<?, ?> map = toMap(client.callEx("reply_post", params));
 
 			@SuppressWarnings("unused")
 			String msgId = (String) map.get("topic_id");
@@ -612,14 +665,24 @@ public class TapatalkClient
 			return i.intValue();
 	}
 
-	private Map toMap(Object o) throws TapatalkException
+	/**
+	 * Converting the object to a map. If object is no Map, it throws a
+	 * {@link TapatalkException}. If Map contains a key "result" and the value
+	 * is not 'true', a {@link TapatalkException} is thrown.
+	 * 
+	 * @param o
+	 * @return
+	 * @throws TapatalkException
+	 */
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> toMap(Object o) throws TapatalkException
 	{
 		if (!(o instanceof Map))
 		{
 			throw new TapatalkException("no map: " + o.toString() + " ("
 					+ o.getClass() + ")");
 		}
-		Map map = (Map) o;
+		Map<String, Object> map = (Map<String, Object>) o;
 
 		Object object = map.get("result");
 		if (object == null)

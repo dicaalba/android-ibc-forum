@@ -51,8 +51,8 @@
 	<string name="waitingforsave">Speichern</string>
 	<string name="waitingfor_loadmore">Lade weitere Einträge</string>
 	<string name="waitingfor_mailbox">Nachrichten werden geladen</string>
-	<string name="waitingfor_subscription_forums">Abbonierte Foren werden geladen</string>
-	<string name="waitingfor_subscription_topics">Abbonierte Themen werden geladen</string>
+	<string name="waitingfor_subscription_forums">Abonierte Foren werden geladen</string>
+	<string name="waitingfor_subscription_topics">Abonierte Themen werden geladen</string>
 	<string name="name">Name</string>
 
 
@@ -134,18 +134,21 @@
 	</string>
 	<string name="subscription_service">Abo-Dienst</string>
 	<string name="subscription_service_started">Abo-Dienst gestartet</string>
+	<string name="subscription_saved">Abonnement wurdeaktualisiert</string>
 	<string name="subscription_service_stopped">Abo-Dienst gestoppt</string>
-	<string name="subscription_service_desc">Informiert bei ungelesenen, abonnierten Foren oder Themen</string>
-	<string name="subscription_forums">Abbonierte Foren</string>
-	<string name="subscription_topics">Abbonierte Themen</string>
-	
+	<string name="subscription_service_desc">Informiert bei neuen Nachrichten und ungelesenen
+		Beiträgen in abonnierten Foren und Themen</string>
+	<string name="subscription_forums">Abonierte Foren</string>
+	<string name="subscription_topics">Abonierte Themen</string>
+
 	<string name="mark_all_forum_read">Alle Foren als gelesen markieren</string>
 	<string name="mark_forum_read">Forum als gelesen markieren</string>
 	<string name="mark_topic_read">Thema als gelesen markieren</string>
 	<string name="mark_unread">Als ungelesen markieren</string>
-	<string name="subscribe_forum">Forum abbonieren</string>
-	<string name="subscribe_topic">Thema abbonieren</string>
-	
+	<string name="subscribe_forum">Forum abonieren</string>
+	<string name="subscribe_topic">Thema abonieren</string>
+
+
 	<string name="interval">Intervall</string>
 	<string-array name="interval_list">
 		<item>1</item>
@@ -168,6 +171,14 @@
 		<item>6 Stunden</item>
 		<item>1 Tag</item>
 		<item>2 Tage</item>
+	</string-array>
+
+	<string-array name="subscription_modes">
+		<item>Kein Abo</item>
+		<item>Ohne E-Mail</item>
+		<item>Sofortige E-Mail</item>
+		<item>Tägliche E-Mail</item>
+		<item>Wöchentliche E-Mail</item>
 	</string-array>
 
 </resources>
