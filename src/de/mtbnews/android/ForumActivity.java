@@ -331,10 +331,6 @@ public class ForumActivity extends EndlessListActivity<Topic>
 					@Override
 					protected void doOnSuccess()
 					{
-						Toast
-								.makeText(getApplicationContext(),
-										R.string.subscription_saved,
-										Toast.LENGTH_SHORT).show();
 					}
 				}.execute();
 
