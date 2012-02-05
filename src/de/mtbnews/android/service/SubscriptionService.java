@@ -299,7 +299,8 @@ public class SubscriptionService extends Service
 						+ (titleExtra != null ? " " + titleExtra : ""),
 						content, intent);
 
-		notification.defaults = Notification.DEFAULT_ALL;
+		notification.defaults = Notification.DEFAULT_LIGHTS
+				| Notification.DEFAULT_SOUND; // Vibration benötigt Permission.
 		notification.flags = Notification.FLAG_AUTO_CANCEL
 				| Notification.FLAG_ONLY_ALERT_ONCE;
 
