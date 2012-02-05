@@ -29,12 +29,12 @@
 				android:resource="@xml/searchable" />
 		</activity>
 
-		<activity android:name="MailboxActivity" android:label="@string/news"></activity>
-		<activity android:name="MailActivity" android:label="@string/news"></activity>
-		<activity android:name="MessageActivity" android:label="@string/news"></activity>
-		<activity android:name="ReplyMailActivity" android:label="@string/mailbox"></activity>
-		<activity android:name="ReplyPostActivity" android:label="@string/mailbox"></activity>
-		<activity android:name="CreateTopicActivity" android:label="@string/mailbox"></activity>
+		<activity android:name="MailboxActivity" android:label="@string/mailbox"></activity>
+		<activity android:name="MailActivity" android:label="@string/mailbox"></activity>
+		<activity android:name="MessageActivity" android:label="@string/mailbox"></activity>
+		<activity android:name="ReplyMailActivity" android:label="@string/reply"></activity>
+		<activity android:name="ReplyPostActivity" android:label="@string/reply"></activity>
+		<activity android:name="CreateTopicActivity" android:label="@string/new_topic"></activity>
 		<activity android:name="SubscriptionForenActivity" android:label="@string/subscription_forums"></activity>
 		<activity android:name="SubscriptionTopicsActivity" android:label="@string/subscription_topics"></activity>
 
