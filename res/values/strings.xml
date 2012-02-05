@@ -134,7 +134,7 @@
 	</string>
 	<string name="subscription_service">Abo-Dienst</string>
 	<string name="subscription_service_started">Abo-Dienst gestartet</string>
-	<string name="subscription_saved">Abonnement wurdeaktualisiert</string>
+	<string name="subscription_saved">Abonnement wurde aktualisiert</string>
 	<string name="subscription_service_stopped">Abo-Dienst gestoppt</string>
 	<string name="subscription_service_desc">Informiert bei neuen Nachrichten und ungelesenen
 		Beiträgen in abonnierten Foren und Themen</string>

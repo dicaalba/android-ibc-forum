@@ -275,6 +275,54 @@ public class TapatalkClient
 		}
 	}
 
+	/**
+	 * Mark a forum as read
+	 * 
+	 * @param forumId
+	 *            if <code>null</code>, all forums are marked read
+	 * @throws TapatalkException
+	 */
+	public void markForumAsRead(String forumId) throws TapatalkException
+	{
+		try
+		{
+			if (forumId == null)
+			{
+				toMap(client.call("mark_all_as_read"));
+			}
+			else
+			{
+				Object[] params = new Object[] { forumId };
+				toMap(client.callEx("mark_all_as_read", params));
+			}
+
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("XMLRPC-Error: " + e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Mark a forum as read
+	 * 
+	 * @param topicId
+	 * @throws TapatalkException
+	 */
+	public void markTopicAsRead(String topicId) throws TapatalkException
+	{
+		try
+		{
+			Object param = new String[] { topicId };
+			toMap(client.call("mark_topic_read", param));
+
+		}
+		catch (XMLRPCException e)
+		{
+			throw new TapatalkException("XMLRPC-Error: " + e.getMessage(), e);
+		}
+	}
+
 	public final static int SUBSCRIBE_NONE = -1;
 	public final static int SUBSCRIBE_WITHOUT_EMAIL = 0;
 	public final static int SUBSCRIBE_INSTANT_EMAIL = 1;

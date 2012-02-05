@@ -270,10 +270,12 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				builder.setItems(R.array.subscription_modes,
 						new DialogInterface.OnClickListener()
 						{
-							public void onClick(DialogInterface dialog, final int item)
+							public void onClick(DialogInterface dialog,
+									final int item)
 							{
 
-								new ServerAsyncTask(ForumActivity.this,R.string.waitingfor_subscription_forums)
+								new ServerAsyncTask(ForumActivity.this,
+										R.string.waitingfor_subscription_forums)
 								{
 
 									@Override
@@ -300,10 +302,70 @@ public class ForumActivity extends EndlessListActivity<Topic>
 												R.string.subscription_saved,
 												Toast.LENGTH_SHORT).show();
 									}
-								};
+								}.execute();
 							}
 						});
 				builder.create().show();
+				return true;
+			case R.id.menu_mark_read:
+
+				new ServerAsyncTask(ForumActivity.this,
+						R.string.mark_forum_read)
+				{
+
+					@Override
+					protected void callServer() throws IOException
+					{
+						TapatalkClient client = ((IBCApplication) getApplication())
+								.getTapatalkClient();
+						try
+						{
+							client.markForumAsRead(forumId);
+						}
+						catch (TapatalkException e)
+						{
+							throw new RuntimeException(e);
+						}
+					}
+
+					@Override
+					protected void doOnSuccess()
+					{
+						Toast
+								.makeText(getApplicationContext(),
+										R.string.subscription_saved,
+										Toast.LENGTH_SHORT).show();
+					}
+				}.execute();
+
+				return true;
+				
+			case R.id.menu_mark_all_read:
+
+				new ServerAsyncTask(ForumActivity.this,
+						R.string.mark_forum_read)
+				{
+					@Override
+					protected void callServer() throws IOException
+					{
+						TapatalkClient client = ((IBCApplication) getApplication())
+								.getTapatalkClient();
+						try
+						{
+							client.markForumAsRead(null);
+						}
+						catch (TapatalkException e)
+						{
+							throw new RuntimeException(e);
+						}
+					}
+
+					@Override
+					protected void doOnSuccess()
+					{
+					}
+				}.execute();
+
 				return true;
 		}
 		return false;

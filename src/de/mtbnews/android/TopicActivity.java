@@ -41,7 +41,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 	private String topicTitle;
 
 	private int totalSize;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -51,7 +51,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 		super.onCreate(savedInstanceState);
 
 		topicId = TopicActivity.this.getIntent().getStringExtra(TOPIC_ID);
-		//forumId = TopicActivity.this.getIntent().getStringExtra("forum_id");
+		// forumId = TopicActivity.this.getIntent().getStringExtra("forum_id");
 
 		setContentView(R.layout.listing);
 
@@ -154,7 +154,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 				intent.putExtra("subject", topicTitle);
 				startActivity(intent);
 				return true;
-				
+
 			case R.id.menu_subscribe:
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -162,9 +162,11 @@ public class TopicActivity extends EndlessListActivity<Post>
 				builder.setItems(R.array.subscription_modes,
 						new DialogInterface.OnClickListener()
 						{
-							public void onClick(DialogInterface dialog, final int item)
+							public void onClick(DialogInterface dialog,
+									final int item)
 							{
-								new ServerAsyncTask(TopicActivity.this,R.string.waitingfor_subscription_forums)
+								new ServerAsyncTask(TopicActivity.this,
+										R.string.mark_topic_read)
 								{
 
 									@Override
@@ -191,10 +193,38 @@ public class TopicActivity extends EndlessListActivity<Post>
 												R.string.subscription_saved,
 												Toast.LENGTH_SHORT).show();
 									}
-								};
+								}.execute();
 							}
 						});
 				builder.create().show();
+				return true;
+
+			case R.id.menu_mark_read:
+
+				new ServerAsyncTask(TopicActivity.this,
+						R.string.mark_topic_read)
+				{
+
+					@Override
+					protected void callServer() throws IOException
+					{
+						TapatalkClient client = ((IBCApplication) getApplication())
+								.getTapatalkClient();
+						try
+						{
+							client.markTopicAsRead(topicId);
+						}
+						catch (TapatalkException e)
+						{
+							throw new RuntimeException(e);
+						}
+					}
+
+					@Override
+					protected void doOnSuccess()
+					{
+					}
+				}.execute();
 				return true;
 
 		}
