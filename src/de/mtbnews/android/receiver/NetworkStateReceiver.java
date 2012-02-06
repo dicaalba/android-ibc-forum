@@ -17,14 +17,14 @@ public class NetworkStateReceiver extends BroadcastReceiver
 				ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 		if (!noConnectivity)
 		{
-			Log.d("IBC", "connection lost, stopping service");
-			context.stopService(new Intent(context, SubscriptionService.class));
-		}
-		else
-		{
 			Log.d("IBC", "connection established, starting service");
 			context
 					.startService(new Intent(context, SubscriptionService.class));
+		}
+		else
+		{
+			Log.d("IBC", "connection lost, stopping service");
+			context.stopService(new Intent(context, SubscriptionService.class));
 		}
 	}
 }
