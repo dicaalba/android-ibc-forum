@@ -31,6 +31,8 @@ public class IBCApplication extends Application
 
 	public SharedPreferences prefs;
 
+	public int themeResId;
+
 	public TapatalkClient getTapatalkClient()
 	{
 		return client;
@@ -44,11 +46,12 @@ public class IBCApplication extends Application
 	@Override
 	public void onCreate()
 	{
-		client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		if (prefs.getBoolean("ibc_theme", true))
-			setTheme(R.style.IBC);
+		themeResId = (prefs.getBoolean("ibc_theme", true)) ? R.style.IBC
+				: android.R.style.Theme;
+
+		client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
 
 		if (prefs.getBoolean("autostart_subscription_service", false))
 		{

@@ -1,13 +1,14 @@
 package de.mtbnews.android;
 
-import de.mtbnews.android.service.SubscriptionService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.text.AndroidCharacter;
 import android.widget.Toast;
+import de.mtbnews.android.service.SubscriptionService;
 
 public class Configuration extends PreferenceActivity
 {
@@ -61,6 +62,19 @@ public class Configuration extends PreferenceActivity
 								R.string.subscription_service_started,
 								Toast.LENGTH_SHORT).show();
 					}
+				}
+
+				// Theme geändert
+				if (key.equals("ibc_theme"))
+				{
+					final IBCApplication application = (IBCApplication) getApplication();
+					if (prefs.getBoolean("ibc_theme", false))
+						application.setTheme(R.style.IBC);
+					else
+						application.setTheme(android.R.style.Theme);
+
+					Toast.makeText(Configuration.this, R.string.theme_changed,
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 		};

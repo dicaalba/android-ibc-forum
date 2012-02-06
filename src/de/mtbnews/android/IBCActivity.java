@@ -52,6 +52,8 @@ public class IBCActivity extends ListActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+		setTheme(((IBCApplication) getApplication()).themeResId);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start);
 
@@ -171,7 +173,8 @@ public class IBCActivity extends ListActivity
 				startActivity(new Intent(IBCActivity.this, PhotoActivity.class));
 				return true;
 			case R.id.menu_mailbox:
-				startActivity(new Intent(IBCActivity.this, MailboxActivity.class));
+				startActivity(new Intent(IBCActivity.this,
+						MailboxActivity.class));
 				return true;
 
 			case R.id.www_bikemarkt:
