@@ -4,7 +4,10 @@
 package de.mtbnews.android.util;
 
 import java.io.IOException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
+
+import de.mtbnews.android.tapatalk.TapatalkException;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -14,7 +17,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
-/**
+/** 
  * Ein asynchroner Task für den Zugriff auf den OpenRat-CMS-Server. Der Aufruf
  * des Servers muss in der zu überschreibenden Methode {@link #callServer()}
  * durchgeführt werden.<br>
@@ -38,7 +41,8 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	private Context context;
 	private AlertDialog alertDialog;
 	private Exception error;
-	private ReentrantLock lock;
+
+	// private static final Semaphore lock2 = new Semaphore(1,true);
 
 	/**
 	 * @param context
@@ -58,9 +62,6 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	@Override
 	final protected void onPreExecute()
 	{
-		lock = new ReentrantLock();
-		lock.lock();
-		
 		progressDialog.setCancelable(true);
 		progressDialog
 				.setOnCancelListener(new DialogInterface.OnCancelListener()
@@ -84,7 +85,6 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	final protected void onPostExecute(Void result)
 	{
 		progressDialog.dismiss();
-		lock.unlock();
 
 		if (error != null)
 		{
@@ -106,8 +106,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	protected void doOnError(Exception error)
 	{
 		progressDialog.dismiss();
-		lock.unlock();
-		
+
 		final Builder builder = new AlertDialog.Builder(this.context);
 		alertDialog = builder.setCancelable(true).create();
 		final int causeRId = ExceptionUtils.getResourceStringId(error);
@@ -149,7 +148,12 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 		{
 			callServer();
 		}
-		catch (Exception e)
+		catch (IOException e)
+		{
+			Log.e(this.getClass().getName(), e.getMessage(), e);
+			error = e;
+		}
+		catch (TapatalkException e)
 		{
 			Log.e(this.getClass().getName(), e.getMessage(), e);
 			error = e;
@@ -165,7 +169,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	 * @throws IOException
 	 *             Vom Server erzeugte Fehler
 	 */
-	protected abstract void callServer() throws IOException;
+	protected abstract void callServer() throws IOException,TapatalkException;
 
 	/**
 	 * 
@@ -173,10 +177,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	 */
 	public final void executeSynchronized(Void... params)
 	{
-		synchronized (ServerAsyncTask.class)
-		{
-			super.execute(params);
-		}
+		super.execute(params);
 	}
 
 }

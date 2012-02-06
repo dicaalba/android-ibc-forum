@@ -91,26 +91,16 @@ public class ForumOverviewActivity extends ExpandableListActivity
 		{
 
 			@Override
-			protected void callServer() throws IOException
+			protected void callServer() throws TapatalkException
 			{
+				// Login.
+				if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
+						&& prefs.getBoolean("auto_login", false))
+					client.login(prefs.getString("username", ""), prefs
+							.getString("password", ""));
 
-				try
-				{
-					// Login.
-					if (!((IBCApplication) getApplication())
-							.getTapatalkClient().loggedIn
-							&& prefs.getBoolean("auto_login", false))
-						client.login(prefs.getString("username", ""), prefs
-								.getString("password", ""));
-
-					forumList = client.getAllForum();
-					unterforenFlachkloppen();
-				}
-				catch (TapatalkException e)
-				{
-					e.printStackTrace();
-					throw new RuntimeException(e);
-				}
+				forumList = client.getAllForum();
+				unterforenFlachkloppen();
 
 			}
 
@@ -266,19 +256,11 @@ public class ForumOverviewActivity extends ExpandableListActivity
 					{
 
 						@Override
-						protected void callServer() throws IOException
+						protected void callServer() throws IOException,
+								TapatalkException
 						{
-							try
-							{
-								client.login(prefs.getString("username", ""),
-										prefs.getString("password", ""));
-
-							}
-							catch (TapatalkException e)
-							{
-								e.printStackTrace();
-								throw new RuntimeException(e);
-							}
+							client.login(prefs.getString("username", ""), prefs
+									.getString("password", ""));
 
 						}
 
@@ -287,7 +269,8 @@ public class ForumOverviewActivity extends ExpandableListActivity
 						{
 							Log.d("IBC", "login success");
 							Toast.makeText(ForumOverviewActivity.this,
-									R.string.login_success, Toast.LENGTH_SHORT).show();
+									R.string.login_success, Toast.LENGTH_SHORT)
+									.show();
 						}
 
 					}.executeSynchronized();
@@ -313,19 +296,10 @@ public class ForumOverviewActivity extends ExpandableListActivity
 		{
 
 			@Override
-			protected synchronized void callServer() throws IOException
+			protected synchronized void callServer() throws IOException,
+					TapatalkException
 			{
-
-				try
-				{
-					client.logout();
-				}
-				catch (TapatalkException e)
-				{
-					e.printStackTrace();
-					throw new RuntimeException(e);
-				}
-
+				client.logout();
 			}
 
 			@Override

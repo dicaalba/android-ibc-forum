@@ -24,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import de.mtbnews.android.ForumActivity;
+import de.mtbnews.android.IBCActivity;
 import de.mtbnews.android.IBCApplication;
 import de.mtbnews.android.MailboxActivity;
 import de.mtbnews.android.R;
@@ -90,24 +91,26 @@ public class SubscriptionService extends Service
 	{
 		public void run()
 		{
-			Log.d(this.getClass().getSimpleName(),
-					"now testing for unread topics and messages");
-
 			final long actualTime = System.currentTimeMillis();
 			final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			final TapatalkClient client = ibcApp.getTapatalkClient();
 
-			if (!client.loggedIn)
+			try
 			{
-				try
+				Log.d(this.getClass().getSimpleName(),
+						"now testing for unread topics and messages");
+
+				final TapatalkClient client = ibcApp.getTapatalkClient();
+
+				if (!client.loggedIn)
 				{
 					client.login(prefs.getString("username", ""), prefs
 							.getString("password", ""));
 				}
-				catch (TapatalkException e)
+
+				if (!client.loggedIn)
 				{
 					final Notification notification = new Notification(
-							R.drawable.ibc_logo, e.getMessage(), actualTime);
+							R.drawable.ibc_logo, "", actualTime);
 					notification.setLatestEventInfo(getApplicationContext(),
 							getResources().getString(R.string.login_failed),
 							"", null);
@@ -116,23 +119,7 @@ public class SubscriptionService extends Service
 
 					return;
 				}
-			}
 
-			if (!client.loggedIn)
-			{
-				final Notification notification = new Notification(
-						R.drawable.ibc_logo, "", actualTime);
-				notification.setLatestEventInfo(getApplicationContext(),
-						getResources().getString(R.string.login_failed), "",
-						null);
-				notification.flags = Notification.FLAG_AUTO_CANCEL;
-				nm.notify(NOTIFICATION_ERROR, notification);
-
-				return;
-			}
-
-			try
-			{
 				List<Forum> subscribedForum = client.getSubscribedForum(true);
 
 				final List<String> forumNameList = new ArrayList<String>();
@@ -159,20 +146,6 @@ public class SubscriptionService extends Service
 									.join(", ", forumNameList), contentIntent);
 					nm.notify(NOTIFICATION_FORUM, notification);
 				}
-			}
-			catch (TapatalkException e)
-			{
-				Log.w(this.getClass().getSimpleName(), e);
-				throw new RuntimeException(e);
-			}
-			catch (Exception e)
-			{
-				Log.w("Laufzeitfehler", e);
-				throw new RuntimeException(e);
-			}
-
-			try
-			{
 				ListHolder<Topic> subscribedTopic = client.getSubscribedTopics(
 						0, 10, true);
 				final List<String> topicNameList = new ArrayList<String>();
@@ -202,20 +175,7 @@ public class SubscriptionService extends Service
 
 					nm.notify(NOTIFICATION_TOPIC, notification);
 				}
-			}
-			catch (TapatalkException e)
-			{
-				Log.w(this.getClass().getSimpleName(), e);
-				throw new RuntimeException(e);
-			}
-			catch (Exception e)
-			{
-				Log.w("Laufzeitfehler", e);
-				throw new RuntimeException(e);
-			}
 
-			try
-			{
 				List<Mailbox> mailboxList = client.getMailbox();
 				int unreadCount = 0;
 
@@ -252,12 +212,21 @@ public class SubscriptionService extends Service
 			}
 			catch (TapatalkException e)
 			{
-				Log.w(this.getClass().getSimpleName(), e);
-				throw new RuntimeException(e);
+				final Intent notificationIntent = new Intent(
+						SubscriptionService.this, IBCActivity.class);
+				final PendingIntent contentIntent = PendingIntent.getActivity(
+						SubscriptionService.this, 0, notificationIntent, 0);
+
+				final Notification notification = createNotification(e
+						.getMessage(), R.string.error, null, e.getMessage(),
+						contentIntent);
+				
+				notification.flags = Notification.FLAG_AUTO_CANCEL;
+				nm.notify(NOTIFICATION_ERROR, notification);
 			}
 			catch (Exception e)
 			{
-				Log.w("Laufzeitfehler", e);
+				Log.w("IBC-Service", e);
 				throw new RuntimeException(e);
 			}
 		}
