@@ -30,7 +30,6 @@ public class IBCApplication extends Application
 	public TapatalkClient client;
 
 	public SharedPreferences prefs;
-	public boolean ibcTheme;
 
 	public TapatalkClient getTapatalkClient()
 	{
@@ -47,7 +46,9 @@ public class IBCApplication extends Application
 	{
 		client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		ibcTheme = prefs.getBoolean("ibc_theme", false);
+
+		if (prefs.getBoolean("ibc_theme", true))
+			setTheme(R.style.IBC);
 
 		if (prefs.getBoolean("autostart_subscription_service", false))
 		{

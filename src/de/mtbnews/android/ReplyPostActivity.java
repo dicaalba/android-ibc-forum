@@ -24,9 +24,6 @@ public class ReplyPostActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		if (((IBCApplication) getApplication()).ibcTheme)
-			setTheme(R.style.IBC);
-
 		setContentView(R.layout.post);
 		super.onCreate(savedInstanceState);
 

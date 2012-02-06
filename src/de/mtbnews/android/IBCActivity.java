@@ -52,9 +52,6 @@ public class IBCActivity extends ListActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		if	( ((IBCApplication)getApplication()).ibcTheme )
-			setTheme(R.style.IBC);
-			
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start);
 

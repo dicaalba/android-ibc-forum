@@ -48,8 +48,6 @@ public class SearchActivity extends EndlessListActivity<Topic>
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		if (((IBCApplication) getApplication()).ibcTheme)
-			setTheme(R.style.IBC);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listing);

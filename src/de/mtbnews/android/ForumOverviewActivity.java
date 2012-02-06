@@ -41,9 +41,6 @@ public class ForumOverviewActivity extends ExpandableListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		if (((IBCApplication) getApplication()).ibcTheme)
-			setTheme(R.style.IBC);
-
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.exp_listing);

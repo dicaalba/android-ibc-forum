@@ -80,7 +80,7 @@
 	<string name="scroll_down">Zum Ende springen</string>
 	<string name="scroll_down_desc">Beim Laden von Themen automatisch zum letzten
 		Beitrag springen</string>
-	<string name="use_ibc_theme">Das IBC-Theme benutzen</string>
+	<string name="use_ibc_theme">IBC-Theme benutzen</string>
 	<string name="auto_login">Automatisch anmelden</string>
 	<string name="auto_login_desc">Beim Starten des Forums automatisch anmelden.
 	</string>

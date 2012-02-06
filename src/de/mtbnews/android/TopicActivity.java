@@ -41,13 +41,10 @@ public class TopicActivity extends EndlessListActivity<Post>
 	private String topicTitle;
 
 	private int totalSize;
-
+ 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		if (((IBCApplication) getApplication()).ibcTheme)
-			setTheme(R.style.IBC);
-
 		super.onCreate(savedInstanceState);
 
 		topicId = TopicActivity.this.getIntent().getStringExtra(TOPIC_ID);

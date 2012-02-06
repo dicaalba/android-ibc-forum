@@ -3,8 +3,7 @@
 	android:title="@string/preferences">
 
 	<CheckBoxPreference android:defaultValue="true"
-		android:key="ibc_theme" android:title="@string/use_ibc_theme"
-		android:enabled="false" />
+		android:key="ibc_theme" android:title="@string/use_ibc_theme" />
 
 	<CheckBoxPreference android:defaultValue="true"
 		android:key="show_hints" android:title="@string/show_hints" />

@@ -24,9 +24,6 @@ public class MailboxActivity extends ListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		if (((IBCApplication) getApplication()).ibcTheme)
-			setTheme(R.style.IBC);
-
 		setContentView(R.layout.listing);
 
 		super.onCreate(savedInstanceState);
