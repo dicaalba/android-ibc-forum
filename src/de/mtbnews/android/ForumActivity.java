@@ -80,6 +80,9 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			public void onCreateContextMenu(ContextMenu menu, View v,
 					ContextMenuInfo menuInfo)
 			{
+				if (topicMode == TapatalkClient.TOPIC_ANNOUNCEMENT)
+					return;
+				
 				MenuInflater menuInflater = new MenuInflater(getApplication());
 				menuInflater.inflate(R.menu.topic_context, menu);
 
@@ -91,6 +94,9 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
+				if (topicMode == TapatalkClient.TOPIC_ANNOUNCEMENT)
+					return;
+				
 				// int aktPosition = displayFrom + position + 1;
 				final Intent intent = new Intent(ForumActivity.this,
 						TopicActivity.class);
@@ -364,7 +370,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				}.execute();
 
 				return true;
-				
+
 			case R.id.menu_mode:
 
 				// Den Topic-Mode ändern (Standard,Wichtig,Ankündigungen)
