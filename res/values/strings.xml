@@ -148,6 +148,8 @@
 	<string name="subscribe_forum">Forum abonnieren</string>
 	<string name="subscribe_topic">Thema abonnieren</string>
 	<string name="mode">Modus</string>
+	<string name="vibration">Vibration</string>
+	<string name="vibration_desc">Vibrationsalarm bei neuen Nachrichten</string>
 
 
 	<string name="interval">Intervall</string>

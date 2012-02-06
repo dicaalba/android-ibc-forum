@@ -62,10 +62,13 @@
 		<CheckBoxPreference android:defaultValue="true"
 			android:key="autostart_subscription_service" android:summary="@string/subscription_service_desc"
 			android:title="@string/subscription_service" />
-
 		<ListPreference android:defaultValue="60"
 			android:entries="@array/interval_list_label" android:entryValues="@array/interval_list"
 			android:key="subscription_service_interval" android:title="@string/interval"
 			android:dependency="autostart_subscription_service" />
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="use_vibration" android:summary="@string/vibration_desc"
+			android:title="@string/vibration" android:dependency="autostart_subscription_service" />
+
 	</PreferenceCategory>
 </PreferenceScreen>
