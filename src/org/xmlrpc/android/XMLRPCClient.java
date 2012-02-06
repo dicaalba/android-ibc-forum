@@ -337,8 +337,6 @@ public class XMLRPCClient extends XMLRPCCommon {
 			pullParser.nextTag(); // either Tag.PARAMS (<params>) or Tag.FAULT (<fault>)  
 			String tag = pullParser.getName();
 			
-			Log.d("XMLRPC-Tag",tag);
-			
 			if (tag.equals(Tag.PARAMS)) {
 				// normal response
 				pullParser.nextTag(); // Tag.PARAM (<param>)

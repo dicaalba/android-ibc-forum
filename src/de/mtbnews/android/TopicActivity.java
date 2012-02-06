@@ -41,7 +41,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 	private String topicTitle;
 
 	private int totalSize;
- 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -53,7 +53,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 		setContentView(R.layout.listing);
 
 		ListAdapter adapter = new ListEntryContentAdapter(TopicActivity.this,
-				entries);
+				entries, true, false);
 		setListAdapter(adapter);
 
 		initialLoad();
@@ -152,49 +152,49 @@ public class TopicActivity extends EndlessListActivity<Post>
 				return true;
 
 			case R.id.menu_subscribe:
-				
+
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setTitle(R.string.subscribe_topic);
 				builder.setItems(R.array.subscription_modes,
 						new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog,
-							final int item)
-					{
-						new ServerAsyncTask(TopicActivity.this,
-								R.string.mark_topic_read)
 						{
-							
-							@Override
-							protected void callServer()
-							throws IOException
+							public void onClick(DialogInterface dialog,
+									final int item)
 							{
-								TapatalkClient client = ((IBCApplication) getApplication())
-								.getTapatalkClient();
-								try
+								new ServerAsyncTask(TopicActivity.this,
+										R.string.mark_topic_read)
 								{
-									client.subscribeTopic(topicId,
-											item - 1);
-								}
-								catch (TapatalkException e)
-								{
-									throw new RuntimeException(e);
-								}
+
+									@Override
+									protected void callServer()
+											throws IOException
+									{
+										TapatalkClient client = ((IBCApplication) getApplication())
+												.getTapatalkClient();
+										try
+										{
+											client.subscribeTopic(topicId,
+													item - 1);
+										}
+										catch (TapatalkException e)
+										{
+											throw new RuntimeException(e);
+										}
+									}
+
+									@Override
+									protected void doOnSuccess()
+									{
+										Toast.makeText(getApplicationContext(),
+												R.string.subscription_saved,
+												Toast.LENGTH_SHORT).show();
+									}
+								}.execute();
 							}
-							
-							@Override
-							protected void doOnSuccess()
-							{
-								Toast.makeText(getApplicationContext(),
-										R.string.subscription_saved,
-										Toast.LENGTH_SHORT).show();
-							}
-						}.execute();
-					}
-				});
+						});
 				builder.create().show();
 				return true;
-				
+
 			case R.id.menu_mark_read:
 
 				new ServerAsyncTask(TopicActivity.this,

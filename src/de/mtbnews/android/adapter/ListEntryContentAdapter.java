@@ -5,8 +5,6 @@ package de.mtbnews.android.adapter;
 
 import java.util.List;
 
-import ru.perm.kefir.bbcode.BBProcessorFactory;
-import ru.perm.kefir.bbcode.TextProcessor;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -41,6 +39,9 @@ public class ListEntryContentAdapter extends BaseAdapter
 
 	private List<? extends ListEntry> list;
 
+	private boolean containsBBCode;
+	private boolean containsHtml;
+
 	public ListEntryContentAdapter(Context context,
 			List<? extends ListEntry> list)
 	{
@@ -48,6 +49,18 @@ public class ListEntryContentAdapter extends BaseAdapter
 		inflator = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.list = list;
+	}
+
+	public ListEntryContentAdapter(Context context,
+			List<? extends ListEntry> list, boolean containsBBCode,
+			boolean containsHtml)
+	{
+		mContext = context;
+		inflator = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.list = list;
+		this.containsBBCode = containsBBCode;
+		this.containsHtml = containsHtml;
 	}
 
 	public int getCount()
@@ -137,13 +150,25 @@ public class ListEntryContentAdapter extends BaseAdapter
 		{
 			SharedPreferences prefs = ((IBCApplication) ((Activity) mContext)
 					.getApplication()).prefs;
-			if (prefs.getBoolean("parse_bbcode", false))
+			if (containsBBCode && prefs.getBoolean("parse_bbcode", false))
 			{
+				String html;
+				// TextProcessor create = BBProcessorFactory.getInstance()
+				// .create();
+				// html = create.process(e.getContent());
+				html = e.getContent();
+				html = new ProcessBBCode().preparePostText(html);
 
-				TextProcessor create = BBProcessorFactory.getInstance()
-						.create();
-				CharSequence html = create.process(e.getContent());
+				ImageGetter imageGetter = null;
+				if (prefs.getBoolean("load_images", false))
+					imageGetter = new ImageGetter();
 
+				viewHolder.desc.setText(Html.fromHtml(html.toString(),
+						imageGetter, null));
+			}
+			else if (containsHtml)
+			{
+				final CharSequence html = e.getContent();
 				ImageGetter imageGetter = null;
 				if (prefs.getBoolean("load_images", false))
 					imageGetter = new ImageGetter();
