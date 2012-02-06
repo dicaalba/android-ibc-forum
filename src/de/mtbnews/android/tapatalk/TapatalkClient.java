@@ -66,7 +66,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Login failed", e);
+			throw new TapatalkException("Login failed" + ": " + e.getMessage(),
+					e);
 		}
 
 	}
@@ -82,7 +83,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Logout failed", e);
+			throw new TapatalkException(
+					"Logout failed" + ": " + e.getMessage(), e);
 		}
 	}
 
@@ -205,7 +207,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not load Forum " + forumId, e);
+			throw new TapatalkException("Could not load Forum " + forumId
+					+ ": " + e.getMessage(), e);
 		}
 	}
 
@@ -248,7 +251,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not load subscribe topics", e);
+			throw new TapatalkException("Could not load subscribe topics"
+					+ ": " + e.getMessage(), e);
 		}
 	}
 
@@ -286,7 +290,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not load subscribe topics", e);
+			throw new TapatalkException("Could not load subscribe topics"
+					+ ": " + e.getMessage(), e);
 		}
 	}
 
@@ -336,7 +341,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("XMLRPC-Error: " + e.getMessage(), e);
+			throw new TapatalkException("Marking topics read: "
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -374,7 +380,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not load subscribe topics", e);
+			throw new TapatalkException("Could not load subscribe topics"
+					+ ": " + e.getMessage(), e);
 		}
 	}
 
@@ -406,7 +413,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not load subscribe topics", e);
+			throw new TapatalkException("Could not load subscribe topics"
+					+ ": " + e.getMessage(), e);
 		}
 	}
 
@@ -485,7 +493,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not search", e);
+			throw new TapatalkException("Could not search" + ": "
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -521,7 +530,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not search", e);
+			throw new TapatalkException("Could not read mailbox" + ": "
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -573,7 +583,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not search", e);
+			throw new TapatalkException("Could not read mailbox " + boxId
+					+ ": " + e.getMessage(), e);
 		}
 	}
 
@@ -613,7 +624,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not read message " + boxId + ","
-					+ messageId, e);
+					+ messageId + ": " + e.getMessage(), e);
 		}
 	}
 
@@ -641,7 +652,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not search", e);
+			throw new TapatalkException("Could not create the topic: "
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -669,7 +681,7 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not search", e);
+			throw new TapatalkException("Could not reply", e);
 		}
 	}
 
@@ -690,20 +702,11 @@ public class TapatalkClient
 			final Object[] params = new Object[] { to, subject.getBytes(),
 					content.getBytes() };
 
-			Object o = client.callEx("create_message", params);
-
-			Map map = (Map) o;
-
-			Object object = map.get("result");
-
-			boolean ok = (Boolean) object;
-			if (!ok)
-				throw new TapatalkException(byteArrayToString(map
-						.get("result_text")));
+			toMap(client.callEx("create_message", params));
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not search", e);
+			throw new TapatalkException("Could not create the message", e);
 		}
 	}
 
