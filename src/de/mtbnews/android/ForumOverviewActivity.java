@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,47 +48,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
-				&& prefs.getBoolean("auto_login", false))
-			login();
-
 		loadForum();
-	}
-
-	private void login()
-	{
-		final TapatalkClient client = ((IBCApplication) getApplication()).client;
-		new ServerAsyncTask(this, R.string.waitingfor_login)
-		{
-
-			@Override
-			protected void callServer() throws IOException
-			{
-
-				// add 2 to 4
-
-				try
-				{
-					client.login(prefs.getString("username", ""), prefs
-							.getString("password", ""));
-
-				}
-				catch (TapatalkException e)
-				{
-					e.printStackTrace();
-					throw new RuntimeException(e);
-				}
-
-			}
-
-			@Override
-			protected void doOnSuccess()
-			{
-				Toast.makeText(ForumOverviewActivity.this, R.string.login,
-						Toast.LENGTH_SHORT).show();
-			}
-
-		}.executeSynchronized();
 	}
 
 	private void unterforenFlachkloppen()
@@ -135,6 +96,13 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 				try
 				{
+					// Login.
+					if (!((IBCApplication) getApplication())
+							.getTapatalkClient().loggedIn
+							&& prefs.getBoolean("auto_login", false))
+						client.login(prefs.getString("username", ""), prefs
+								.getString("password", ""));
+
 					forumList = client.getAllForum();
 					unterforenFlachkloppen();
 				}
@@ -242,7 +210,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 			case R.id.menu_mailbox:
 				startActivity(new Intent(this, MailboxActivity.class));
 				return true;
-				
+
 			case R.id.menu_search:
 				onSearchRequested();
 				return true;
@@ -293,7 +261,37 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 				if (!TextUtils.isEmpty(prefs.getString("username", "")))
 				{
-					login();
+					final TapatalkClient client = ((IBCApplication) getApplication()).client;
+					new ServerAsyncTask(this, R.string.waitingfor_login)
+					{
+
+						@Override
+						protected void callServer() throws IOException
+						{
+							try
+							{
+								client.login(prefs.getString("username", ""),
+										prefs.getString("password", ""));
+
+							}
+							catch (TapatalkException e)
+							{
+								e.printStackTrace();
+								throw new RuntimeException(e);
+							}
+
+						}
+
+						@Override
+						protected void doOnSuccess()
+						{
+							Log.d("IBC", "login success");
+							Toast.makeText(ForumOverviewActivity.this,
+									R.string.login_success, Toast.LENGTH_SHORT).show();
+						}
+
+					}.executeSynchronized();
+
 				}
 				else
 				{
