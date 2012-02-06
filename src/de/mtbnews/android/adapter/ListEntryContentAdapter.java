@@ -128,9 +128,11 @@ public class ListEntryContentAdapter extends BaseAdapter
 		else
 			viewHolder.title.setEnabled(false);
 
-		if	(e.isUnread() )
+		if (e.isUnread())
 			viewHolder.title.setTypeface(null, Typeface.BOLD);
-		
+		else
+			viewHolder.title.setTypeface(null, Typeface.NORMAL);
+
 		if (e.getContent() != null)
 		{
 			SharedPreferences prefs = ((IBCApplication) ((Activity) mContext)
