@@ -38,6 +38,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	private Context context;
 	private AlertDialog alertDialog;
 	private Exception error;
+	private ReentrantLock lock;
 
 	/**
 	 * @param context
@@ -57,6 +58,9 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	@Override
 	final protected void onPreExecute()
 	{
+		lock = new ReentrantLock();
+		lock.lock();
+		
 		progressDialog.setCancelable(true);
 		progressDialog
 				.setOnCancelListener(new DialogInterface.OnCancelListener()
@@ -80,6 +84,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	final protected void onPostExecute(Void result)
 	{
 		progressDialog.dismiss();
+		lock.unlock();
 
 		if (error != null)
 		{
@@ -100,6 +105,9 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	 */
 	protected void doOnError(Exception error)
 	{
+		progressDialog.dismiss();
+		lock.unlock();
+		
 		final Builder builder = new AlertDialog.Builder(this.context);
 		alertDialog = builder.setCancelable(true).create();
 		final int causeRId = ExceptionUtils.getResourceStringId(error);
