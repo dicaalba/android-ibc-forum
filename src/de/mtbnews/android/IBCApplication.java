@@ -47,7 +47,7 @@ public class IBCApplication extends Application
 	@Override
 	public void onCreate()
 	{
-		Log.i("IBC","starting main application");
+		Log.i(IBC.TAG,"starting main application");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		themeResId = (prefs.getBoolean("ibc_theme", true)) ? R.style.IBC
@@ -75,6 +75,7 @@ public class IBCApplication extends Application
 	@Override
 	public void onLowMemory()
 	{
+		Log.d(IBC.TAG,"Low memory detected...");
 		super.onLowMemory();
 	}
 
@@ -86,6 +87,7 @@ public class IBCApplication extends Application
 	@Override
 	public void onTerminate()
 	{
+		Log.d(IBC.TAG,"terminating application");
 		super.onTerminate();
 	}
 }
