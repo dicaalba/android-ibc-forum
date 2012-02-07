@@ -37,6 +37,8 @@ public class TapatalkClient
 	public void login(String username, String password)
 			throws TapatalkException
 	{
+		this.loggedIn = false;
+		
 		if (TextUtils.isEmpty(username))
 			throw new TapatalkException("Username empty");
 
