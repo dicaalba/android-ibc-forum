@@ -21,6 +21,7 @@ package de.mtbnews.android;
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
+import org.mcsoxford.rss.RSSFault;
 import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSReader;
 import org.mcsoxford.rss.RSSReaderException;
@@ -120,6 +121,10 @@ public class IBCActivity extends ListActivity
 					((IBCApplication) getApplication()).newsFeed = feed;
 				}
 				catch (RSSReaderException e)
+				{
+					throw new ClientProtocolException(e);
+				}
+				catch (RSSFault e)
 				{
 					throw new ClientProtocolException(e);
 				}
