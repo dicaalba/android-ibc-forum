@@ -12,12 +12,13 @@
 	<item android:id="@+id/menu_mode" android:title="@string/mode"
 		android:icon="@android:drawable/ic_menu_share"></item>
 		
-	<item android:id="@+id/menu_mark_all_read" android:title="@string/mark_all_forum_read"
-		android:icon="@android:drawable/ic_menu_agenda"></item>
-		
 	<item android:id="@+id/menu_mark_read" android:title="@string/mark_forum_read"
 		android:icon="@android:drawable/ic_menu_agenda"></item>
+		
+	<item android:id="@+id/menu_mark_all_read" android:title="@string/mark_all_forum_read"
+		android:icon="@android:drawable/ic_menu_agenda"></item>
 <!-- 
+		
 	<item android:id="@+id/menu_mailbox" android:title="@string/mailbox"
 		android:icon="@android:drawable/ic_menu_send"></item>
  -->
