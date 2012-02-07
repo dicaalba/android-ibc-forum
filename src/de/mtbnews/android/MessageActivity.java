@@ -35,6 +35,8 @@ public class MessageActivity extends Activity
 		boxId = getIntent().getStringExtra("box_id");
 		messageId = getIntent().getStringExtra("message_id");
 
+		findViewById(R.id.item_button).setVisibility(View.INVISIBLE);
+		
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
 			private TapatalkClient client;

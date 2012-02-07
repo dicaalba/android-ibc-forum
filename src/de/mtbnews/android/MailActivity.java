@@ -3,12 +3,18 @@ package de.mtbnews.android;
 import java.io.IOException;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import de.mtbnews.android.adapter.ListEntryContentAdapter;
@@ -72,6 +78,34 @@ public class MailActivity extends EndlessListActivity<Message>
 
 	}
 
+	
+	
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		super.onCreateOptionsMenu(menu);
+		MenuInflater mi = new MenuInflater(getApplication());
+
+		mi.inflate(R.menu.mailbox, menu);
+
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.menu_new_message:
+				Intent intent = new Intent(this, ReplyMailActivity.class);
+				startActivity(intent);
+				return true;
+		}
+		return false;
+	}
+
+	
+	
 	@Override
 	protected int getTotalSize()
 	{

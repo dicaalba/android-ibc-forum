@@ -38,7 +38,7 @@ public class TapatalkClient
 			throws TapatalkException
 	{
 		this.loggedIn = false;
-		
+
 		if (TextUtils.isEmpty(username))
 			throw new TapatalkException("Username empty");
 
@@ -697,7 +697,11 @@ public class TapatalkClient
 			final Object[] params = new Object[] { to, subject.getBytes(),
 					content.getBytes() };
 
-			toMap(client.callEx("create_message", params));
+			final Boolean ok = (Boolean) client.callEx("create_message", params);
+			if (!ok)
+			{
+				throw new TapatalkException("sending message failed");
+			}
 		}
 		catch (XMLRPCException e)
 		{

@@ -46,6 +46,7 @@
 	<string name="waitingforprojects">Projekte werden geladen</string>
 	<string name="waitingfor_login">Anmeldung am Server</string>
 	<string name="waitingfor_logout">Abmeldung</string>
+	<string name="waitingfor_sending">Wird gesendet</string>
 	<string name="waitingfordelete">Löschen</string>
 	<string name="waitingfornew">Erzeuge</string>
 	<string name="waitingforsave">Speichern</string>
@@ -65,7 +66,7 @@
 	<string name="areyousure">Sicher?</string>
 	<string name="choosefile">Datei auswählen</string>
 	<string name="chooseimage">Bild auswählen</string>
-	<string name="newserver">Neuer Server</string>
+	<string name="new_message">Neue Nachricht</string>
 	<string name="server">Server</string>
 	<string name="timeout">Zeitablauf</string>
 	<string name="timeout_desc">Timeout der TCP/IP-Verbindung in Sekunden</string>

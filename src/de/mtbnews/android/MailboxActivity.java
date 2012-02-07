@@ -6,6 +6,9 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -74,4 +77,28 @@ public class MailboxActivity extends ListActivity
 		});
 
 	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		super.onCreateOptionsMenu(menu);
+		MenuInflater mi = new MenuInflater(getApplication());
+
+		mi.inflate(R.menu.mailbox, menu);
+
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.menu_new_message:
+				Intent intent = new Intent(this, ReplyMailActivity.class);
+				startActivity(intent);
+				return true;
+		}
+		return false;
+	}
+
 }

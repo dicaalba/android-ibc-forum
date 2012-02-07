@@ -48,12 +48,11 @@ public class Mailbox implements ListEntry
 	{
 		return name;
 	}
-	public boolean unread;
 
 	@Override
 	public boolean isUnread()
 	{
-		return this.unread;
+		return this.countUnread > 0;
 	}
 
 }

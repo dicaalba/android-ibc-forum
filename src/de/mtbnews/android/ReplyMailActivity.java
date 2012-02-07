@@ -3,7 +3,6 @@ package de.mtbnews.android;
 import java.io.IOException;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,73 +25,85 @@ public class ReplyMailActivity extends Activity
 		setContentView(R.layout.post);
 		super.onCreate(savedInstanceState);
 
-		boxId = getIntent().getStringExtra("box_id");
-		messageId = getIntent().getStringExtra("message_id");
+		final TextView recipient = (TextView) findViewById(R.id.recipient);
+		final TextView subject = (TextView) findViewById(R.id.subject);
+		final TextView text = (TextView) findViewById(R.id.content);
 
-		new ServerAsyncTask(this, R.string.waitingforcontent)
+		if (getIntent().hasExtra("box_id"))
 		{
-			private Message message;
-			private TapatalkClient client;
 
+			boxId = getIntent().getStringExtra("box_id");
+			messageId = getIntent().getStringExtra("message_id");
+
+			new ServerAsyncTask(this, R.string.waitingfor_mailbox)
+			{
+				private Message message;
+				private TapatalkClient client;
+
+				@Override
+				protected void callServer() throws IOException
+				{
+					client = ((IBCApplication) getApplication())
+							.getTapatalkClient();
+					try
+					{
+						message = client.getMessage(boxId, messageId);
+					}
+					catch (TapatalkException e)
+					{
+						throw new RuntimeException(e);
+					}
+				}
+
+				protected void doOnSuccess()
+				{
+					// MessageActivity.this.setTitle(feed.getTitle());
+
+					recipient.setText(message.from);
+
+					// TextView name = (TextView) findViewById(R.id.item_title);
+					// name.setText(item.getTitle());
+
+					subject.setText(message.subject.startsWith("Re: ") ? ""
+							: "Re: " + message.subject);
+
+					text.setText("[quote]" + message.getContent()
+							+ "[/quote]\n\n");
+
+				}
+			}.execute();
+		}
+
+		final Button button = (Button) findViewById(R.id.send);
+		button.setOnClickListener(new OnClickListener()
+		{
 			@Override
-			protected void callServer() throws IOException
+			public void onClick(View v)
 			{
-				client = ((IBCApplication) getApplication())
-						.getTapatalkClient();
-				try
-				{
-					message = client.getMessage(boxId, messageId);
-				}
-				catch (TapatalkException e)
-				{
-					throw new RuntimeException(e);
-				}
-			}
-
-			protected void doOnSuccess()
-			{
-				// MessageActivity.this.setTitle(feed.getTitle());
-
-				final TextView recipient = (TextView) findViewById(R.id.recipient);
-				recipient.setText(message.from);
-
-				// TextView name = (TextView) findViewById(R.id.item_title);
-				// name.setText(item.getTitle());
-
-				final TextView subject = (TextView) findViewById(R.id.subject);
-				subject.setText(message.subject.startsWith("Re: ") ? ""
-						: "Re: " + message.subject);
-
-				final TextView text = (TextView) findViewById(R.id.content);
-				text.setText("[quote]" + message.getContent() + "[/quote]\n\n");
-
-				Button button = (Button) findViewById(R.id.send);
-				button.setOnClickListener(new OnClickListener()
+				new ServerAsyncTask(ReplyMailActivity.this,
+						R.string.waitingfor_sending)
 				{
 					@Override
-					public void onClick(View v)
+					protected void callServer() throws IOException,
+							TapatalkException
 					{
-						try
-						{
-							client.createMessage(new String[] { recipient
-									.getText().toString() }, subject.getText()
-									.toString(), text.getText().toString());
-							Toast.makeText(ReplyMailActivity.this,
-									R.string.sent_ok, Toast.LENGTH_LONG);
-							ReplyMailActivity.this.finish();
-						}
-						catch (TapatalkException e)
-						{
-							new AlertDialog.Builder(ReplyMailActivity.this)
-									.setTitle(R.string.sent_fail).setMessage(
-											e.getMessage()).show();
-						}
-					}
-				});
+						TapatalkClient client = ((IBCApplication) getApplication())
+								.getTapatalkClient();
 
+						client.createMessage(new String[] { recipient.getText()
+								.toString() }, subject.getText().toString(),
+								text.getText().toString());
+					}
+
+					protected void doOnSuccess()
+					{
+						Toast.makeText(ReplyMailActivity.this,
+								R.string.sent_ok, Toast.LENGTH_LONG);
+						ReplyMailActivity.this.finish();
+					}
+				}.execute();
 			}
-		}.execute();
+		});
 
 	}
-
 }
