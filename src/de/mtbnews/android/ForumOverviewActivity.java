@@ -6,12 +6,11 @@ package de.mtbnews.android;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import android.app.ExpandableListActivity;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -151,6 +150,11 @@ public class ForumOverviewActivity extends ExpandableListActivity
 				{
 					Toast.makeText(ForumOverviewActivity.this,
 							R.string.sub_only, Toast.LENGTH_SHORT).show();
+				}
+				else if (!TextUtils.isEmpty(forum.url))
+				{
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri
+							.parse(forum.url)));
 				}
 				else
 				{

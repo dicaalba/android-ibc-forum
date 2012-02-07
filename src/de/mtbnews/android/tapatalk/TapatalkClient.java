@@ -771,6 +771,7 @@ public class TapatalkClient
 			String id = (String) map.get("forum_id");
 			Forum forum = new Forum(id, new ArrayList<Topic>(), name, null,
 					content);
+			forum.url = (String) map.get("url");
 			list.add(forum);
 			forum.subOnly = (Boolean) map.get("sub_only");
 			if (map.containsKey(childName))

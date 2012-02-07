@@ -18,7 +18,8 @@ public class Forum implements ListEntry
 	public List<Forum> subForen;
 	public boolean subOnly;
 	public boolean unread;
-
+	public String url;
+	
 	@Override
 	public boolean isUnread()
 	{
