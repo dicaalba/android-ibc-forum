@@ -76,9 +76,6 @@ public class TopicActivity extends EndlessListActivity<Post>
 				// startActivity(intent);
 			}
 		});
-
-		Toast.makeText(this, R.string.hint_press_long, Toast.LENGTH_SHORT)
-				.show();
 	}
 
 	@Override

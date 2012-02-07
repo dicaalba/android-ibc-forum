@@ -42,8 +42,8 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 
 		setContentView(R.layout.listing);
 
-		ListAdapter adapter = new ListEntryContentAdapter(SubscriptionTopicsActivity.this,
-				entries);
+		ListAdapter adapter = new ListEntryContentAdapter(
+				SubscriptionTopicsActivity.this, entries);
 		setListAdapter(adapter);
 
 		initialLoad();
@@ -68,18 +68,17 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 					int position, long id)
 			{
 				// int aktPosition = displayFrom + position + 1;
-				final Intent intent = new Intent(SubscriptionTopicsActivity.this,
-						TopicActivity.class);
-				Topic topic = SubscriptionTopicsActivity.super.entries.get(position);
+				final Intent intent = new Intent(
+						SubscriptionTopicsActivity.this, TopicActivity.class);
+				Topic topic = SubscriptionTopicsActivity.super.entries
+						.get(position);
 				intent.putExtra(TopicActivity.TOPIC_ID, topic.getId());
 				startActivity(intent);
 			}
 		});
 
-
-		Toast.makeText(this, R.string.hint_press_long, Toast.LENGTH_SHORT)
-				.show();
 	}
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item)
 	{
@@ -92,8 +91,8 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 
 				final Intent intent = new Intent(
 						SubscriptionTopicsActivity.this, TopicActivity.class);
-				intent.putExtra(TopicActivity.TOPIC_ID, super.entries.get(menuInfo.position)
-						.getId());
+				intent.putExtra(TopicActivity.TOPIC_ID, super.entries.get(
+						menuInfo.position).getId());
 				intent.putExtra(EndlessListActivity.FIRST_POST, true);
 				startActivity(intent);
 				return true;
@@ -102,8 +101,8 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 
 				final Intent intent2 = new Intent(
 						SubscriptionTopicsActivity.this, TopicActivity.class);
-				intent2.putExtra(TopicActivity.TOPIC_ID, super.entries.get(menuInfo.position)
-						.getId());
+				intent2.putExtra(TopicActivity.TOPIC_ID, super.entries.get(
+						menuInfo.position).getId());
 				intent2.putExtra(EndlessListActivity.LAST_POST, true);
 				startActivity(intent2);
 				return true;
@@ -111,6 +110,7 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 
 		return super.onContextItemSelected(item);
 	}
+
 	@Override
 	protected int getTotalSize()
 	{
@@ -120,7 +120,7 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 	@Override
 	protected void loadEntries(
 			final OnListLoadedListener<Topic> onListLoadedListener,
-			final int from, final int to, boolean firstLoad)
+			final int from, final int to, final boolean firstLoad)
 	{
 		new ServerAsyncTask(SubscriptionTopicsActivity.this,
 				firstLoad ? R.string.waitingfor_subscription_topics
@@ -129,26 +129,25 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 			private ListHolder<Topic> topicHolder;
 
 			@Override
-			protected void callServer() throws IOException
+			protected void callServer() throws IOException, TapatalkException
 			{
 				TapatalkClient client = ((IBCApplication) getApplication()).client;
 
-				try
-				{
-					topicHolder = client.getSubscribedTopics(from, to,false);
+				topicHolder = client.getSubscribedTopics(from, to, false);
 
-					totalSize = topicHolder.totalCount;
-				}
-				catch (TapatalkException e)
-				{
-					throw new RuntimeException(e);
-				}
+				totalSize = topicHolder.totalCount;
 			}
 
 			protected void doOnSuccess()
 			{
-				//SubscriptionTopicsActivity.this.setTitle(topicHolder.getTitle());
+				// SubscriptionTopicsActivity.this.setTitle(topicHolder.getTitle());
 				onListLoadedListener.listLoaded(this.topicHolder.getChildren());
+
+				if (firstLoad)
+					Toast.makeText(SubscriptionTopicsActivity.this,
+							R.string.hint_press_long, Toast.LENGTH_SHORT)
+							.show();
+
 			}
 
 		}.execute();

@@ -23,10 +23,15 @@ public interface IBC
 	 * Fee-URL für Nachrichten.
 	 */
 	static final String IBC_NEWS_RSS_URL = "http://www.mtb-news.de/news/feed/";
-
+	
 	/**
 	 * Feed-URL für Fotos.
 	 */
 	static final String IBC_FOTOS_RSS_URL = "http://fotos.mtb-news.de/photos/recent.rss";
+
+	/**
+	 * Logging-Tag.
+	 */
+	static final String TAG = "IBC";
 
 }

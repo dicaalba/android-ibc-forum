@@ -399,7 +399,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 	@Override
 	protected void loadEntries(
 			final de.mtbnews.android.EndlessListActivity.OnListLoadedListener<Topic> onListLoaded,
-			final int from, final int to, boolean firstLoad)
+			final int from, final int to, final boolean firstLoad)
 	{
 
 		new ServerAsyncTask(this, R.string.waitingfor_forum)
@@ -426,7 +426,10 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			{
 				ForumActivity.this.setTitle(forum.getTitle());
 				onListLoaded.listLoaded(this.forum.getTopics());
-			}
+				
+				if (firstLoad)
+					Toast.makeText(ForumActivity.this, R.string.hint_press_long,
+							Toast.LENGTH_SHORT).show();			}
 
 		}.execute();
 

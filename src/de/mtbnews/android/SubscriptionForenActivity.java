@@ -95,18 +95,10 @@ public class SubscriptionForenActivity extends ListActivity
 			private List<Forum> newForumList;
 
 			@Override
-			protected void callServer() throws IOException
+			protected void callServer() throws IOException, TapatalkException
 			{
-
 				TapatalkClient client = ((IBCApplication) getApplication()).client;
-				try
-				{
-					newForumList = client.getSubscribedForum(false);
-				}
-				catch (TapatalkException e)
-				{
-					throw new RuntimeException(e);
-				}
+				newForumList = client.getSubscribedForum(false);
 			}
 
 			protected void doOnSuccess()
