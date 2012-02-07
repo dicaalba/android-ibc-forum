@@ -9,6 +9,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 import de.mtbnews.android.service.SubscriptionService;
 import de.mtbnews.android.tapatalk.TapatalkClient;
@@ -46,6 +47,7 @@ public class IBCApplication extends Application
 	@Override
 	public void onCreate()
 	{
+		Log.i("IBC","starting main application");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		themeResId = (prefs.getBoolean("ibc_theme", true)) ? R.style.IBC
