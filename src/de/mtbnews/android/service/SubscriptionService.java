@@ -71,13 +71,30 @@ public class SubscriptionService extends Service
 		ibcApp = (IBCApplication) getApplication();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+		final TapatalkClient client = ibcApp.getTapatalkClient();
+
+		if (prefs.getBoolean("auto_login", false))
+		{
+			Log.i("IBC", "Login for " + prefs.getString("username", ""));
+			try
+			{
+				client.login(prefs.getString("username", ""), prefs.getString(
+						"password", ""));
+			}
+			catch (TapatalkException e)
+			{
+				Log.w("IBC", e);
+			}
+		}
+
 		// Intervall in Minuten (Default = 3 Stunden)
 		int intervalInMinutes = Integer.parseInt(prefs.getString(
 				"subscription_service_interval", "180"));
 
 		timer = new Timer();
-		timer.scheduleAtFixedRate(new SubscriptionTask(), 0,
+		timer.scheduleAtFixedRate(new SubscriptionTask(), 2000,
 				intervalInMinutes * 60 * 1000);
+
 	}
 
 	/**
@@ -96,8 +113,7 @@ public class SubscriptionService extends Service
 
 			try
 			{
-				Log.d(this.getClass().getSimpleName(),
-						"now testing for unread topics and messages");
+				Log.d("IBC", "timer event fired");
 
 				final TapatalkClient client = ibcApp.getTapatalkClient();
 
@@ -220,7 +236,7 @@ public class SubscriptionService extends Service
 				final Notification notification = createNotification(e
 						.getMessage(), R.string.error, null, e.getMessage(),
 						contentIntent);
-				
+
 				notification.flags = Notification.FLAG_AUTO_CANCEL;
 				nm.notify(NOTIFICATION_ERROR, notification);
 			}
