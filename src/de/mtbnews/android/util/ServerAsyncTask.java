@@ -17,7 +17,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
-/** 
+/**
  * Ein asynchroner Task für den Zugriff auf den OpenRat-CMS-Server. Der Aufruf
  * des Servers muss in der zu überschreibenden Methode {@link #callServer()}
  * durchgeführt werden.<br>
@@ -150,16 +150,34 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 		}
 		catch (IOException e)
 		{
-			Log.e(this.getClass().getName(), e.getMessage(), e);
+			Log.w(this.getClass().getName(), e.getMessage(), e);
 			error = e;
 		}
 		catch (TapatalkException e)
 		{
-			Log.e(this.getClass().getName(), e.getMessage(), e);
+			Log.w(this.getClass().getName(), e.getMessage(), e);
 			error = e;
+		}
+		catch (RuntimeException e)
+		{
+			// Hier den Dialogo schließen, da es sonst zu
+			// "has leaked window"-Fehlern kommt.
+			progressDialog.dismiss();
+
+			Log.w(this.getClass().getName(), e.getMessage(), e);
+			throw e; // Und weiterwerfen, da den Fehler hier niemand behandeln
+			// kann. Android schließt somit die Activity.
 		}
 
 		return null;
+	}
+
+	@Override
+	protected void onCancelled()
+	{
+		// Hier den Dialogo schließen, da es sonst zu
+		// "has leaked window"-Fehlern kommt.
+		progressDialog.dismiss();
 	}
 
 	/**
@@ -169,7 +187,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	 * @throws IOException
 	 *             Vom Server erzeugte Fehler
 	 */
-	protected abstract void callServer() throws IOException,TapatalkException;
+	protected abstract void callServer() throws IOException, TapatalkException;
 
 	/**
 	 * 
