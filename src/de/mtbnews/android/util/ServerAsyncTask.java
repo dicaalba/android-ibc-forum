@@ -4,10 +4,7 @@
 package de.mtbnews.android.util;
 
 import java.io.IOException;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.ReentrantLock;
-
-import de.mtbnews.android.tapatalk.TapatalkException;
+import java.util.concurrent.locks.Lock;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -16,6 +13,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
+import de.mtbnews.android.tapatalk.TapatalkClient;
+import de.mtbnews.android.tapatalk.TapatalkException;
 
 /**
  * Ein asynchroner Task für den Zugriff auf den OpenRat-CMS-Server. Der Aufruf
@@ -105,8 +104,6 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	 */
 	protected void doOnError(Exception error)
 	{
-		progressDialog.dismiss();
-
 		final Builder builder = new AlertDialog.Builder(this.context);
 		alertDialog = builder.setCancelable(true).create();
 		final int causeRId = ExceptionUtils.getResourceStringId(error);
@@ -146,7 +143,10 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	{
 		try
 		{
-			callServer();
+			synchronized (TapatalkClient.class)
+			{
+				callServer();
+			}
 		}
 		catch (IOException e)
 		{
