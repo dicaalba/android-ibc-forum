@@ -98,8 +98,6 @@ public class TapatalkClient
 
 			Map map = toMap(client.callEx("get_thread", params));
 
-			toMap(map);
-
 			String title = byteArrayToString(map.get("topic_title"));
 			String id = (String) map.get("topic_id");
 			int postCount = toInt(map.get("total_post_num"));
@@ -176,9 +174,8 @@ public class TapatalkClient
 				mode2 = "";
 
 			final Object[] params = new Object[] { forumId, from, to, mode2 };
-			Object o = client.callEx("get_topic", params);
+			Map map = (Map) toMap(client.callEx("get_topic", params));
 
-			Map map = (Map) o;
 			String title = new String((byte[]) map.get("forum_name"));
 			String id = (String) map.get("forum_id");
 
@@ -219,9 +216,7 @@ public class TapatalkClient
 		try
 		{
 			final Object[] params = new Object[] { from, to };
-			Object o = client.callEx("get_subscribed_topic", params);
-
-			Map map = (Map) o;
+			Map map = toMap(client.callEx("get_subscribed_topic", params));
 
 			int topicCount = (Integer) map.get("total_topic_num");
 
@@ -262,9 +257,7 @@ public class TapatalkClient
 	{
 		try
 		{
-			Object o = client.call("get_subscribed_forum");
-
-			Map map = (Map) o;
+			Map map = toMap(client.call("get_subscribed_forum"));
 
 			@SuppressWarnings("unused")
 			int forumCount = (Integer) map.get("total_forums_num");
