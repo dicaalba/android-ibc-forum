@@ -101,8 +101,13 @@ public class IBCActivity extends ListActivity
 	{
 		if (((IBCApplication) getApplication()).newsFeed != null)
 		{
-			// Nicht nochmal laden.
-			// TODO: Reload-Funktion.
+			RSSFeed feed = ((IBCApplication) getApplication()).newsFeed;
+			IBCActivity.this.setTitle(feed.getTitle());
+
+			ListAdapter adapter = new ListEntryContentAdapter(
+					IBCActivity.this, feed.getItems());
+			setListAdapter(adapter);
+			
 			return;
 		}
 
