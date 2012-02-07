@@ -4,10 +4,7 @@
 package de.mtbnews.android.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,25 +15,23 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Paint.Join;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
-import de.mtbnews.android.ForumActivity;
 import de.mtbnews.android.IBCActivity;
 import de.mtbnews.android.IBCApplication;
 import de.mtbnews.android.MailboxActivity;
 import de.mtbnews.android.R;
 import de.mtbnews.android.SubscriptionForenActivity;
 import de.mtbnews.android.SubscriptionTopicsActivity;
-import de.mtbnews.android.TopicActivity;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
 import de.mtbnews.android.tapatalk.wrapper.ListHolder;
 import de.mtbnews.android.tapatalk.wrapper.Mailbox;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
+import de.mtbnews.android.util.IBC;
 
 /**
  * @author dankert
@@ -52,6 +47,8 @@ public class SubscriptionService extends Service
 	private static final int NOTIFICATION_TOPIC = 2;
 	private static final int NOTIFICATION_FORUM = 3;
 	private static final int NOTIFICATION_MESSAGES = 4;
+	
+	private TapatalkClient client;
 
 	public IBinder onBind(Intent arg0)
 	{
@@ -71,11 +68,11 @@ public class SubscriptionService extends Service
 		ibcApp = (IBCApplication) getApplication();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		final TapatalkClient client = ibcApp.getTapatalkClient();
+		client = ibcApp.getTapatalkClient();
 
 		if (prefs.getBoolean("auto_login", false))
 		{
-			Log.i("IBC", "Login for " + prefs.getString("username", ""));
+			Log.i(IBC.TAG, "Login for " + prefs.getString("username", ""));
 			try
 			{
 				client.login(prefs.getString("username", ""), prefs.getString(
@@ -83,7 +80,7 @@ public class SubscriptionService extends Service
 			}
 			catch (TapatalkException e)
 			{
-				Log.w("IBC", e);
+				Log.w(IBC.TAG, e);
 			}
 		}
 
@@ -113,7 +110,7 @@ public class SubscriptionService extends Service
 
 			try
 			{
-				Log.d("IBC", "timer event fired");
+				Log.d(IBC.TAG, "timer event fired");
 
 				final TapatalkClient client = ibcApp.getTapatalkClient();
 
