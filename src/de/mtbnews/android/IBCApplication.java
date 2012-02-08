@@ -54,6 +54,7 @@ public class IBCApplication extends Application
 				: android.R.style.Theme;
 
 		client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
+		client.getXMLRPCClient().setUserAgent("Mozilla/5.0 (compatible; Android)");
 
 		if (prefs.getBoolean("autostart_subscription_service", false))
 		{
