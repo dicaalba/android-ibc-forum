@@ -51,7 +51,7 @@ public abstract class EndlessListActivity<T> extends ListActivity
 
 	private SharedPreferences prefs;
 
-	private boolean firstLoad = true;
+	private boolean firstLoad;
 
 	/**
 	 * Absolute Anzahl aller verfügbaren Elemente.
@@ -65,6 +65,7 @@ public abstract class EndlessListActivity<T> extends ListActivity
 	 */
 	protected void initialLoad()
 	{
+		firstLoad = true;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		final int numLoad = Integer.parseInt(prefs.getString("num_load", "10"));
 

@@ -124,7 +124,7 @@
 	<string name="goto_first_post">Zum ersten Beitrag</string>
 	<string name="goto_last_post">Zum letzten Beitrag</string>
 	<string name="goto_top">Nach oben</string>
-	<string name="goto_buttom">Nach unten</string>
+	<string name="goto_bottom">Nach unten</string>
 	<string name="reply">Antworten</string>
 	<string name="sent_ok">Nachricht wurde veschickt</string>
 	<string name="sent_fail">Nicht verschickt</string>

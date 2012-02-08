@@ -3,7 +3,6 @@
  */
 package de.mtbnews.android;
 
-import java.io.IOException;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -15,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -133,6 +133,22 @@ public class TopicActivity extends EndlessListActivity<Post>
 	{
 		switch (item.getItemId())
 		{
+			case R.id.menu_top:
+
+				getListView().setOnScrollListener(null);
+				getListView().setSelection(0);
+				getIntent().putExtra(FIRST_POST, true);
+				initialLoad();
+				return true;
+
+			case R.id.menu_bottom:
+
+				getListView().setOnScrollListener(null);
+				getListView().setSelection( super.entries.size()-1);
+				getIntent().putExtra(LAST_POST, true);
+				initialLoad();
+				return true;
+
 			case R.id.menu_reply:
 				Intent intent = new Intent(this, ReplyPostActivity.class);
 				intent.putExtra("topic_id", topicId);
