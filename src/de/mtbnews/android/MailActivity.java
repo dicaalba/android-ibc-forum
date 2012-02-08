@@ -124,22 +124,13 @@ public class MailActivity extends EndlessListActivity<Message>
 			private Mailbox mailbox;
 
 			@Override
-			protected void callServer() throws IOException
+			protected void callServer() throws TapatalkException
 			{
-
-				try
-				{
 					TapatalkClient client = ((IBCApplication) getApplication())
 							.getTapatalkClient();
 					mailbox = client.getBoxContent(boxId, from, to);
 
 					totalMessageCount = mailbox.countAll;
-
-				}
-				catch (TapatalkException e)
-				{
-					throw new RuntimeException(e);
-				}
 			}
 
 			protected void doOnSuccess()

@@ -32,68 +32,47 @@ public class ReplyPostActivity extends Activity
 		subject = getIntent().getStringExtra("subject");
 		quote = getIntent().getStringExtra("quote");
 
-		new ServerAsyncTask(this, R.string.waitingforcontent)
+		ReplyPostActivity.this.setTitle(R.string.reply);
+
+		final TextView recipient = (TextView) findViewById(R.id.recipient);
+		recipient.setVisibility(View.INVISIBLE);
+
+		final TextView subject = (TextView) findViewById(R.id.subject);
+		subject
+				.setText(ReplyPostActivity.this.subject != null ? ReplyPostActivity.this.subject
+						: "");
+
+		final TextView text = (TextView) findViewById(R.id.content);
+		text.setText(quote != null ? "[quote]" + quote + "[/quote]" : "");
+
+		Button button = (Button) findViewById(R.id.send);
+		button.setOnClickListener(new OnClickListener()
 		{
-			private TapatalkClient client;
 
 			@Override
-			protected void callServer() throws IOException
+			public void onClick(View v)
 			{
-				client = ((IBCApplication) getApplication())
-						.getTapatalkClient();
-				// try
-				// {
-				// message = client.getMessage(boxId, messageId);
-				// }
-				// catch (TapatalkException e)
-				// {
-				// throw new RuntimeException(e);
-				// }
-			}
-
-			protected void doOnSuccess()
-			{
-				ReplyPostActivity.this.setTitle(R.string.reply);
-
-				final TextView recipient = (TextView) findViewById(R.id.recipient);
-				recipient.setVisibility(View.INVISIBLE);
-
-				final TextView subject = (TextView) findViewById(R.id.subject);
-				subject
-						.setText(ReplyPostActivity.this.subject != null ? ReplyPostActivity.this.subject
-								: "");
-
-				final TextView text = (TextView) findViewById(R.id.content);
-				text.setText(quote != null ? "[quote]"+quote+"[/quote]" : "");
-
-				Button button = (Button) findViewById(R.id.send);
-				button.setOnClickListener(new OnClickListener()
+				new ServerAsyncTask(ReplyPostActivity.this, R.string.send)
 				{
 
 					@Override
-					public void onClick(View v)
+					protected void callServer() throws TapatalkException
 					{
-						try
-						{
-							client.createReply(forumId, topicId, subject
-									.getText().toString(), text.getText()
-									.toString());
-							Toast.makeText(ReplyPostActivity.this,
-									R.string.sent_ok, Toast.LENGTH_LONG);
-							ReplyPostActivity.this.finish();
-						}
-						catch (TapatalkException e)
-						{
-							new AlertDialog.Builder(ReplyPostActivity.this)
-									.setTitle(R.string.sent_fail).setMessage(
-											e.getMessage()).show();
-						}
+						TapatalkClient client = ((IBCApplication) getApplication())
+								.getTapatalkClient();
+
+						client.createReply(forumId, topicId, subject.getText()
+								.toString(), text.getText().toString());
 					}
-				});
 
+					protected void doOnSuccess()
+					{
+						Toast.makeText(ReplyPostActivity.this,
+								R.string.sent_ok, Toast.LENGTH_LONG);
+						ReplyPostActivity.this.finish();
+					}
+				}.execute();
 			}
-		}.execute();
-
+		});
 	}
-
 }

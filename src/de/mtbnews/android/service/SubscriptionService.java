@@ -107,14 +107,15 @@ public class SubscriptionService extends Service
 		public void run()
 		{
 			Log.d(IBC.TAG, "timer event fired");
-			
+
 			final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 			try
 			{
 				if (!client.loggedIn)
 				{
-					Log.d(IBC.TAG, "Login for: " + prefs.getString("username", ""));
+					Log.d(IBC.TAG, "Login for: "
+							+ prefs.getString("username", ""));
 					client.login(prefs.getString("username", ""), prefs
 							.getString("password", ""));
 				}
@@ -225,6 +226,13 @@ public class SubscriptionService extends Service
 			}
 			catch (Exception e)
 			{
+				// Das sollte eigentlich nicht vorkommen. Hier scheint etwas
+				// schlimmeres kaputt zu sein, daher werfen wir hier eine
+				// RuntimeException weiter. Android wird dann den Service
+				// beenden und das Senden eines Berichtes ermöglichen. Das ist
+				// das beste, was wir hier noch tun können ;) Würden wir den
+				// Fehler nicht weiterwerfen, würde der Service eh nichts mehr
+				// machen und niemandem wäre geholfen.
 				Log.w(IBC.TAG, e);
 				throw new RuntimeException(e);
 			}

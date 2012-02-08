@@ -34,32 +34,24 @@ public class MailboxActivity extends ListActivity
 
 		super.onCreate(savedInstanceState);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
 
 			@Override
-			protected void callServer() throws IOException
+			protected void callServer() throws TapatalkException
 			{
+				TapatalkClient client = ((IBCApplication) getApplication())
+						.getTapatalkClient();
 
-				try
-				{
-					TapatalkClient client = ((IBCApplication) getApplication())
-					.getTapatalkClient();
-					
-					// Login.
-					if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
-							&& prefs.getBoolean("auto_login", false))
-						client.login(prefs.getString("username", ""), prefs
-								.getString("password", ""));
-					
-					mailboxList = client.getMailbox();
+				// Login.
+				if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
+						&& prefs.getBoolean("auto_login", false))
+					client.login(prefs.getString("username", ""), prefs
+							.getString("password", ""));
 
-				}
-				catch (TapatalkException e)
-				{
-					throw new RuntimeException(e);
-				}
+				mailboxList = client.getMailbox();
+
 			}
 
 			protected void doOnSuccess()

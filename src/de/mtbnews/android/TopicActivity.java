@@ -97,23 +97,16 @@ public class TopicActivity extends EndlessListActivity<Post>
 			private Topic topic;
 
 			@Override
-			protected void callServer() throws IOException
+			protected void callServer() throws TapatalkException
 			{
 				TapatalkClient client = ((IBCApplication) getApplication()).client;
 
-				try
-				{
-					topic = client.getTopic(topicId, from, to);
+				topic = client.getTopic(topicId, from, to);
 
-					forumId = topic.forumId;
-					topicTitle = topic.getTitle();
-					totalSize = topic.getPostCount();
-					this.posts = topic.getPosts();
-				}
-				catch (TapatalkException e)
-				{
-					throw new RuntimeException(e);
-				}
+				forumId = topic.forumId;
+				topicTitle = topic.getTitle();
+				totalSize = topic.getPostCount();
+				this.posts = topic.getPosts();
 			}
 
 			protected void doOnSuccess()
@@ -164,19 +157,13 @@ public class TopicActivity extends EndlessListActivity<Post>
 
 									@Override
 									protected void callServer()
-											throws IOException
+											throws TapatalkException
 									{
 										TapatalkClient client = ((IBCApplication) getApplication())
 												.getTapatalkClient();
-										try
-										{
-											client.subscribeTopic(topicId,
-													item - 1);
-										}
-										catch (TapatalkException e)
-										{
-											throw new RuntimeException(e);
-										}
+										client
+												.subscribeTopic(topicId,
+														item - 1);
 									}
 
 									@Override
@@ -194,28 +181,17 @@ public class TopicActivity extends EndlessListActivity<Post>
 
 			case R.id.menu_mark_read:
 
+				// TODO: In Tapatalk-API-Version 3 nicht verfügbar!
 				new ServerAsyncTask(TopicActivity.this,
 						R.string.mark_topic_read)
 				{
 
 					@Override
-					protected void callServer() throws IOException
+					protected void callServer() throws TapatalkException
 					{
 						TapatalkClient client = ((IBCApplication) getApplication())
 								.getTapatalkClient();
-						try
-						{
-							client.markTopicAsRead(topicId);
-						}
-						catch (TapatalkException e)
-						{
-							throw new RuntimeException(e);
-						}
-					}
-
-					@Override
-					protected void doOnSuccess()
-					{
+						client.markTopicAsRead(topicId);
 					}
 				}.execute();
 				return true;

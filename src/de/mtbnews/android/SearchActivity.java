@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Search;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
+import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 /**
@@ -78,6 +80,11 @@ public class SearchActivity extends EndlessListActivity<Topic>
 		}
 		else
 		{
+			// Diese Activity wurde mit einer unbekannten Action aufgerufen.
+			Log.w(IBC.TAG, "Unknown search action: " + intent.getAction());
+
+			// Das kann nur ein Programmfehler sein, daher RTE werfen und damit
+			// hoffen, dass der Benutzer einen Bericht sendet.
 			throw new RuntimeException("Unknown search action: "
 					+ intent.getAction());
 		}
@@ -136,8 +143,8 @@ public class SearchActivity extends EndlessListActivity<Topic>
 
 				final Intent intent = new Intent(SearchActivity.this,
 						TopicActivity.class);
-				intent.putExtra(TopicActivity.TOPIC_ID, super.entries
-						.get(menuInfo.position).getId());
+				intent.putExtra(TopicActivity.TOPIC_ID, super.entries.get(
+						menuInfo.position).getId());
 				intent.putExtra("first_post", true);
 				startActivity(intent);
 				return true;
@@ -165,22 +172,15 @@ public class SearchActivity extends EndlessListActivity<Topic>
 			private Search search;
 
 			@Override
-			protected void callServer() throws IOException
+			protected void callServer() throws TapatalkException
 			{
 				TapatalkClient client = ((IBCApplication) getApplication()).client;
 
-				try
-				{
-					search = client.searchTopics(searchType, query, username,
-							from, to, searchId);
+				search = client.searchTopics(searchType, query, username, from,
+						to, searchId);
 
-					totalSize = search.topicCount;
-					searchId = search.searchId;
-				}
-				catch (TapatalkException e)
-				{
-					throw new RuntimeException(e);
-				}
+				totalSize = search.topicCount;
+				searchId = search.searchId;
 			}
 
 			protected void doOnSuccess()

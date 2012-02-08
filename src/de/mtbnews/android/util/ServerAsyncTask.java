@@ -4,7 +4,7 @@
 package de.mtbnews.android.util;
 
 import java.io.IOException;
-import java.util.concurrent.locks.Lock;
+import java.net.SocketTimeoutException;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
+import de.mtbnews.android.R;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 
@@ -39,7 +40,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	private ProgressDialog progressDialog;
 	private Context context;
 	private AlertDialog alertDialog;
-	private Exception error;
+	private IBCException error;
 
 	// private static final Semaphore lock2 = new Semaphore(1,true);
 
@@ -102,25 +103,13 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	 * @param error
 	 *            Exception, die aufgetreten ist.
 	 */
-	protected void doOnError(Exception error)
+	protected void doOnError(IBCException error)
 	{
 		final Builder builder = new AlertDialog.Builder(this.context);
 		alertDialog = builder.setCancelable(true).create();
-		final int causeRId = ExceptionUtils.getResourceStringId(error);
-		String msg = // this.context.getResources().getString(R.string.reason)
-		// + ":\n\n" +
-		error.getMessage();
 
-		Throwable t = error;
-		while (t.getCause() != null)
-		{
-			t = t.getCause();
-			msg += ": " + t.getMessage();
-		}
-
-		alertDialog.setTitle(causeRId);
 		alertDialog.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
-		alertDialog.setMessage(msg);
+		alertDialog.setMessage(context.getText(error.getErrorResId()));
 		alertDialog.show();
 
 	}
@@ -151,9 +140,22 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 		catch (IOException e)
 		{
 			Log.w(this.getClass().getName(), e.getMessage(), e);
-			error = e;
+
+			final int resId;
+			
+			if (e instanceof SocketTimeoutException)
+				resId = R.string.error_timeout;
+			else
+				resId = R.string.error_io;
+
+			error = new IBCException(resId, e.getMessage(), e);
 		}
 		catch (TapatalkException e)
+		{
+			Log.w(this.getClass().getName(), e.getMessage(), e);
+			error = new IBCException(R.string.error_tapatalk, e.getMessage(), e);
+		}
+		catch (IBCException e)
 		{
 			Log.w(this.getClass().getName(), e.getMessage(), e);
 			error = e;
@@ -187,7 +189,8 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	 * @throws IOException
 	 *             Vom Server erzeugte Fehler
 	 */
-	protected abstract void callServer() throws IOException, TapatalkException;
+	protected abstract void callServer() throws IOException, TapatalkException,
+			IBCException;
 
 	/**
 	 * 

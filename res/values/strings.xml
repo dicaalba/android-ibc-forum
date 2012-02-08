@@ -62,6 +62,7 @@
 	<string name="error_timeout">Zeitablauf</string>
 	<string name="error_io">Verbindungsabbruch</string>
 	<string name="error">Fehler</string>
+	<string name="error_tapatalk">Tut uns leid, aber diese Aktion war nicht erfolgreich</string>
 	<string name="reason">Grund</string>
 	<string name="areyousure">Sicher?</string>
 	<string name="choosefile">Datei auswählen</string>

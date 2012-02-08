@@ -29,6 +29,7 @@ import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
+import de.mtbnews.android.util.IBCException;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 /**
@@ -79,7 +80,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			{
 				if (topicMode == TapatalkClient.TOPIC_ANNOUNCEMENT)
 					return;
-				
+
 				MenuInflater menuInflater = new MenuInflater(getApplication());
 				menuInflater.inflate(R.menu.topic_context, menu);
 
@@ -93,7 +94,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			{
 				if (topicMode == TapatalkClient.TOPIC_ANNOUNCEMENT)
 					return;
-				
+
 				// int aktPosition = displayFrom + position + 1;
 				final Intent intent = new Intent(ForumActivity.this,
 						TopicActivity.class);
@@ -144,7 +145,8 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		{
 
 			@Override
-			protected synchronized void callServer() throws IOException
+			protected synchronized void callServer() throws IOException,
+					IBCException
 			{
 
 				try
@@ -155,8 +157,8 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				}
 				catch (TapatalkException e)
 				{
-					e.printStackTrace();
-					throw new RuntimeException(e);
+					throw new IBCException(R.string.login_failed, e
+							.getMessage(), e);
 				}
 
 			}
@@ -172,7 +174,8 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		{
 
 			@Override
-			protected synchronized void callServer() throws IOException
+			protected synchronized void callServer() throws IOException,
+					IBCException
 			{
 
 				try
@@ -182,8 +185,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				}
 				catch (TapatalkException e)
 				{
-					e.printStackTrace();
-					throw new RuntimeException(e);
+
 				}
 
 			}
@@ -284,19 +286,14 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 									@Override
 									protected void callServer()
-											throws IOException
+											throws IOException,
+											TapatalkException
 									{
 										TapatalkClient client = ((IBCApplication) getApplication())
 												.getTapatalkClient();
-										try
-										{
-											client.subscribeForum(forumId,
-													item - 1);
-										}
-										catch (TapatalkException e)
-										{
-											throw new RuntimeException(e);
-										}
+										client
+												.subscribeForum(forumId,
+														item - 1);
 									}
 
 									@Override
@@ -318,18 +315,11 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				{
 
 					@Override
-					protected void callServer() throws IOException
+					protected void callServer() throws TapatalkException
 					{
 						TapatalkClient client = ((IBCApplication) getApplication())
 								.getTapatalkClient();
-						try
-						{
-							client.markForumAsRead(forumId);
-						}
-						catch (TapatalkException e)
-						{
-							throw new RuntimeException(e);
-						}
+						client.markForumAsRead(forumId);
 					}
 
 					@Override
@@ -346,18 +336,11 @@ public class ForumActivity extends EndlessListActivity<Topic>
 						R.string.mark_forum_read)
 				{
 					@Override
-					protected void callServer() throws IOException
+					protected void callServer() throws TapatalkException
 					{
 						TapatalkClient client = ((IBCApplication) getApplication())
 								.getTapatalkClient();
-						try
-						{
-							client.markForumAsRead(null);
-						}
-						catch (TapatalkException e)
-						{
-							throw new RuntimeException(e);
-						}
+						client.markForumAsRead(null);
 					}
 
 					@Override
@@ -407,29 +390,24 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			private Forum forum;
 
 			@Override
-			protected void callServer() throws IOException
+			protected void callServer() throws TapatalkException
 			{
 
 				TapatalkClient client = ((IBCApplication) getApplication()).client;
-				try
-				{
-					this.forum = client.getForum(forumId, from, to, topicMode);
-					totalSize = this.forum.topicCount;
-				}
-				catch (TapatalkException e)
-				{
-					throw new RuntimeException(e);
-				}
+				this.forum = client.getForum(forumId, from, to, topicMode);
+				totalSize = this.forum.topicCount;
 			}
 
 			protected void doOnSuccess()
 			{
 				ForumActivity.this.setTitle(forum.getTitle());
 				onListLoaded.listLoaded(this.forum.getTopics());
-				
+
 				if (firstLoad)
-					Toast.makeText(ForumActivity.this, R.string.hint_press_long,
-							Toast.LENGTH_SHORT).show();			}
+					Toast.makeText(ForumActivity.this,
+							R.string.hint_press_long, Toast.LENGTH_SHORT)
+							.show();
+			}
 
 		}.execute();
 

@@ -36,25 +36,18 @@ public class MessageActivity extends Activity
 		messageId = getIntent().getStringExtra("message_id");
 
 		findViewById(R.id.item_button).setVisibility(View.INVISIBLE);
-		
+
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
 			private TapatalkClient client;
 			private Message message;
 
 			@Override
-			protected void callServer() throws IOException
+			protected void callServer() throws TapatalkException
 			{
 				client = ((IBCApplication) getApplication())
 						.getTapatalkClient();
-				try
-				{
-					message = client.getMessage(boxId, messageId);
-				}
-				catch (TapatalkException e)
-				{
-					throw new RuntimeException(e);
-				}
+				message = client.getMessage(boxId, messageId);
 			}
 
 			protected void doOnSuccess()

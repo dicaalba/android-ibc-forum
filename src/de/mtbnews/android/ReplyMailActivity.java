@@ -41,18 +41,11 @@ public class ReplyMailActivity extends Activity
 				private TapatalkClient client;
 
 				@Override
-				protected void callServer() throws IOException
+				protected void callServer() throws TapatalkException
 				{
 					client = ((IBCApplication) getApplication())
 							.getTapatalkClient();
-					try
-					{
-						message = client.getMessage(boxId, messageId);
-					}
-					catch (TapatalkException e)
-					{
-						throw new RuntimeException(e);
-					}
+					message = client.getMessage(boxId, messageId);
 				}
 
 				protected void doOnSuccess()

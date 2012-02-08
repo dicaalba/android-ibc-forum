@@ -19,7 +19,6 @@
 		<activity android:name="ForumOverviewActivity" android:label="@string/forum"></activity>
 		<activity android:name="ForumActivity" android:label="@string/forum"></activity>
 		<activity android:name="TopicActivity" android:label="@string/forum"></activity>
-		<activity android:name="PostActivity" android:label="@string/forum"></activity>
 
 		<activity android:name=".SearchActivity">
 			<intent-filter>
