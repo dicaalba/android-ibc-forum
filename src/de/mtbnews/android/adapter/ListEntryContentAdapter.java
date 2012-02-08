@@ -18,7 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import de.mtbnews.android.IBCApplication;
 import de.mtbnews.android.R;
-import de.mtbnews.android.image.ImageGetter;
+import de.mtbnews.android.image.URLImageParser;
 import de.mtbnews.android.tapatalk.wrapper.ListEntry;
 
 /**
@@ -159,9 +159,10 @@ public class ListEntryContentAdapter extends BaseAdapter
 				html = e.getContent();
 				html = new ProcessBBCode().preparePostText(html);
 
-				ImageGetter imageGetter = null;
+				Html.ImageGetter imageGetter = null;
 				if (prefs.getBoolean("load_images", false))
-					imageGetter = new ImageGetter();
+					// imageGetter = new ImageGetter();
+					imageGetter = new URLImageParser(viewHolder.desc, mContext);
 
 				viewHolder.desc.setText(Html.fromHtml(html.toString(),
 						imageGetter, null));
@@ -169,9 +170,9 @@ public class ListEntryContentAdapter extends BaseAdapter
 			else if (containsHtml)
 			{
 				final CharSequence html = e.getContent();
-				ImageGetter imageGetter = null;
+				Html.ImageGetter imageGetter = null;
 				if (prefs.getBoolean("load_images", false))
-					imageGetter = new ImageGetter();
+					imageGetter = new URLImageParser(viewHolder.desc, mContext);
 
 				viewHolder.desc.setText(Html.fromHtml(html.toString(),
 						imageGetter, null));

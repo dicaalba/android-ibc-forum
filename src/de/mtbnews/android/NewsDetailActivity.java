@@ -1,19 +1,10 @@
 package de.mtbnews.android;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import org.mcsoxford.rss.RSSItem;
-
-import de.mtbnews.android.image.ImageGetter;
-import de.mtbnews.android.image.ImageGetterAsyncTask;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -22,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import de.mtbnews.android.image.URLImageParser;
 
 public class NewsDetailActivity extends Activity
 {
@@ -49,9 +41,9 @@ public class NewsDetailActivity extends Activity
 		// if (e.getContent() != null)
 		final String html = item.getFullContent();
 
-		ImageGetter imageGetter = null;
+		Html.ImageGetter imageGetter = null;
 		if (prefs.getBoolean("load_images", false))
-			imageGetter = new ImageGetter();
+			imageGetter = new URLImageParser(desc,this);
 
 		desc.setText(Html.fromHtml(html, imageGetter, null));
 

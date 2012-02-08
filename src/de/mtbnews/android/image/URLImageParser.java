@@ -8,11 +8,14 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.R.drawable;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Html.ImageGetter;
+import android.util.Log;
 import android.view.View;
+import de.mtbnews.android.util.IBC;
 
 public class URLImageParser implements ImageGetter
 {
@@ -66,16 +69,20 @@ public class URLImageParser implements ImageGetter
 		@Override
 		protected void onPostExecute(Drawable result)
 		{
-			// set the correct bound according to the result from HTTP call
-			urlDrawable.setBounds(0, 0, 0 + result.getIntrinsicWidth(),
-					0 + result.getIntrinsicHeight());
+			if (result != null)
+			{
 
-			// change the reference of the current drawable to the result
-			// from the HTTP call
-			urlDrawable.drawable = result;
+				// set the correct bound according to the result from HTTP call
+				urlDrawable.setBounds(0, 0, 0 + result.getIntrinsicWidth(),
+						0 + result.getIntrinsicHeight());
 
-			// redraw the image by invalidating the container
-			URLImageParser.this.container.invalidate();
+				// change the reference of the current drawable to the result
+				// from the HTTP call
+				urlDrawable.drawable = result;
+
+				// redraw the image by invalidating the container
+				URLImageParser.this.container.invalidate();
+			}
 		}
 
 		/***
@@ -90,12 +97,16 @@ public class URLImageParser implements ImageGetter
 			{
 				InputStream is = fetch(urlString);
 				Drawable drawable = Drawable.createFromStream(is, "src");
-				drawable.setBounds(0, 0, 0 + drawable.getIntrinsicWidth(),
-						0 + drawable.getIntrinsicHeight());
-				return drawable;
+				if (drawable == null)
+					Log.w(IBC.TAG, "drawable is null, url=" + urlString);
+				else
+					drawable.setBounds(0, 0, 0 + drawable.getIntrinsicWidth(),
+							0 + drawable.getIntrinsicHeight());
+				return drawable; 
 			}
 			catch (Exception e)
 			{
+				Log.w(IBC.TAG, e);
 				return null;
 			}
 		}
