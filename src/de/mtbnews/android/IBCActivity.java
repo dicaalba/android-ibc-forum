@@ -99,52 +99,6 @@ public class IBCActivity extends ListActivity
 	 */
 	private void reloadFeed()
 	{
-		if (((IBCApplication) getApplication()).newsFeed != null)
-		{
-			RSSFeed feed = ((IBCApplication) getApplication()).newsFeed;
-			IBCActivity.this.setTitle(feed.getTitle());
-
-			ListAdapter adapter = new ListEntryContentAdapter(
-					IBCActivity.this, feed.getItems());
-			setListAdapter(adapter);
-			
-			return;
-		}
-
-		new ServerAsyncTask(this, R.string.waitingfor_news)
-		{
-
-			private RSSFeed feed;
-
-			@Override
-			protected void callServer() throws IOException
-			{
-				RSSReader reader = new RSSReader();
-				try
-				{
-					feed = reader.load(IBC.IBC_NEWS_RSS_URL);
-					((IBCApplication) getApplication()).newsFeed = feed;
-				}
-				catch (RSSReaderException e)
-				{
-					throw new ClientProtocolException(e);
-				}
-				catch (RSSFault e)
-				{
-					throw new ClientProtocolException(e);
-				}
-			}
-
-			protected void doOnSuccess()
-			{
-				IBCActivity.this.setTitle(feed.getTitle());
-
-				ListAdapter adapter = new ListEntryContentAdapter(
-						IBCActivity.this, this.feed.getItems());
-				setListAdapter(adapter);
-			}
-		}.execute();
-
 		final ListView list = getListView();
 
 		list.setOnItemClickListener(new OnItemClickListener()
@@ -160,6 +114,51 @@ public class IBCActivity extends ListActivity
 				startActivity(intent);
 			}
 		});
+
+		if (((IBCApplication) getApplication()).newsFeed != null)
+		{
+			RSSFeed feed = ((IBCApplication) getApplication()).newsFeed;
+			IBCActivity.this.setTitle(feed.getTitle());
+
+			ListAdapter adapter = new ListEntryContentAdapter(IBCActivity.this,
+					feed.getItems());
+			setListAdapter(adapter);
+		}
+		else
+		{
+			new ServerAsyncTask(this, R.string.waitingfor_news)
+			{
+				private RSSFeed feed;
+
+				@Override
+				protected void callServer() throws IOException
+				{
+					RSSReader reader = new RSSReader();
+					try
+					{
+						feed = reader.load(IBC.IBC_NEWS_RSS_URL);
+						((IBCApplication) getApplication()).newsFeed = feed;
+					}
+					catch (RSSReaderException e)
+					{
+						throw new ClientProtocolException(e);
+					}
+					catch (RSSFault e)
+					{
+						throw new ClientProtocolException(e);
+					}
+				}
+
+				protected void doOnSuccess()
+				{
+					IBCActivity.this.setTitle(feed.getTitle());
+
+					ListAdapter adapter = new ListEntryContentAdapter(
+							IBCActivity.this, this.feed.getItems());
+					setListAdapter(adapter);
+				}
+			}.execute();
+		}
 	}
 
 	@Override
