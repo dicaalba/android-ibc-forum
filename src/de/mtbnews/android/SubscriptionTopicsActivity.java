@@ -6,7 +6,9 @@ package de.mtbnews.android;
 import java.io.IOException;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,12 +36,14 @@ import de.mtbnews.android.util.ServerAsyncTask;
 public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 {
 	private int totalSize;
+	private SharedPreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		setContentView(R.layout.listing);
 
 		ListAdapter adapter = new ListEntryContentAdapter(
@@ -132,6 +136,12 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 			protected void callServer() throws IOException, TapatalkException
 			{
 				TapatalkClient client = ((IBCApplication) getApplication()).client;
+				
+				// Login.
+				if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
+						&& prefs.getBoolean("auto_login", false))
+					client.login(prefs.getString("username", ""), prefs
+							.getString("password", ""));
 
 				topicHolder = client.getSubscribedTopics(from, to, false);
 

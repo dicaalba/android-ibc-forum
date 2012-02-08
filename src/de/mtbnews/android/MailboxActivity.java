@@ -5,7 +5,9 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +25,7 @@ import de.mtbnews.android.util.ServerAsyncTask;
 public class MailboxActivity extends ListActivity
 {
 	private List<Mailbox> mailboxList;
+	private SharedPreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -30,7 +33,8 @@ public class MailboxActivity extends ListActivity
 		setContentView(R.layout.listing);
 
 		super.onCreate(savedInstanceState);
-
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
 
@@ -41,7 +45,14 @@ public class MailboxActivity extends ListActivity
 				try
 				{
 					TapatalkClient client = ((IBCApplication) getApplication())
-							.getTapatalkClient();
+					.getTapatalkClient();
+					
+					// Login.
+					if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
+							&& prefs.getBoolean("auto_login", false))
+						client.login(prefs.getString("username", ""), prefs
+								.getString("password", ""));
+					
 					mailboxList = client.getMailbox();
 
 				}

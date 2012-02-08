@@ -49,9 +49,6 @@ public class SubscriptionForenActivity extends ListActivity
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		TapatalkClient client = ((IBCApplication) getApplication())
-				.getTapatalkClient();
-
 		ListAdapter adapter = new ListEntryContentAdapter(
 				SubscriptionForenActivity.this, forumList);
 		setListAdapter(adapter);
@@ -98,6 +95,13 @@ public class SubscriptionForenActivity extends ListActivity
 			protected void callServer() throws IOException, TapatalkException
 			{
 				TapatalkClient client = ((IBCApplication) getApplication()).client;
+				
+				// Login.
+				if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
+						&& prefs.getBoolean("auto_login", false))
+					client.login(prefs.getString("username", ""), prefs
+							.getString("password", ""));
+				
 				newForumList = client.getSubscribedForum(false);
 			}
 
