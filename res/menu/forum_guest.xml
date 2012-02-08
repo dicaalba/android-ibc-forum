@@ -1,8 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/menu_login" android:title="@string/login"
 		android:icon="@android:drawable/ic_lock_lock"></item>
-		
-				
+
+	<item android:id="@+id/menu_latest_topics" android:title="@string/latest_topics"
+		android:icon="@android:drawable/ic_menu_today"></item>
+
 	<item android:id="@+id/menu_search" android:title="@string/search"
 		android:icon="@android:drawable/ic_menu_search"></item>
 </menu>
