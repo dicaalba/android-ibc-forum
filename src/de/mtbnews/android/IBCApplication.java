@@ -47,7 +47,7 @@ public class IBCApplication extends Application
 	@Override
 	public void onCreate()
 	{
-		Log.i(IBC.TAG,"starting main application");
+		Log.d(IBC.TAG,"starting main application");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		themeResId = (prefs.getBoolean("ibc_theme", true)) ? R.style.IBC

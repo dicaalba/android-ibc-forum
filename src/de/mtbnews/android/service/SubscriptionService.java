@@ -47,7 +47,7 @@ public class SubscriptionService extends Service
 	private static final int NOTIFICATION_TOPIC = 2;
 	private static final int NOTIFICATION_FORUM = 3;
 	private static final int NOTIFICATION_MESSAGES = 4;
-	
+
 	private TapatalkClient client;
 
 	public IBinder onBind(Intent arg0)
@@ -63,7 +63,7 @@ public class SubscriptionService extends Service
 	 */
 	public void onCreate()
 	{
-		Log.d(this.getClass().getSimpleName(), "Starting service");
+		Log.d(IBC.TAG, "Starting service");
 		super.onCreate();
 		ibcApp = (IBCApplication) getApplication();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -88,6 +88,7 @@ public class SubscriptionService extends Service
 		int intervalInMinutes = Integer.parseInt(prefs.getString(
 				"subscription_service_interval", "180"));
 
+		Log.d(IBC.TAG, "Creating the timer");
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new SubscriptionTask(), 2000,
 				intervalInMinutes * 60 * 1000);
@@ -105,32 +106,17 @@ public class SubscriptionService extends Service
 	{
 		public void run()
 		{
-			final long actualTime = System.currentTimeMillis();
+			Log.d(IBC.TAG, "timer event fired");
+			
 			final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 			try
 			{
-				Log.d(IBC.TAG, "timer event fired");
-
-				final TapatalkClient client = ibcApp.getTapatalkClient();
-
 				if (!client.loggedIn)
 				{
+					Log.d(IBC.TAG, "Login for: " + prefs.getString("username", ""));
 					client.login(prefs.getString("username", ""), prefs
 							.getString("password", ""));
-				}
-
-				if (!client.loggedIn)
-				{
-					final Notification notification = new Notification(
-							R.drawable.ibc_logo, "", actualTime);
-					notification.setLatestEventInfo(getApplicationContext(),
-							getResources().getString(R.string.login_failed),
-							"", null);
-					notification.flags = Notification.FLAG_AUTO_CANCEL;
-					nm.notify(NOTIFICATION_ERROR, notification);
-
-					return;
 				}
 
 				List<Forum> subscribedForum = client.getSubscribedForum(true);
@@ -239,9 +225,16 @@ public class SubscriptionService extends Service
 			}
 			catch (Exception e)
 			{
-				Log.w("IBC-Service", e);
+				Log.w(IBC.TAG, e);
 				throw new RuntimeException(e);
 			}
+		}
+
+		@Override
+		public boolean cancel()
+		{
+			Log.d(IBC.TAG, "Timer destroyed");
+			return super.cancel();
 		}
 	}
 
@@ -254,19 +247,27 @@ public class SubscriptionService extends Service
 	 */
 	public void onDestroy()
 	{
+		Log.d(IBC.TAG, "Destroying service");
 
 		timer.cancel(); // Alle Timer-Ereignisse stoppen.
-		Log.d(this.getClass().getSimpleName(), "Destroying service");
 
 		super.onDestroy();
 	}
 
 	/**
+	 * Notification erzeugen
+	 * 
 	 * @param tickerText
+	 *            Mehrzeiliger Ticker-Text, der in der Notification-Bar
+	 *            angezeigt wird.
 	 * @param titleResId
+	 *            Titel-Resource-Id der Notification
 	 * @param titleExtra
+	 *            Zusatz-Titeltext, kann <code>null</code> bleiben
 	 * @param content
+	 *            Inhaltstext der Noification
 	 * @param intent
+	 *            Auszulösender Intent
 	 * @return
 	 */
 	private Notification createNotification(String tickerText, int titleResId,
@@ -284,6 +285,7 @@ public class SubscriptionService extends Service
 		notification.defaults = Notification.DEFAULT_LIGHTS
 				| Notification.DEFAULT_SOUND;
 
+		// Falls so konfiguriert, den Vibrationsalarm auslösen
 		if (prefs.getBoolean("use_vibration", false))
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
 

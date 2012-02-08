@@ -34,6 +34,14 @@ public class TapatalkClient
 		this.client = new XMLRPCClient(connectorUrl);
 	}
 
+	/**
+	 * Benutzer-Login. Falls Login nicht klappt, wird eine
+	 * {@link TapatalkException} geworfen.
+	 * 
+	 * @param username
+	 * @param password
+	 * @throws TapatalkException
+	 */
 	public void login(String username, String password)
 			throws TapatalkException
 	{
@@ -697,7 +705,8 @@ public class TapatalkClient
 			final Object[] params = new Object[] { to, subject.getBytes(),
 					content.getBytes() };
 
-			final Boolean ok = (Boolean) client.callEx("create_message", params);
+			final Boolean ok = (Boolean) client
+					.callEx("create_message", params);
 			if (!ok)
 			{
 				throw new TapatalkException("sending message failed");
