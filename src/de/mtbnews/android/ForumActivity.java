@@ -279,7 +279,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 							{
 
 								new ServerAsyncTask(ForumActivity.this,
-										R.string.waitingfor_subscription_forums)
+										R.string.subscribe_forum)
 								{
 
 									@Override

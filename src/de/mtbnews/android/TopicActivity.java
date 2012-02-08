@@ -159,7 +159,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 									final int item)
 							{
 								new ServerAsyncTask(TopicActivity.this,
-										R.string.mark_topic_read)
+										R.string.subscribe_topic)
 								{
 
 									@Override
