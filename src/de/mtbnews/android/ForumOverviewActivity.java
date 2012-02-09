@@ -174,7 +174,17 @@ public class ForumOverviewActivity extends ExpandableListActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		super.onCreateOptionsMenu(menu);
+		// see #onPrepareOptionsMenu
+		
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		super.onPrepareOptionsMenu(menu);
+
+		menu.clear();
 		MenuInflater mi = new MenuInflater(getApplication());
 
 		TapatalkClient client = ((IBCApplication) getApplication())
