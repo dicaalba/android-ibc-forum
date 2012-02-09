@@ -9,6 +9,7 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import android.text.TextUtils;
+import android.util.Log;
 import de.mtbnews.android.tapatalk.TapatalkException.TapatalkErrorCode;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
 import de.mtbnews.android.tapatalk.wrapper.ListHolder;
@@ -17,6 +18,7 @@ import de.mtbnews.android.tapatalk.wrapper.Message;
 import de.mtbnews.android.tapatalk.wrapper.Post;
 import de.mtbnews.android.tapatalk.wrapper.Search;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
+import de.mtbnews.android.util.IBC;
 
 /**
  * Tapatalk-compatible client.
@@ -55,7 +57,8 @@ public class TapatalkClient
 		this.loginTime = -1L;
 
 		if (TextUtils.isEmpty(username))
-			throw new TapatalkException("Username empty",TapatalkErrorCode.NO_USERNAME);
+			throw new TapatalkException("Username empty",
+					TapatalkErrorCode.NO_USERNAME);
 
 		final Object[] params = new Object[] { username.getBytes(),
 				password.getBytes() };
@@ -87,10 +90,23 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException(
-					"Logout failed" + ": " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
+					"Logout failed" + ": " + e.getMessage(), e,
+					TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
+	/**
+	 * Load a topic.
+	 * 
+	 * @param topicId
+	 *            topic-id
+	 * @param start
+	 *            start-position
+	 * @param end
+	 *            end-position
+	 * @return list of topics
+	 * @throws TapatalkException
+	 */
 	@SuppressWarnings("unchecked")
 	public Topic getTopic(String topicId, int start, int end)
 			throws TapatalkException
@@ -114,9 +130,9 @@ public class TapatalkClient
 			{
 				Map postMap = (Map) o1;
 				Post post = new Post((Date) postMap.get("post_time"),
-						new String((byte[]) postMap.get("post_title")),
-						new String((byte[]) postMap.get("post_content")),
-						new String((byte[]) postMap.get("post_author_name")));
+						byteArrayToString(postMap.get("post_title")),
+						byteArrayToString(postMap.get("post_content")),
+						byteArrayToString(postMap.get("post_author_name")));
 				posts.add(post);
 			}
 
@@ -124,7 +140,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not load Topic " + topicId, e, TapatalkErrorCode.XMLRPC_ERROR);
+			throw new TapatalkException("Could not load Topic " + topicId, e,
+					TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -142,7 +159,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not load Forum structure", e, TapatalkErrorCode.XMLRPC_ERROR);
+			throw new TapatalkException("Could not load Forum structure", e,
+					TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -179,28 +197,31 @@ public class TapatalkClient
 			final Object[] params = new Object[] { forumId, from, to, mode2 };
 			Map map = (Map) toMap(client.callEx("get_topic", params));
 
-			String title = new String((byte[]) map.get("forum_name"));
-			String id = (String) map.get("forum_id");
-
 			final List<Topic> topics = new ArrayList<Topic>();
 			final List<Post> posts = new ArrayList<Post>();
+
+			String title = byteArrayToString(map.get("forum_name"));
+			String id = (String) map.get("forum_id");
 
 			final Forum forum = new Forum(id, topics, title, null, null);
 			forum.topicCount = (Integer) map.get("total_topic_num");
 
-			for (Object o1 : (Object[]) map.get("topics"))
+			if (forum.topicCount > 0)
 			{
-				Map topicMap = (Map) o1;
-				Topic topic = new Topic(
-						(String) topicMap.get("topic_id"),
-						posts, //
-						byteArrayToString(topicMap.get("topic_title")),//
-						(Date) topicMap.get("last_reply_time"), //
-						new String((byte[]) topicMap.get("short_content")),//
-						new String((byte[]) topicMap.get("topic_author_name")),
-						0);
-				topic.unread = (Boolean) topicMap.get("new_post");
-				topics.add(topic);
+				for (Object o1 : (Object[]) map.get("topics"))
+				{
+					Map topicMap = (Map) o1;
+					Topic topic = new Topic(
+							(String) topicMap.get("topic_id"),
+							posts, //
+							byteArrayToString(topicMap.get("topic_title")),//
+							(Date) topicMap.get("last_reply_time"), //
+							byteArrayToString(topicMap.get("short_content")),//
+							byteArrayToString(topicMap.get("topic_author_name")),
+							0);
+					topic.unread = (Boolean) topicMap.get("new_post");
+					topics.add(topic);
+				}
 			}
 
 			return forum;
@@ -231,13 +252,14 @@ public class TapatalkClient
 				if (!onlyUnread || (Boolean) topicMap.get("new_post"))
 				{
 
-					Topic topic = new Topic((String) topicMap.get("topic_id"),
+					Topic topic = new Topic(
+							(String) topicMap.get("topic_id"),
 							new ArrayList<Post>(), //
 							byteArrayToString(topicMap.get("topic_title")),//
 							(Date) topicMap.get("post_time"), //
-							new String((byte[]) topicMap.get("short_content")),//
-							new String((byte[]) topicMap
-									.get("post_author_name")), 0);
+							byteArrayToString(topicMap.get("short_content")),//
+							byteArrayToString(topicMap.get("post_author_name")),
+							0);
 					topic.unread = (Boolean) topicMap.get("new_post");
 					topics.add(topic);
 				}
@@ -315,7 +337,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("XMLRPC-Error: " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
+			throw new TapatalkException("XMLRPC-Error: " + e.getMessage(), e,
+					TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -473,14 +496,12 @@ public class TapatalkClient
 			for (Object o1 : (Object[]) map.get("topics"))
 			{
 				Map topicMap = toMap(o1);
-				Topic topic = new Topic(
-						(String) topicMap.get("topic_id"),
+				Topic topic = new Topic((String) topicMap.get("topic_id"),
 						posts, //
 						byteArrayToString(topicMap.get("topic_title")),//
 						(Date) topicMap.get("post_time"), //
-						new String((byte[]) topicMap.get("short_content")),//
-						new String((byte[]) topicMap.get("post_author_name")),
-						0);
+						byteArrayToString(topicMap.get("short_content")),//
+						byteArrayToString(topicMap.get("post_author_name")), 0);
 				topic.unread = (Boolean) topicMap.get("new_post");
 				topics.add(topic);
 			}
@@ -620,7 +641,8 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not read message " + boxId + ","
-					+ messageId + ": " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
+					+ messageId + ": " + e.getMessage(), e,
+					TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -677,7 +699,8 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not reply", e, TapatalkErrorCode.XMLRPC_ERROR);
+			throw new TapatalkException("Could not reply", e,
+					TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -702,12 +725,14 @@ public class TapatalkClient
 					.callEx("create_message", params);
 			if (!ok)
 			{
-				throw new TapatalkException("sending message failed",TapatalkErrorCode.SEND_MESSAGE_FAILED);
+				throw new TapatalkException("sending message failed",
+						TapatalkErrorCode.SEND_MESSAGE_FAILED);
 			}
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not create the message", e, TapatalkErrorCode.XMLRPC_ERROR);
+			throw new TapatalkException("Could not create the message", e,
+					TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -750,7 +775,8 @@ public class TapatalkClient
 		if (!(o instanceof Map))
 		{
 			throw new TapatalkException("no map: " + o.toString() + " ("
-					+ o.getClass() + ")",TapatalkErrorCode.UNKNOWN_SERVER_RESPONSE);
+					+ o.getClass() + ")",
+					TapatalkErrorCode.UNKNOWN_SERVER_RESPONSE);
 		}
 		Map<String, Object> map = (Map<String, Object>) o;
 
@@ -761,7 +787,8 @@ public class TapatalkClient
 		boolean ok = (Boolean) object;
 		if (!ok)
 			throw new TapatalkException(byteArrayToString(map
-					.get("result_text")),TapatalkErrorCode.UNKNOWN_SERVER_RESPONSE);
+					.get("result_text")),
+					TapatalkErrorCode.UNKNOWN_SERVER_RESPONSE);
 		return map;
 	}
 
@@ -788,5 +815,4 @@ public class TapatalkClient
 
 	}
 
-	
 }
