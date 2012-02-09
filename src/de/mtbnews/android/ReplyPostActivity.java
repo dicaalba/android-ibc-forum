@@ -1,10 +1,9 @@
 package de.mtbnews.android;
 
-import java.io.IOException;
-
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.util.ServerAsyncTask;
+import de.mtbnews.android.util.Utils;
 
 public class ReplyPostActivity extends Activity
 {
@@ -20,12 +20,14 @@ public class ReplyPostActivity extends Activity
 	private String topicId;
 	private String subject;
 	private String quote;
+	private SharedPreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		setContentView(R.layout.post);
 		super.onCreate(savedInstanceState);
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		topicId = getIntent().getStringExtra("topic_id");
 		forumId = getIntent().getStringExtra("forum_id");
@@ -60,6 +62,11 @@ public class ReplyPostActivity extends Activity
 					{
 						TapatalkClient client = ((IBCApplication) getApplication())
 								.getTapatalkClient();
+
+						// Login.
+						if (Utils.loginExceeded(client))
+							client.login(prefs.getString("username", ""), prefs
+									.getString("password", ""));
 
 						client.createReply(forumId, topicId, subject.getText()
 								.toString(), text.getText().toString());

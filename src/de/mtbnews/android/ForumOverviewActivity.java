@@ -27,7 +27,9 @@ import de.mtbnews.android.adapter.ExpandableForumContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
+import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
+import de.mtbnews.android.util.Utils;
 
 /**
  * @author dankert
@@ -93,10 +95,10 @@ public class ForumOverviewActivity extends ExpandableListActivity
 			protected void callServer() throws TapatalkException
 			{
 				// Login.
-				if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
-						&& prefs.getBoolean("auto_login", false))
-					client.login(prefs.getString("username", ""), prefs
-							.getString("password", ""));
+				if (prefs.getBoolean("auto_login", false))
+					if (Utils.loginExceeded(client))
+						client.login(prefs.getString("username", ""), prefs
+								.getString("password", ""));
 
 				forumList = client.getAllForum();
 				unterforenFlachkloppen();

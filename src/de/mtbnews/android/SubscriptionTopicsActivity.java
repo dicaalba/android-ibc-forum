@@ -26,6 +26,7 @@ import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.ListHolder;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
 import de.mtbnews.android.util.ServerAsyncTask;
+import de.mtbnews.android.util.Utils;
 
 /**
  * Anzeige aller Beiträge eines Themas.
@@ -43,7 +44,7 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 	{
 		super.onCreate(savedInstanceState);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
 		setContentView(R.layout.listing);
 
 		ListAdapter adapter = new ListEntryContentAdapter(
@@ -136,10 +137,9 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 			protected void callServer() throws IOException, TapatalkException
 			{
 				TapatalkClient client = ((IBCApplication) getApplication()).client;
-				
+
 				// Login.
-				if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
-						&& prefs.getBoolean("auto_login", false))
+				if (Utils.loginExceeded(client))
 					client.login(prefs.getString("username", ""), prefs
 							.getString("password", ""));
 

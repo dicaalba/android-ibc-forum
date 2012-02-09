@@ -21,6 +21,7 @@ import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Mailbox;
 import de.mtbnews.android.util.ServerAsyncTask;
+import de.mtbnews.android.util.Utils;
 
 public class MailboxActivity extends ListActivity
 {
@@ -45,8 +46,7 @@ public class MailboxActivity extends ListActivity
 						.getTapatalkClient();
 
 				// Login.
-				if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
-						&& prefs.getBoolean("auto_login", false))
+				if (Utils.loginExceeded(client))
 					client.login(prefs.getString("username", ""), prefs
 							.getString("password", ""));
 

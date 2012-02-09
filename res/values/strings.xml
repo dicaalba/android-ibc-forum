@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="canceled">Abgebrochen</string>
 	<string name="more">Mehr</string>
 	<string name="sub_only">Forum enthält keine Themen</string>
 	<string name="app_name">IBC</string>
@@ -60,7 +61,9 @@
 	<string name="description">Inhalt</string>
 	<string name="editor">Inhalt</string>
 	<string name="error_timeout">Zeitablauf</string>
-	<string name="error_io">Verbindungsabbruch</string>
+	<string name="error_io">Keine Verbindung</string>
+	<string name="xmlrpc_error">Keine Verbindung zum Server</string>
+	<string name="error_common_server">Keine Antwort vom Server</string>
 	<string name="error">Fehler</string>
 	<string name="error_tapatalk">Tut uns leid, aber diese Aktion war nicht erfolgreich</string>
 	<string name="reason">Grund</string>
@@ -94,7 +97,7 @@
 	<string name="auto_load_next_desc">Beim Scrollen die nächsten Einträge automatisch
 		laden</string>
 	<string name="login">Anmelden</string>
-	<string name="login_success">Benutzeranmeldung erfolgreich</string>
+	<string name="login_success">Anmeldung erfolgreich</string>
 	<string name="login_failed">Benutzeranmeldung nicht erfolgreich</string>
 	<string name="logout">Abmelden</string>
 	<string-array name="num_load_list">

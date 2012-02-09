@@ -32,6 +32,7 @@ import de.mtbnews.android.tapatalk.wrapper.ListHolder;
 import de.mtbnews.android.tapatalk.wrapper.Mailbox;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
 import de.mtbnews.android.util.IBC;
+import de.mtbnews.android.util.Utils;
 
 /**
  * @author dankert
@@ -70,20 +71,6 @@ public class SubscriptionService extends Service
 
 		client = ibcApp.getTapatalkClient();
 
-		if (prefs.getBoolean("auto_login", false))
-		{
-			Log.i(IBC.TAG, "Login for " + prefs.getString("username", ""));
-			try
-			{
-				client.login(prefs.getString("username", ""), prefs.getString(
-						"password", ""));
-			}
-			catch (TapatalkException e)
-			{
-				Log.w(IBC.TAG, e);
-			}
-		}
-
 		// Intervall in Minuten (Default = 3 Stunden)
 		int intervalInMinutes = Integer.parseInt(prefs.getString(
 				"subscription_service_interval", "180"));
@@ -112,13 +99,8 @@ public class SubscriptionService extends Service
 
 			try
 			{
-				if (!client.loggedIn)
-				{
-					Log.d(IBC.TAG, "Login for: "
-							+ prefs.getString("username", ""));
-					client.login(prefs.getString("username", ""), prefs
-							.getString("password", ""));
-				}
+				client.login(prefs.getString("username", ""), prefs.getString(
+						"password", ""));
 
 				List<Forum> subscribedForum = client.getSubscribedForum(true);
 
@@ -146,6 +128,7 @@ public class SubscriptionService extends Service
 									.join(", ", forumNameList), contentIntent);
 					nm.notify(NOTIFICATION_FORUM, notification);
 				}
+				
 				ListHolder<Topic> subscribedTopic = client.getSubscribedTopics(
 						0, 10, true);
 				final List<String> topicNameList = new ArrayList<String>();
@@ -212,13 +195,16 @@ public class SubscriptionService extends Service
 			}
 			catch (TapatalkException e)
 			{
+				// Kann vorkommen, wenn Login fehlschlägt oder Verbindung
+				// abbricht
 				final Intent notificationIntent = new Intent(
 						SubscriptionService.this, IBCActivity.class);
 				final PendingIntent contentIntent = PendingIntent.getActivity(
 						SubscriptionService.this, 0, notificationIntent, 0);
 
 				final Notification notification = createNotification(e
-						.getMessage(), R.string.error, null, e.getMessage(),
+						.getMessage(), R.string.error, null, getResources()
+						.getString(Utils.getResId(e.getErrorCode())),
 						contentIntent);
 
 				notification.flags = Notification.FLAG_AUTO_CANCEL;
@@ -234,7 +220,7 @@ public class SubscriptionService extends Service
 				// Fehler nicht weiterwerfen, würde der Service eh nichts mehr
 				// machen und niemandem wäre geholfen.
 				Log.w(IBC.TAG, e);
-				throw new RuntimeException(e);
+				throw new RuntimeException("Unrecoverable error in service", e);
 			}
 		}
 

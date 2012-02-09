@@ -29,6 +29,7 @@ import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
 import de.mtbnews.android.util.ServerAsyncTask;
+import de.mtbnews.android.util.Utils;
 
 /**
  * @author dankert
@@ -95,13 +96,12 @@ public class SubscriptionForenActivity extends ListActivity
 			protected void callServer() throws IOException, TapatalkException
 			{
 				TapatalkClient client = ((IBCApplication) getApplication()).client;
-				
+
 				// Login.
-				if (!((IBCApplication) getApplication()).getTapatalkClient().loggedIn
-						&& prefs.getBoolean("auto_login", false))
+				if (Utils.loginExceeded(client))
 					client.login(prefs.getString("username", ""), prefs
 							.getString("password", ""));
-				
+
 				newForumList = client.getSubscribedForum(false);
 			}
 

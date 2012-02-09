@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 import de.mtbnews.android.R;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
@@ -70,6 +71,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 					public void onCancel(DialogInterface dialog)
 					{
 						ServerAsyncTask.this.cancel(true);
+						Toast.makeText(context,R.string.canceled,Toast.LENGTH_SHORT).show();
 					}
 				});
 
@@ -108,7 +110,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 		final Builder builder = new AlertDialog.Builder(this.context);
 		alertDialog = builder.setCancelable(true).create();
 
-		alertDialog.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+		alertDialog.setIcon(android.R.drawable.ic_menu_info_details);
 		alertDialog.setMessage(context.getText(error.getErrorResId()));
 		alertDialog.show();
 
@@ -142,7 +144,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 			Log.w(this.getClass().getName(), e.getMessage(), e);
 
 			final int resId;
-			
+
 			if (e instanceof SocketTimeoutException)
 				resId = R.string.error_timeout;
 			else
@@ -153,7 +155,8 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 		catch (TapatalkException e)
 		{
 			Log.w(this.getClass().getName(), e.getMessage(), e);
-			error = new IBCException(R.string.error_tapatalk, e.getMessage(), e);
+			error = new IBCException(Utils.getResId(e.getErrorCode()), e
+					.getMessage(), e);
 		}
 		catch (IBCException e)
 		{

@@ -9,6 +9,7 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import android.text.TextUtils;
+import de.mtbnews.android.tapatalk.TapatalkException.TapatalkErrorCode;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
 import de.mtbnews.android.tapatalk.wrapper.ListHolder;
 import de.mtbnews.android.tapatalk.wrapper.Mailbox;
@@ -28,7 +29,12 @@ public class TapatalkClient
 	private XMLRPCClient client;
 
 	public boolean loggedIn;
+	public long loginTime;
 
+	/**
+	 * @param connectorUrl
+	 *            URL
+	 */
 	public TapatalkClient(String connectorUrl)
 	{
 		this.client = new XMLRPCClient(connectorUrl);
@@ -46,24 +52,10 @@ public class TapatalkClient
 			throws TapatalkException
 	{
 		this.loggedIn = false;
+		this.loginTime = -1L;
 
 		if (TextUtils.isEmpty(username))
-			throw new TapatalkException("Username empty");
-
-		// try
-		// {
-		//
-		// final Map<String, Object> map = (Map<String, Object>)
-		// toMap(getXMLRPCClient()
-		// .call("get_config"));
-		// Log.i("IBC Server Config", map.toString());
-		// for (String key : map.keySet())
-		// Log.d("IBC Server Config", key + "=" + map.get(key));
-		// }
-		// catch (XMLRPCException e)
-		// {
-		// throw new TapatalkException("Load Config failed", e);
-		// }
+			throw new TapatalkException("Username empty",TapatalkErrorCode.NO_USERNAME);
 
 		final Object[] params = new Object[] { username.getBytes(),
 				password.getBytes() };
@@ -73,11 +65,12 @@ public class TapatalkClient
 
 			toMap(client.callEx("login", params));
 			this.loggedIn = true;
+			this.loginTime = System.currentTimeMillis();
 		}
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Login failed" + ": " + e.getMessage(),
-					e);
+					e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 
 	}
@@ -94,7 +87,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException(
-					"Logout failed" + ": " + e.getMessage(), e);
+					"Logout failed" + ": " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -131,7 +124,7 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not load Topic " + topicId, e);
+			throw new TapatalkException("Could not load Topic " + topicId, e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -149,7 +142,7 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not load Forum structure", e);
+			throw new TapatalkException("Could not load Forum structure", e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -215,7 +208,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not load Forum " + forumId
-					+ ": " + e.getMessage(), e);
+					+ ": " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -257,7 +250,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not load subscribe topics"
-					+ ": " + e.getMessage(), e);
+					+ ": " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -294,7 +287,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not load subscribe topics"
-					+ ": " + e.getMessage(), e);
+					+ ": " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -322,7 +315,7 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("XMLRPC-Error: " + e.getMessage(), e);
+			throw new TapatalkException("XMLRPC-Error: " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -345,7 +338,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Marking topics read: "
-					+ e.getMessage(), e);
+					+ e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -384,7 +377,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not load subscribe topics"
-					+ ": " + e.getMessage(), e);
+					+ ": " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -417,7 +410,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not load subscribe topics"
-					+ ": " + e.getMessage(), e);
+					+ ": " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -497,7 +490,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not search" + ": "
-					+ e.getMessage(), e);
+					+ e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -534,7 +527,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not read mailbox" + ": "
-					+ e.getMessage(), e);
+					+ e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -587,7 +580,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not read mailbox " + boxId
-					+ ": " + e.getMessage(), e);
+					+ ": " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -627,7 +620,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not read message " + boxId + ","
-					+ messageId + ": " + e.getMessage(), e);
+					+ messageId + ": " + e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -656,7 +649,7 @@ public class TapatalkClient
 		catch (XMLRPCException e)
 		{
 			throw new TapatalkException("Could not create the topic: "
-					+ e.getMessage(), e);
+					+ e.getMessage(), e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -684,7 +677,7 @@ public class TapatalkClient
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not reply", e);
+			throw new TapatalkException("Could not reply", e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -709,12 +702,12 @@ public class TapatalkClient
 					.callEx("create_message", params);
 			if (!ok)
 			{
-				throw new TapatalkException("sending message failed");
+				throw new TapatalkException("sending message failed",TapatalkErrorCode.SEND_MESSAGE_FAILED);
 			}
 		}
 		catch (XMLRPCException e)
 		{
-			throw new TapatalkException("Could not create the message", e);
+			throw new TapatalkException("Could not create the message", e, TapatalkErrorCode.XMLRPC_ERROR);
 		}
 	}
 
@@ -757,7 +750,7 @@ public class TapatalkClient
 		if (!(o instanceof Map))
 		{
 			throw new TapatalkException("no map: " + o.toString() + " ("
-					+ o.getClass() + ")");
+					+ o.getClass() + ")",TapatalkErrorCode.UNKNOWN_SERVER_RESPONSE);
 		}
 		Map<String, Object> map = (Map<String, Object>) o;
 
@@ -768,7 +761,7 @@ public class TapatalkClient
 		boolean ok = (Boolean) object;
 		if (!ok)
 			throw new TapatalkException(byteArrayToString(map
-					.get("result_text")));
+					.get("result_text")),TapatalkErrorCode.UNKNOWN_SERVER_RESPONSE);
 		return map;
 	}
 
@@ -795,4 +788,5 @@ public class TapatalkClient
 
 	}
 
+	
 }

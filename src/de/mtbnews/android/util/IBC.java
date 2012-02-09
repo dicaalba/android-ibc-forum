@@ -23,7 +23,7 @@ public interface IBC
 	 * Fee-URL für Nachrichten.
 	 */
 	static final String IBC_NEWS_RSS_URL = "http://www.mtb-news.de/news/feed/";
-	
+
 	/**
 	 * Feed-URL für Fotos.
 	 */
@@ -34,4 +34,8 @@ public interface IBC
 	 */
 	static final String TAG = "IBC";
 
+	/**
+	 * Sitzungs-Timeout. Ab wieviel Minuten sollte das Login erneuert werden?
+	 */
+	static final int LOGIN_TIMEOUT = 10;
 }

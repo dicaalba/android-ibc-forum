@@ -3,7 +3,9 @@ package de.mtbnews.android;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -12,17 +14,19 @@ import android.widget.Toast;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.util.ServerAsyncTask;
+import de.mtbnews.android.util.Utils;
 
 public class CreateTopicActivity extends Activity
 {
 	private String forumId;
+	private SharedPreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		setContentView(R.layout.post);
 		super.onCreate(savedInstanceState);
-
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		forumId = getIntent().getStringExtra("forum_id");
 
 		final TextView recipient = (TextView) findViewById(R.id.recipient);
@@ -41,8 +45,7 @@ public class CreateTopicActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				new ServerAsyncTask(CreateTopicActivity.this,
-						R.string.send)
+				new ServerAsyncTask(CreateTopicActivity.this, R.string.send)
 				{
 
 					@Override
@@ -51,6 +54,12 @@ public class CreateTopicActivity extends Activity
 					{
 						TapatalkClient client = ((IBCApplication) getApplication())
 								.getTapatalkClient();
+						
+						// Login.
+						if (Utils.loginExceeded(client))
+							client.login(prefs.getString("username", ""), prefs
+									.getString("password", ""));
+
 						client.createTopic(forumId, subject.getText()
 								.toString(), text.getText().toString());
 					}
