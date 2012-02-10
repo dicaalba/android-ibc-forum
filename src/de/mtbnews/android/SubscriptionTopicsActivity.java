@@ -154,9 +154,10 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 				onListLoadedListener.listLoaded(this.topicHolder.getChildren());
 
 				if (firstLoad)
-					Toast.makeText(SubscriptionTopicsActivity.this,
-							R.string.hint_press_long, Toast.LENGTH_SHORT)
-							.show();
+					if (prefs.getBoolean("show_hints", true))
+						Toast.makeText(SubscriptionTopicsActivity.this,
+								R.string.hint_press_long, Toast.LENGTH_SHORT)
+								.show();
 
 			}
 

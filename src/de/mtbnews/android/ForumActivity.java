@@ -65,7 +65,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		}
 
 		forumId = getIntent().getStringExtra(FORUM_ID);
-		Log.d(IBC.TAG,"Loading forum #"+forumId);
+		Log.d(IBC.TAG, "Loading forum #" + forumId);
 
 		ListAdapter adapter = new ListEntryContentAdapter(ForumActivity.this,
 				entries);
@@ -143,7 +143,8 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 	private void login()
 	{
-		final TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
+		final TapatalkClient client = ((IBCApplication) getApplication())
+				.getTapatalkClient();
 		new ServerAsyncTask(this, R.string.waitingfor_login)
 		{
 
@@ -171,7 +172,8 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 	private void logout()
 	{
-		final TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
+		final TapatalkClient client = ((IBCApplication) getApplication())
+				.getTapatalkClient();
 
 		new ServerAsyncTask(this, R.string.waitingfor_logout)
 		{
@@ -396,7 +398,8 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			protected void callServer() throws TapatalkException
 			{
 
-				TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
+				TapatalkClient client = ((IBCApplication) getApplication())
+						.getTapatalkClient();
 				this.forum = client.getForum(forumId, from, to, topicMode);
 				totalSize = this.forum.topicCount;
 			}
@@ -407,9 +410,10 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				onListLoaded.listLoaded(this.forum.getTopics());
 
 				if (firstLoad)
-					Toast.makeText(ForumActivity.this,
-							R.string.hint_press_long, Toast.LENGTH_SHORT)
-							.show();
+					if (prefs.getBoolean("show_hints", true))
+						Toast.makeText(ForumActivity.this,
+								R.string.hint_press_long, Toast.LENGTH_SHORT)
+								.show();
 			}
 
 		}.execute();
