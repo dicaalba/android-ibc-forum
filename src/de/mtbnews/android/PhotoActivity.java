@@ -1,9 +1,9 @@
 package de.mtbnews.android;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
+import org.mcsoxford.rss.RSSFault;
 import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSItem;
 import org.mcsoxford.rss.RSSReader;
@@ -21,14 +21,14 @@ import de.mtbnews.android.adapter.RSSContentAdapter;
 import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
+/**
+ * Anzeige des RSSFeed für neue Fotos.
+ * 
+ * @author dankert
+ * 
+ */
 public class PhotoActivity extends ListActivity
 {
-	public final static String ELEMENTID = "elementid";
-	public final static String OBJECTID = "objectid";
-	// public final static String TYPE = "type";
-	public static final String CLIENT = "client";
-	private Map<String, String> properties;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -44,12 +44,16 @@ public class PhotoActivity extends ListActivity
 			@Override
 			protected void callServer() throws IOException
 			{
-				RSSReader reader = new RSSReader();
+				final RSSReader reader = new RSSReader();
 				try
 				{
 					feed = reader.load(IBC.IBC_FOTOS_RSS_URL);
 				}
 				catch (RSSReaderException e)
+				{
+					throw new ClientProtocolException("Feed not available", e);
+				}
+				catch (RSSFault e)
 				{
 					throw new ClientProtocolException("Feed not available", e);
 				}
@@ -59,7 +63,7 @@ public class PhotoActivity extends ListActivity
 			{
 				ListAdapter adapter = new RSSContentAdapter(PhotoActivity.this,
 						feed);
-				PhotoActivity.this.setTitle( feed.getTitle() );
+				PhotoActivity.this.setTitle(feed.getTitle());
 
 				setListAdapter(adapter);
 			}
