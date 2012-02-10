@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +30,7 @@ import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
+import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.IBCException;
 import de.mtbnews.android.util.ServerAsyncTask;
 
@@ -63,6 +65,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		}
 
 		forumId = getIntent().getStringExtra(FORUM_ID);
+		Log.d(IBC.TAG,"Loading forum #"+forumId);
 
 		ListAdapter adapter = new ListEntryContentAdapter(ForumActivity.this,
 				entries);
@@ -140,7 +143,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 	private void login()
 	{
-		final TapatalkClient client = ((IBCApplication) getApplication()).client;
+		final TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 		new ServerAsyncTask(this, R.string.waitingfor_login)
 		{
 
@@ -168,7 +171,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 	private void logout()
 	{
-		final TapatalkClient client = ((IBCApplication) getApplication()).client;
+		final TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 		new ServerAsyncTask(this, R.string.waitingfor_logout)
 		{
@@ -199,7 +202,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		super.onCreateOptionsMenu(menu);
 		MenuInflater mi = new MenuInflater(getApplication());
 
-		if (((IBCApplication) getApplication()).client.loggedIn)
+		if (((IBCApplication) getApplication()).getTapatalkClient().loggedIn)
 			mi.inflate(R.menu.forum, menu);
 		else
 			mi.inflate(R.menu.forum_guest, menu);
@@ -393,7 +396,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			protected void callServer() throws TapatalkException
 			{
 
-				TapatalkClient client = ((IBCApplication) getApplication()).client;
+				TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 				this.forum = client.getForum(forumId, from, to, topicMode);
 				totalSize = this.forum.topicCount;
 			}

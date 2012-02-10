@@ -174,7 +174,7 @@ public class SearchActivity extends EndlessListActivity<Topic>
 			@Override
 			protected void callServer() throws TapatalkException
 			{
-				TapatalkClient client = ((IBCApplication) getApplication()).client;
+				TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 				search = client.searchTopics(searchType, query, username, from,
 						to, searchId);

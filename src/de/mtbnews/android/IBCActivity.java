@@ -58,16 +58,6 @@ public class IBCActivity extends ListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start);
 
-		// Gast-Zugang ist ok, daher keine Meldung anzeigen...
-		// if (globalPrefs.getString("username", "").equals("") )
-		// {
-		// // Noch kein Benutzer konfiguriert. Hinweis anzeigen!
-		// final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		// builder.setMessage(getResources().getString(R.string.noserver));
-		// AlertDialog alert = builder.create();
-		// alert.show();
-		// }
-
 		Button forumButton = (Button) findViewById(R.id.forum);
 		forumButton.setOnClickListener(new OnClickListener()
 		{
@@ -79,17 +69,6 @@ public class IBCActivity extends ListActivity
 						ForumOverviewActivity.class));
 			}
 		});
-
-		// Button photoButton = (Button) findViewById(R.id.photo);
-		// photoButton.setOnClickListener(new OnClickListener()
-		// {
-		//
-		// @Override
-		// public void onClick(View v)
-		// {
-		// startActivity(new Intent(IBCActivity.this, PhotoActivity.class));
-		// }
-		// });
 
 		reloadFeed();
 	}
@@ -115,29 +94,28 @@ public class IBCActivity extends ListActivity
 			}
 		});
 
-		if (((IBCApplication) getApplication()).newsFeed != null)
+		new ServerAsyncTask(this, R.string.waitingfor_news)
 		{
-			RSSFeed feed = ((IBCApplication) getApplication()).newsFeed;
-			IBCActivity.this.setTitle(feed.getTitle());
+			private RSSFeed feed;
 
-			ListAdapter adapter = new ListEntryContentAdapter(IBCActivity.this,
-					feed.getItems());
-			setListAdapter(adapter);
-		}
-		else
-		{
-			new ServerAsyncTask(this, R.string.waitingfor_news)
+			@Override
+			protected void callServer() throws IOException
 			{
-				private RSSFeed feed;
-
-				@Override
-				protected void callServer() throws IOException
+				final RSSFeed oldFeed = ((IBCApplication) getApplication())
+						.getNewsFeed();
+				
+				if (oldFeed != null)
 				{
+					feed = oldFeed;
+				}
+				else
+				{
+
 					RSSReader reader = new RSSReader();
 					try
 					{
 						feed = reader.load(IBC.IBC_NEWS_RSS_URL);
-						((IBCApplication) getApplication()).newsFeed = feed;
+						((IBCApplication) getApplication()).setNewsFeed(feed);
 					}
 					catch (RSSReaderException e)
 					{
@@ -148,17 +126,17 @@ public class IBCActivity extends ListActivity
 						throw new ClientProtocolException(e);
 					}
 				}
+			}
 
-				protected void doOnSuccess()
-				{
-					IBCActivity.this.setTitle(feed.getTitle());
+			protected void doOnSuccess()
+			{
+				IBCActivity.this.setTitle(feed.getTitle());
 
-					ListAdapter adapter = new ListEntryContentAdapter(
-							IBCActivity.this, this.feed.getItems());
-					setListAdapter(adapter);
-				}
-			}.execute();
-		}
+				ListAdapter adapter = new ListEntryContentAdapter(
+						IBCActivity.this, this.feed.getItems());
+				setListAdapter(adapter);
+			}
+		}.execute();
 	}
 
 	@Override

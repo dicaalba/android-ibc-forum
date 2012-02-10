@@ -94,15 +94,19 @@ public class ForumOverviewActivity extends ExpandableListActivity
 			@Override
 			protected void callServer() throws TapatalkException
 			{
-				// Login.
-				if (prefs.getBoolean("auto_login", false))
-					if (Utils.loginExceeded(client))
-						client.login(prefs.getString("username", ""), prefs
-								.getString("password", ""));
+				// Forumliste nur laden, wenn noch nicht vorhanden.
+				if (forumList == null)
+				{
+					// Login.
+					if (prefs.getBoolean("auto_login", false))
+						if (Utils.loginExceeded(client))
+							client.login(prefs.getString("username", ""), prefs
+									.getString("password", ""));
 
-				forumList = client.getAllForum();
-				unterforenFlachkloppen();
+					forumList = client.getAllForum();
+					unterforenFlachkloppen();
 
+				}
 			}
 
 			protected void doOnSuccess()
@@ -116,29 +120,6 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 		final ExpandableListView list = getExpandableListView();
 
-		// list.setOnGroupClickListener(new OnGroupClickListener()
-		// {
-		// @Override
-		// public boolean onGroupClick(ExpandableListView parent, View v,
-		// int groupPosition, long id)
-		// {
-		// Forum forum = forumList.get(groupPosition);
-		//				
-		// if (forum.subOnly)
-		// {
-		// Toast.makeText(ForumOverviewActivity.this,
-		// R.string.sub_only, Toast.LENGTH_SHORT).show();
-		// }
-		// else
-		// {
-		// final Intent intent = new Intent(
-		// ForumOverviewActivity.this, ForumActivity.class);
-		// intent.putExtra("forum_id", forum.getId());
-		// startActivity(intent);
-		// }
-		// return true;
-		// }
-		// });
 		list.setOnChildClickListener(new OnChildClickListener()
 		{
 
@@ -175,7 +156,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		// see #onPrepareOptionsMenu
-		
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -209,6 +190,10 @@ public class ForumOverviewActivity extends ExpandableListActivity
 		return super.onSearchRequested();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch (item.getItemId())
@@ -250,6 +235,10 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 			case R.id.menu_logout:
 				logout();
+				
+				// Forum-Übersicht neu laden.
+				forumList = null;
+				loadForum();
 				return true;
 
 			case R.id.menu_login:
@@ -267,7 +256,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 				if (!TextUtils.isEmpty(prefs.getString("username", "")))
 				{
-					final TapatalkClient client = ((IBCApplication) getApplication()).client;
+					final TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 					new ServerAsyncTask(this, R.string.waitingfor_login)
 					{
 
@@ -287,6 +276,8 @@ public class ForumOverviewActivity extends ExpandableListActivity
 							Toast.makeText(ForumOverviewActivity.this,
 									R.string.login_success, Toast.LENGTH_SHORT)
 									.show();
+							forumList = null;
+							loadForum();
 						}
 
 					}.executeSynchronized();
@@ -306,7 +297,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 	private void logout()
 	{
-		final TapatalkClient client = ((IBCApplication) getApplication()).client;
+		final TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 		new ServerAsyncTask(this, R.string.waitingfor_logout)
 		{

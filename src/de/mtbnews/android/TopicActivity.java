@@ -99,7 +99,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 			@Override
 			protected void callServer() throws TapatalkException
 			{
-				TapatalkClient client = ((IBCApplication) getApplication()).client;
+				TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 				topic = client.getTopic(topicId, from, to);
 

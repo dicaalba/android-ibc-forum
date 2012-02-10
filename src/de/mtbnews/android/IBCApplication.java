@@ -3,6 +3,8 @@
  */
 package de.mtbnews.android;
 
+import java.lang.ref.SoftReference;
+
 import org.mcsoxford.rss.RSSFeed;
 
 import android.app.Application;
@@ -24,20 +26,23 @@ import de.mtbnews.android.util.IBC;
  */
 public class IBCApplication extends Application
 {
-	public RSSFeed newsFeed;
+	/**
+	 * Speichert eine Referenz auf den Tapatalk-Client. Dieser Client kann vom
+	 * GC jederzeit entfernt werden, wenn der Speicherverbrauch zu hoch ist.
+	 */
+	private SoftReference<TapatalkClient> tapatalkClientRef = new SoftReference<TapatalkClient>(
+			null);
 
-	public RSSFeed photoFeed;
-
-	public TapatalkClient client;
+	/**
+	 * Speichert eine Referenz auf den RSSFeed. Dieser Feed kann vom GC
+	 * jederzeit entfernt werden, wenn der Speicherverbrauch zu hoch ist.
+	 */
+	private SoftReference<RSSFeed> newsFeedRef = new SoftReference<RSSFeed>(
+			null);
 
 	public SharedPreferences prefs;
 
 	public int themeResId;
-
-	public TapatalkClient getTapatalkClient()
-	{
-		return client;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -47,14 +52,11 @@ public class IBCApplication extends Application
 	@Override
 	public void onCreate()
 	{
-		Log.d(IBC.TAG,"starting main application");
+		Log.d(IBC.TAG, "starting main application");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		themeResId = (prefs.getBoolean("ibc_theme", true)) ? R.style.IBC
 				: android.R.style.Theme;
-
-		client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
-		client.getXMLRPCClient().setUserAgent("Mozilla/5.0 (compatible; Android)");
 
 		if (prefs.getBoolean("autostart_subscription_service", false))
 		{
@@ -76,7 +78,7 @@ public class IBCApplication extends Application
 	@Override
 	public void onLowMemory()
 	{
-		Log.d(IBC.TAG,"Low memory detected...");
+		Log.d(IBC.TAG, "Low memory detected...");
 		super.onLowMemory();
 	}
 
@@ -88,7 +90,43 @@ public class IBCApplication extends Application
 	@Override
 	public void onTerminate()
 	{
-		Log.d(IBC.TAG,"terminating application");
+		Log.d(IBC.TAG, "terminating application");
 		super.onTerminate();
+	}
+
+	/**
+	 * Liefert den Tapatalk-Client. Der Client wird zwar gecacht, kann jedoch,
+	 * falls der bisherige durch den GC weggeräumt wurde, auch ein neuer Client
+	 * ohne bestehendes Login sein!
+	 * 
+	 * @return
+	 */
+	public TapatalkClient getTapatalkClient()
+	{
+		TapatalkClient client = tapatalkClientRef.get();
+		if (client != null)
+		{
+			return client;
+		}
+		else
+		{
+			Log.d(IBC.TAG, "Creating a new tapatalk client");
+			
+			client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
+			client.getXMLRPCClient().setUserAgent(
+					"Mozilla/5.0 (compatible; Android)");
+			tapatalkClientRef = new SoftReference<TapatalkClient>(client);
+			return client;
+		}
+	}
+
+	public RSSFeed getNewsFeed()
+	{
+		return newsFeedRef.get();
+	}
+
+	public void setNewsFeed(RSSFeed feed)
+	{
+		newsFeedRef = new SoftReference<RSSFeed>(feed);
 	}
 }

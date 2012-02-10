@@ -136,7 +136,7 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 			@Override
 			protected void callServer() throws IOException, TapatalkException
 			{
-				TapatalkClient client = ((IBCApplication) getApplication()).client;
+				TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 				// Login.
 				if (Utils.loginExceeded(client))
