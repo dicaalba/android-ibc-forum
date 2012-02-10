@@ -20,7 +20,6 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import de.mtbnews.android.IBCActivity;
-import de.mtbnews.android.IBCApplication;
 import de.mtbnews.android.MailboxActivity;
 import de.mtbnews.android.R;
 import de.mtbnews.android.SubscriptionForenActivity;
@@ -35,30 +34,47 @@ import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.Utils;
 
 /**
+ * Hintergrund-Service, der ungelesene Nachrichten, Themen und Beiträge
+ * ermittelt und im Erfolgsfall eine Notification erzeugt.
+ * 
  * @author dankert
  * 
  */
 public class SubscriptionService extends Service
 {
-	private IBCApplication ibcApp;
-	private static Timer timer;
+	/**
+	 * Timer, der das zeitgesteuerte Abholen von neuen Nachrichten steuert.
+	 */
+	// Damit der Timer nicht nur erzeugt, sondern auch gestoppt werden kann,
+	// behalten wir hier eine Referenz.
+	private Timer timer;
+
+	/**
+	 * App-Einstellungen.
+	 */
+	// Notwendig für die Benutzeranmeldung.
 	private SharedPreferences prefs;
 
+	// Notification-Kategorien:
 	private static final int NOTIFICATION_ERROR = 1;
 	private static final int NOTIFICATION_TOPIC = 2;
 	private static final int NOTIFICATION_FORUM = 3;
 	private static final int NOTIFICATION_MESSAGES = 4;
 
-	private TapatalkClient client;
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see android.app.Service#onBind(android.content.Intent)
+	 */
 	public IBinder onBind(Intent arg0)
 	{
+		// Dieser Service läuft stets alleine und wird nicht gebunden.
 		return null;
 	}
 
 	/**
-	 * Erzeugt für diese Serviceinstanz einen Timer, der in regelmäßigen
-	 * Abständen auf neue Themen und Nachrichten prüft.
+	 * Service-Start. Erzeugt für diese Serviceinstanz einen Timer, der in
+	 * regelmäßigen Abständen auf neue Themen und Nachrichten prüft.
 	 * 
 	 * @see android.app.Service#onCreate()
 	 */
@@ -66,10 +82,7 @@ public class SubscriptionService extends Service
 	{
 		Log.d(IBC.TAG, "Starting service");
 		super.onCreate();
-		ibcApp = (IBCApplication) getApplication();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-		client = ibcApp.getTapatalkClient();
 
 		// Intervall in Minuten (Default = 3 Stunden)
 		int intervalInMinutes = Integer.parseInt(prefs.getString(
@@ -84,7 +97,9 @@ public class SubscriptionService extends Service
 
 	/**
 	 * Der Timer, der auf ungelesene Nachrichten und ungelesene Themen prüft.
-	 * Falls gefunden, wird dies über den NotificationService gemeldet.
+	 * Falls gefunden, wird dies über den NotificationService gemeldet. <em>Dies
+	 * darf eine interne Klasse sein, denn solange der Timer besteht, muss auch
+	 * der Service dazu laufen.</em>
 	 * 
 	 * @author dankert
 	 * 
@@ -94,6 +109,15 @@ public class SubscriptionService extends Service
 		public void run()
 		{
 			Log.d(IBC.TAG, "timer event fired");
+
+			// Für diesen Timer-Event erzeugen wir einen eigene Instanz des
+			// Tapatalk-Client. Die Laufzeit ist hier unkritisch, dafür belastet
+			// der Client nicht den HEAP, da nach dem Timeevent der
+			// Tapatalk-Client durch den GC weggeräum werden kann. Dieser
+			// Hintergrundprozess wird dadurch deutlich weniger
+			// speicherintensiv.
+			final TapatalkClient client = new TapatalkClient(
+					IBC.IBC_FORUM_CONNECTOR_URL);
 
 			final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -128,7 +152,7 @@ public class SubscriptionService extends Service
 									.join(", ", forumNameList), contentIntent);
 					nm.notify(NOTIFICATION_FORUM, notification);
 				}
-				
+
 				ListHolder<Topic> subscribedTopic = client.getSubscribedTopics(
 						0, 10, true);
 				final List<String> topicNameList = new ArrayList<String>();
@@ -249,7 +273,7 @@ public class SubscriptionService extends Service
 	}
 
 	/**
-	 * Notification erzeugen
+	 * Notification erzeugen.
 	 * 
 	 * @param tickerText
 	 *            Mehrzeiliger Ticker-Text, der in der Notification-Bar
@@ -257,7 +281,7 @@ public class SubscriptionService extends Service
 	 * @param titleResId
 	 *            Titel-Resource-Id der Notification
 	 * @param titleExtra
-	 *            Zusatz-Titeltext, kann <code>null</code> bleiben
+	 *            Zusatz-Titeltext, kann <code>null</code> sein
 	 * @param content
 	 *            Inhaltstext der Noification
 	 * @param intent
