@@ -140,12 +140,6 @@ public class XMLRPCClient extends XMLRPCCommon
 	public CookieStore cookieStore = new BasicCookieStore();
 	HttpContext localContext = new BasicHttpContext();
 
-	@Override
-	protected void finalize() throws Throwable
-	{
-		Log.w(IBC.TAG,"*********** destructing the XMLRPC client ************");
-		super.finalize();
-	}
 	/**
 	 * XMLRPCClient constructor. Creates new instance based on server URI (Code
 	 * contributed by sgayda2 from issue #17, and by erickok from ticket #10)

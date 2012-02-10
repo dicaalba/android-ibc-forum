@@ -3,12 +3,13 @@ package de.mtbnews.android.image;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.R.drawable;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -19,8 +20,14 @@ import de.mtbnews.android.util.IBC;
 
 public class URLImageParser implements ImageGetter
 {
-	Context c;
-	View container;
+	/**
+	 * Einfacher Bildercache, der zu einer URL das {@link Drawable} speichert.
+	 * Achtung: Bei nächsten GC-Lauf wird der Inhalt der Map entfernt.
+	 */
+	private static Map<String, Drawable> drawableCache = new WeakHashMap<String, Drawable>();
+
+	private Context context;
+	private View view;
 
 	/***
 	 * Construct the URLImageParser which will execute AsyncTask and refresh the
@@ -31,8 +38,8 @@ public class URLImageParser implements ImageGetter
 	 */
 	public URLImageParser(View t, Context c)
 	{
-		this.c = c;
-		this.container = t;
+		this.context = c;
+		this.view = t;
 	}
 
 	public Drawable getDrawable(String source)
@@ -81,7 +88,7 @@ public class URLImageParser implements ImageGetter
 				urlDrawable.drawable = result;
 
 				// redraw the image by invalidating the container
-				URLImageParser.this.container.invalidate();
+				URLImageParser.this.view.invalidate();
 			}
 		}
 
@@ -91,10 +98,15 @@ public class URLImageParser implements ImageGetter
 		 * @param urlString
 		 * @return
 		 */
-		public Drawable fetchDrawable(String urlString)
+		private Drawable fetchDrawable(String urlString)
 		{
 			try
 			{
+				// Bild bereits im Cache?
+				final Drawable drawableFromCache = drawableCache.get(urlString);
+				if (drawableFromCache != null)
+					return drawableFromCache;
+
 				InputStream is = fetch(urlString);
 				Drawable drawable = Drawable.createFromStream(is, "src");
 				if (drawable == null)
@@ -102,7 +114,10 @@ public class URLImageParser implements ImageGetter
 				else
 					drawable.setBounds(0, 0, 0 + drawable.getIntrinsicWidth(),
 							0 + drawable.getIntrinsicHeight());
-				return drawable; 
+
+				// Bild in den Cache einfügen
+				drawableCache.put(urlString, drawable);
+				return drawable;
 			}
 			catch (Exception e)
 			{
