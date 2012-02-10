@@ -15,11 +15,11 @@
 			style="@style/infoText" android:gravity="right"></TextView>
 	</LinearLayout>
 
-	<TextView android:text="@+id/TextView03" android:layout_width="fill_parent"
+	<TextView android:text="" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:id="@+id/item_title"
 		style="@style/titleText"></TextView>
 
-	<TextView android:text="@+id/TextView01" android:layout_width="fill_parent"
+	<TextView android:text="" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:id="@+id/item_description"
 		style="@style/normalText"></TextView>
 </LinearLayout> 
