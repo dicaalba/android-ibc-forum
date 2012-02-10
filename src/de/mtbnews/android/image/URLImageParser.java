@@ -108,7 +108,22 @@ public class URLImageParser implements ImageGetter
 					return drawableFromCache;
 
 				InputStream is = fetch(urlString);
-				Drawable drawable = Drawable.createFromStream(is, "src");
+				Drawable drawable = null;
+				try
+				{
+					drawable = Drawable.createFromStream(is, "src");
+				}
+				catch (OutOfMemoryError e)
+				{
+					Log.w(IBC.TAG, "OutOfMemory: Image too big: "
+							+ e.getMessage(), e);
+				}
+				catch (Exception e)
+				{
+					Log
+							.w(IBC.TAG, "unable to load image: "
+									+ e.getMessage(), e);
+				}
 				if (drawable == null)
 					Log.w(IBC.TAG, "drawable is null, url=" + urlString);
 				else
