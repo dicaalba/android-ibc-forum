@@ -7,8 +7,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.opengl.Visibility;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,8 +42,6 @@ public class ExpandableForumContentAdapter extends BaseExpandableListAdapter
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		this.forumList = forumList;
-		Log.d("IBC", "" + this.forumList.size());
-		Log.d("IBC", this.forumList.toString());
 	}
 
 	@Override
