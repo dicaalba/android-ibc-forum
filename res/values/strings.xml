@@ -130,7 +130,7 @@
 	<string name="goto_bottom">Nach unten</string>
 	<string name="reply">Antworten</string>
 	<string name="sent_ok">Nachricht wurde veschickt</string>
-	<string name="sent_fail">Nicht verschickt</string>
+	<string name="sent_fail">Die Nachricht konnte nicht gesendet werden</string>
 	<string name="new_topic">Neues Thema</string>
 	<string name="parse_bbcode">BB-Code auswerten</string>
 	<string name="parse_bbcode_desc">In Forumbeiträgen den BB-Code auflösen. Kann die

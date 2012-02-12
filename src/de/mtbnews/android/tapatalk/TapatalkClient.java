@@ -9,7 +9,6 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import android.text.TextUtils;
-import android.util.Log;
 import de.mtbnews.android.tapatalk.TapatalkException.TapatalkErrorCode;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
 import de.mtbnews.android.tapatalk.wrapper.ListHolder;
@@ -18,7 +17,6 @@ import de.mtbnews.android.tapatalk.wrapper.Message;
 import de.mtbnews.android.tapatalk.wrapper.Post;
 import de.mtbnews.android.tapatalk.wrapper.Search;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
-import de.mtbnews.android.util.IBC;
 
 /**
  * Tapatalk-compatible client.
@@ -721,12 +719,33 @@ public class TapatalkClient
 			final Object[] params = new Object[] { to, subject.getBytes(),
 					content.getBytes() };
 
-			final Boolean ok = (Boolean) client
-					.callEx("create_message", params);
-			if (!ok)
+			Object result = client.callEx("create_message", params);
+
+			if (result instanceof Boolean)
 			{
-				throw new TapatalkException("sending message failed",
-						TapatalkErrorCode.SEND_MESSAGE_FAILED);
+				// Im Erfolgsfall ist das result vom Typ java.lang.Boolean
+
+				final Boolean ok = (Boolean) result;
+				if (!ok)
+				{
+					throw new TapatalkException("sending message failed",
+							TapatalkErrorCode.SEND_MESSAGE_FAILED);
+				}
+			}
+			else
+			{
+				// Das result kann auch eine Map sein
+
+				try
+				{
+					toMap(result);
+				}
+				catch (TapatalkException e)
+				{
+					throw new TapatalkException("sending message failed: "
+							+ e.getMessage(),
+							TapatalkErrorCode.SEND_MESSAGE_FAILED);
+				}
 			}
 		}
 		catch (XMLRPCException e)
@@ -814,5 +833,4 @@ public class TapatalkClient
 		return list;
 
 	}
-
 }
