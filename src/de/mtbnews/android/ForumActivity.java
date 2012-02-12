@@ -47,6 +47,8 @@ public class ForumActivity extends EndlessListActivity<Topic>
 	private String forumId;
 	private int topicMode = TapatalkClient.TOPIC_STANDARD;
 
+	private TapatalkClient client;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -56,7 +58,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		TapatalkClient client = ((IBCApplication) getApplication())
+		client = ((IBCApplication) getApplication())
 				.getTapatalkClient();
 
 		if (!client.loggedIn && prefs.getBoolean("auto_login", false))
@@ -143,8 +145,6 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 	private void login()
 	{
-		final TapatalkClient client = ((IBCApplication) getApplication())
-				.getTapatalkClient();
 		new ServerAsyncTask(this, R.string.waitingfor_login)
 		{
 
@@ -172,9 +172,6 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 	private void logout()
 	{
-		final TapatalkClient client = ((IBCApplication) getApplication())
-				.getTapatalkClient();
-
 		new ServerAsyncTask(this, R.string.waitingfor_logout)
 		{
 
@@ -204,7 +201,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		super.onCreateOptionsMenu(menu);
 		MenuInflater mi = new MenuInflater(getApplication());
 
-		if (((IBCApplication) getApplication()).getTapatalkClient().loggedIn)
+		if (client.loggedIn)
 			mi.inflate(R.menu.forum, menu);
 		else
 			mi.inflate(R.menu.forum_guest, menu);
@@ -294,8 +291,6 @@ public class ForumActivity extends EndlessListActivity<Topic>
 											throws IOException,
 											TapatalkException
 									{
-										TapatalkClient client = ((IBCApplication) getApplication())
-												.getTapatalkClient();
 										client
 												.subscribeForum(forumId,
 														item - 1);
@@ -322,8 +317,6 @@ public class ForumActivity extends EndlessListActivity<Topic>
 					@Override
 					protected void callServer() throws TapatalkException
 					{
-						TapatalkClient client = ((IBCApplication) getApplication())
-								.getTapatalkClient();
 						client.markForumAsRead(forumId);
 					}
 
@@ -343,8 +336,6 @@ public class ForumActivity extends EndlessListActivity<Topic>
 					@Override
 					protected void callServer() throws TapatalkException
 					{
-						TapatalkClient client = ((IBCApplication) getApplication())
-								.getTapatalkClient();
 						client.markForumAsRead(null);
 					}
 
@@ -398,8 +389,6 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			protected void callServer() throws TapatalkException
 			{
 
-				TapatalkClient client = ((IBCApplication) getApplication())
-						.getTapatalkClient();
 				this.forum = client.getForum(forumId, from, to, topicMode);
 				totalSize = this.forum.topicCount;
 			}

@@ -38,12 +38,14 @@ import de.mtbnews.android.util.Utils;
 public class SubscriptionForenActivity extends ListActivity
 {
 	private SharedPreferences prefs;
+	private TapatalkClient client;
 
 	private final List<Forum> forumList = new ArrayList<Forum>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		client = ((IBCApplication) getApplication()).getTapatalkClient();
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.listing);
@@ -95,7 +97,6 @@ public class SubscriptionForenActivity extends ListActivity
 			@Override
 			protected void callServer() throws IOException, TapatalkException
 			{
-				TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 				// Login.
 				if (Utils.loginExceeded(client))
@@ -156,7 +157,7 @@ public class SubscriptionForenActivity extends ListActivity
 		super.onCreateOptionsMenu(menu);
 		MenuInflater mi = new MenuInflater(getApplication());
 
-		if (((IBCApplication) getApplication()).getTapatalkClient().loggedIn)
+		if (client.loggedIn)
 			mi.inflate(R.menu.forum, menu);
 		else
 			mi.inflate(R.menu.forum_guest, menu);

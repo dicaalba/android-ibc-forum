@@ -39,6 +39,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 {
 	private SharedPreferences prefs;
 	private List<Forum> forumList;
+	private TapatalkClient client;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -85,7 +86,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 	private void loadForum()
 	{
-		final TapatalkClient client = ((IBCApplication) getApplication())
+		client = ((IBCApplication) getApplication())
 				.getTapatalkClient();
 
 		new ServerAsyncTask(this, R.string.waitingfor_forum)
@@ -167,9 +168,6 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 		menu.clear();
 		MenuInflater mi = new MenuInflater(getApplication());
-
-		TapatalkClient client = ((IBCApplication) getApplication())
-				.getTapatalkClient();
 
 		if (client.loggedIn)
 			mi.inflate(R.menu.forumoverview, menu);
@@ -256,7 +254,6 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 				if (!TextUtils.isEmpty(prefs.getString("username", "")))
 				{
-					final TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 					new ServerAsyncTask(this, R.string.waitingfor_login)
 					{
 
@@ -297,8 +294,6 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 	private void logout()
 	{
-		final TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
-
 		new ServerAsyncTask(this, R.string.waitingfor_logout)
 		{
 

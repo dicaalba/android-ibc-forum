@@ -18,10 +18,12 @@ public class ReplyMailActivity extends Activity
 {
 	private String boxId;
 	private String messageId;
+	private TapatalkClient client;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		client = ((IBCApplication) getApplication()).getTapatalkClient();
 		setContentView(R.layout.post);
 		super.onCreate(savedInstanceState);
 
@@ -38,13 +40,10 @@ public class ReplyMailActivity extends Activity
 			new ServerAsyncTask(this, R.string.waitingfor_mailbox)
 			{
 				private Message message;
-				private TapatalkClient client;
 
 				@Override
 				protected void callServer() throws TapatalkException
 				{
-					client = ((IBCApplication) getApplication())
-							.getTapatalkClient();
 					message = client.getMessage(boxId, messageId);
 				}
 
@@ -80,9 +79,6 @@ public class ReplyMailActivity extends Activity
 					protected void callServer() throws IOException,
 							TapatalkException
 					{
-						TapatalkClient client = ((IBCApplication) getApplication())
-								.getTapatalkClient();
-
 						client.createMessage(new String[] { recipient.getText()
 								.toString() }, subject.getText().toString(),
 								text.getText().toString());

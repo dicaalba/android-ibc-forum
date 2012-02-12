@@ -41,10 +41,12 @@ public class TopicActivity extends EndlessListActivity<Post>
 	private String topicTitle;
 
 	private int totalSize;
+	private TapatalkClient client;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		client = ((IBCApplication) getApplication()).getTapatalkClient();
 		super.onCreate(savedInstanceState);
 
 		topicId = TopicActivity.this.getIntent().getStringExtra(TOPIC_ID);
@@ -99,7 +101,6 @@ public class TopicActivity extends EndlessListActivity<Post>
 			@Override
 			protected void callServer() throws TapatalkException
 			{
-				TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 				topic = client.getTopic(topicId, from, to);
 
@@ -144,7 +145,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 			case R.id.menu_bottom:
 
 				getListView().setOnScrollListener(null);
-				getListView().setSelection( super.entries.size()-1);
+				getListView().setSelection(super.entries.size() - 1);
 				getIntent().putExtra(LAST_POST, true);
 				initialLoad();
 				return true;
@@ -175,8 +176,6 @@ public class TopicActivity extends EndlessListActivity<Post>
 									protected void callServer()
 											throws TapatalkException
 									{
-										TapatalkClient client = ((IBCApplication) getApplication())
-												.getTapatalkClient();
 										client
 												.subscribeTopic(topicId,
 														item - 1);
@@ -205,8 +204,6 @@ public class TopicActivity extends EndlessListActivity<Post>
 					@Override
 					protected void callServer() throws TapatalkException
 					{
-						TapatalkClient client = ((IBCApplication) getApplication())
-								.getTapatalkClient();
 						client.markTopicAsRead(topicId);
 					}
 				}.execute();
