@@ -40,7 +40,7 @@ public class NetworkStateReceiver extends BroadcastReceiver
 		if (!noConnectivity)
 		{
 			// Datenverbindung vorhanden
-			Log.d("IBC", "connection established, starting service");
+			Log.d("IBC", "connection established, (re-)starting service");
 			context.stopService(new Intent(context, SubscriptionService.class));
 			context
 					.startService(new Intent(context, SubscriptionService.class));

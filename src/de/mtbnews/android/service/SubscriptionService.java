@@ -56,7 +56,6 @@ public class SubscriptionService extends Service
 	private SharedPreferences prefs;
 
 	// Notification-Kategorien:
-	private static final int NOTIFICATION_ERROR = 1;
 	private static final int NOTIFICATION_TOPIC = 2;
 	private static final int NOTIFICATION_FORUM = 3;
 	private static final int NOTIFICATION_MESSAGES = 4;
@@ -88,10 +87,21 @@ public class SubscriptionService extends Service
 		int intervalInMinutes = Integer.parseInt(prefs.getString(
 				"subscription_service_interval", "180"));
 
-		Log.d(IBC.TAG, "Creating the timer");
-		timer = new Timer();
-		timer.scheduleAtFixedRate(new SubscriptionTask(), 2000,
-				intervalInMinutes * 60 * 1000);
+		// Prüfen, ob Service laufen soll und ein Benutzername vorhanden ist
+		if (prefs.getBoolean("autostart_subscription_service", false)
+				&& !TextUtils.isEmpty(prefs.getString("username", "")))
+		{
+			Log.d(IBC.TAG, "Creating the timer");
+			timer = new Timer();
+			timer.scheduleAtFixedRate(new SubscriptionTask(), 2000,
+					intervalInMinutes * 60 * 1000);
+		}
+		else
+		{
+			// Service soll nicht laufen, also sofort wieder stoppen
+			Log.d(IBC.TAG, "Stopping service");
+			stopSelf();
+		}
 
 	}
 
@@ -123,6 +133,7 @@ public class SubscriptionService extends Service
 
 			try
 			{
+				// Zuerst Login
 				client.login(prefs.getString("username", ""), prefs.getString(
 						"password", ""));
 
@@ -221,18 +232,13 @@ public class SubscriptionService extends Service
 			{
 				// Kann vorkommen, wenn Login fehlschlägt oder Verbindung
 				// abbricht
-				final Intent notificationIntent = new Intent(
-						SubscriptionService.this, IBCActivity.class);
-				final PendingIntent contentIntent = PendingIntent.getActivity(
-						SubscriptionService.this, 0, notificationIntent, 0);
+				Log.w(IBC.TAG, e);
 
-				final Notification notification = createNotification(e
-						.getMessage(), R.string.error, null, getResources()
-						.getString(Utils.getResId(e.getErrorCode())),
-						contentIntent);
-
-				notification.flags = Notification.FLAG_AUTO_CANCEL;
-				nm.notify(NOTIFICATION_ERROR, notification);
+				// Ganz bewusst wird hier keine Fehlermeldung erzeugt:
+				// Oft kann es passieren, dass der Empfang schlecht wird und die
+				// Verbindung einen Timeout bekommt. In diesem Fall möchten wir
+				// den Benutzer aber nicht mit Fehlermeldungen nerven. Beim
+				// nächsten Timerevent wird der Abruf sowieso wieder probiert.
 			}
 			catch (Exception e)
 			{
@@ -251,7 +257,7 @@ public class SubscriptionService extends Service
 		@Override
 		public boolean cancel()
 		{
-			Log.d(IBC.TAG, "Timer destroyed");
+			Log.d(IBC.TAG, "Timer canceled");
 			return super.cancel();
 		}
 	}
@@ -267,7 +273,8 @@ public class SubscriptionService extends Service
 	{
 		Log.d(IBC.TAG, "Destroying service");
 
-		timer.cancel(); // Alle Timer-Ereignisse stoppen.
+		if (timer != null)
+			timer.cancel(); // Alle Timer-Ereignisse stoppen.
 
 		super.onDestroy();
 	}
