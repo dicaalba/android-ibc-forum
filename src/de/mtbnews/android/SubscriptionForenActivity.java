@@ -154,15 +154,7 @@ public class SubscriptionForenActivity extends ListActivity
 
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		super.onCreateOptionsMenu(menu);
-		MenuInflater mi = new MenuInflater(getApplication());
-
-		if (client.loggedIn)
-			mi.inflate(R.menu.forum, menu);
-		else
-			mi.inflate(R.menu.forum_guest, menu);
-
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item)
