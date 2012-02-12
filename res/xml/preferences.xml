@@ -66,6 +66,9 @@
 			android:entries="@array/interval_list_label" android:entryValues="@array/interval_list"
 			android:key="subscription_service_interval" android:title="@string/interval"
 			android:dependency="autostart_subscription_service" />
+		<RingtonePreference android:key="ringtone"
+			android:showSilent="true" android:showDefault="true"
+			android:ringtoneType="notification" android:title="@string/ringtone" />
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="use_vibration" android:summary="@string/vibration_desc"
 			android:title="@string/vibration" android:dependency="autostart_subscription_service" />

@@ -15,11 +15,13 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
-import de.mtbnews.android.IBCActivity;
 import de.mtbnews.android.MailboxActivity;
 import de.mtbnews.android.R;
 import de.mtbnews.android.SubscriptionForenActivity;
@@ -31,7 +33,6 @@ import de.mtbnews.android.tapatalk.wrapper.ListHolder;
 import de.mtbnews.android.tapatalk.wrapper.Mailbox;
 import de.mtbnews.android.tapatalk.wrapper.Topic;
 import de.mtbnews.android.util.IBC;
-import de.mtbnews.android.util.Utils;
 
 /**
  * Hintergrund-Service, der ungelesene Nachrichten, Themen und Beiträge
@@ -307,8 +308,14 @@ public class SubscriptionService extends Service
 						+ (titleExtra != null ? " " + titleExtra : ""),
 						content, intent);
 
-		notification.defaults = Notification.DEFAULT_LIGHTS
-				| Notification.DEFAULT_SOUND;
+		notification.defaults = Notification.DEFAULT_LIGHTS;
+
+		final String ringtone = prefs.getString("ringtone", "");
+
+		if (!TextUtils.isEmpty(ringtone))
+			notification.sound = Uri.parse(ringtone);
+		else
+			notification.defaults |= Notification.DEFAULT_SOUND;
 
 		// Falls so konfiguriert, den Vibrationsalarm auslösen
 		if (prefs.getBoolean("use_vibration", false))

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+ 
 	<string name="canceled">Abgebrochen</string>
 	<string name="more">Mehr</string>
 	<string name="sub_only">Forum enthält keine Themen</string>
@@ -156,6 +156,7 @@
 	<string name="mode">Modus</string>
 	<string name="vibration">Vibration</string>
 	<string name="vibration_desc">Vibrationsalarm bei neuen Nachrichten</string>
+	<string name="ringtone">Ton</string>
 
 
 	<string name="interval">Intervall</string>
