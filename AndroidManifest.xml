@@ -4,6 +4,7 @@
 
 	<application android:icon="@drawable/ibc_icon"
 		android:name=".IBCApplication" android:label="@string/app_name">
+		
 		<activity android:name=".IBCActivity" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -16,9 +17,37 @@
 		<activity android:name="NewsDetailActivity" android:label="@string/news"></activity>
 		<activity android:name="PhotoActivity" android:label="@string/photos"></activity>
 
-		<activity android:name="ForumOverviewActivity" android:label="@string/forum"></activity>
-		<activity android:name="ForumActivity" android:label="@string/forum"></activity>
-		<activity android:name="TopicActivity" android:label="@string/forum"></activity>
+		<activity android:name="ForumOverviewActivity" android:label="@string/forum" >
+			<!-- URL-Filter, damit diese Activity beim Aufruf der Forum-URL gestartet wird. -->
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="http" android:host="www.mtb-news.de" android:path="/forum/index.php" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="http" android:host="www.mtb-news.de" android:path="/forum/" />
+			</intent-filter>
+			<intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
+		
+		<activity android:name="ForumActivity" android:label="@string/forum" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
+		
+		<activity android:name="TopicActivity" android:label="@string/forum" android:configChanges="keyboardHidden|orientation">
+		</activity>
 
 		<activity android:name=".SearchActivity">
 			<intent-filter>
@@ -28,8 +57,17 @@
 				android:resource="@xml/searchable" />
 		</activity>
 
-		<activity android:name="MailboxActivity" android:label="@string/mailbox"></activity>
-		<activity android:name="MailActivity" android:label="@string/mailbox"></activity>
+		<activity android:name="MailboxActivity" android:label="@string/mailbox">
+			<intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+		</activity>
+		<activity android:name="MailActivity" android:label="@string/mailbox">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
 		<activity android:name="MessageActivity" android:label="@string/mailbox"></activity>
 		<activity android:name="ReplyMailActivity" android:label="@string/reply"></activity>
 		<activity android:name="ReplyPostActivity" android:label="@string/reply"></activity>

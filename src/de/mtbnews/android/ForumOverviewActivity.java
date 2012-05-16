@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,7 +28,6 @@ import de.mtbnews.android.adapter.ExpandableForumContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Forum;
-import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 import de.mtbnews.android.util.Utils;
 
@@ -137,15 +137,42 @@ public class ForumOverviewActivity extends ExpandableListActivity
 				}
 				else if (!TextUtils.isEmpty(forum.url))
 				{
-					startActivity(new Intent(Intent.ACTION_VIEW, Uri
-							.parse(forum.url)));
+			        if (!Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
+						startActivity(new Intent(Intent.ACTION_VIEW, Uri
+								.parse(forum.url)));
+			        }
 				}
 				else
 				{
-					final Intent intent = new Intent(
-							ForumOverviewActivity.this, ForumActivity.class);
-					intent.putExtra("forum_id", forum.getId());
-					startActivity(intent);
+			        if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
+
+			        	Intent shortcutIntent = new Intent(
+								ForumOverviewActivity.this, ForumActivity.class);
+//			            Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
+//			            shortcutIntent.setClassName(ForumActivity.class.getPackage().getName(), "." + ForumActivity.class.getSimpleName());
+//			            shortcutIntent.setClassName(ForumActivity.class.getPackage().getName(), ForumActivity.class.getName());
+			            shortcutIntent.putExtra("forum_id", forum.getId());
+
+			            // Then, set up the container intent (the response to the caller)
+
+			            Intent intent = new Intent();
+			            intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+			            intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, forum.getTitle());
+			            Parcelable iconResource = Intent.ShortcutIconResource.fromContext(
+			                    ForumOverviewActivity.this,  R.drawable.ibc_icon);
+			            intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
+
+			            // Now, return the result to the launcher
+
+			            setResult(RESULT_OK, intent);
+			            finish();
+
+			        } else {
+						final Intent intent = new Intent(
+								ForumOverviewActivity.this, ForumActivity.class);
+						intent.putExtra("forum_id", forum.getId());
+						startActivity(intent);
+			        }
 				}
 				return true;
 			}

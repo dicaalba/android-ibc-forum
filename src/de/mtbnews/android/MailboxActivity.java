@@ -7,6 +7,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,9 +74,36 @@ public class MailboxActivity extends ListActivity
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
-				Intent i = new Intent(MailboxActivity.this, MailActivity.class);
-				i.putExtra("box_id", mailboxList.get(position).getId());
-				startActivity(i);
+				final Mailbox mailbox = mailboxList.get(position);
+				
+		        if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
+
+		        	Intent shortcutIntent = new Intent(
+		        			MailboxActivity.this, MailActivity.class);
+//		            Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
+		            shortcutIntent.setClassName(MailboxActivity.this, MailActivity.class.getName());
+		            shortcutIntent.putExtra("box_id", mailbox.getId());
+
+		            // Then, set up the container intent (the response to the caller)
+
+		            Intent intent = new Intent();
+		            intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+		            intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, mailbox.getTitle());
+		            Parcelable iconResource = Intent.ShortcutIconResource.fromContext(
+		                    MailboxActivity.this,  R.drawable.ibc_icon);
+		            intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
+
+		            // Now, return the result to the launcher
+
+		            setResult(RESULT_OK, intent);
+		            finish();
+
+		        } else {
+
+					Intent i = new Intent(MailboxActivity.this, MailActivity.class);
+					i.putExtra("box_id", mailbox.getId());
+					startActivity(i);
+		        }
 			}
 		});
 
