@@ -57,6 +57,7 @@ public class SubscriptionService extends Service
 	private SharedPreferences prefs;
 
 	// Notification-Kategorien:
+	private static final int NOTIFICATION_EVENT_RUNNING = 1;
 	private static final int NOTIFICATION_TOPIC = 2;
 	private static final int NOTIFICATION_FORUM = 3;
 	private static final int NOTIFICATION_MESSAGES = 4;
@@ -117,7 +118,7 @@ public class SubscriptionService extends Service
 	 */
 	private class SubscriptionTask extends TimerTask
 	{
-		public void run()
+		public void run() 
 		{
 			Log.d(IBC.TAG, "timer event fired");
 
@@ -130,8 +131,26 @@ public class SubscriptionService extends Service
 			final TapatalkClient client = new TapatalkClient(
 					IBC.IBC_FORUM_CONNECTOR_URL);
 
+			// Anzeigen einer Notification, damit der Benutzer weiß, dass neue Nachrichten ab
 			final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			final PendingIntent emptyIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
+			
+			final String tickerText1 = getResources().getString(
+					R.string.checking_new);
+			
+			final Notification notificationRunning = new Notification(R.drawable.ibc_logo,
+					tickerText1, System.currentTimeMillis());
 
+			notificationRunning
+			.setLatestEventInfo(getApplicationContext(), getResources()
+					.getString(R.string.checking_new),
+					"", emptyIntent);
+
+			notificationRunning.defaults = 0;
+			notificationRunning.flags = Notification.FLAG_ONGOING_EVENT
+			| Notification.FLAG_NO_CLEAR;
+			nm.notify(NOTIFICATION_EVENT_RUNNING, notificationRunning);
+			
 			try
 			{
 				// Zuerst Login
@@ -252,6 +271,11 @@ public class SubscriptionService extends Service
 				// machen und niemandem wäre geholfen.
 				Log.w(IBC.TAG, e);
 				throw new RuntimeException("Unrecoverable error in service", e);
+			}
+			finally
+			{
+				// In jedem Fall die Notification entfernen.
+				nm.cancel(NOTIFICATION_EVENT_RUNNING);
 			}
 		}
 
