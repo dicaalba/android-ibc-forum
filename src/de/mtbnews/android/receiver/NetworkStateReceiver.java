@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
