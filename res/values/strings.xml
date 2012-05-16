@@ -55,6 +55,10 @@
 	<string name="waitingfor_mailbox">Nachrichten werden geladen</string>
 	<string name="waitingfor_subscription_forums">Abonnierte Foren werden geladen</string>
 	<string name="waitingfor_subscription_topics">Abonnierte Themen werden geladen</string>
+	<string name="checking_new">Prüfe auf neue Nachrichten</string>
+	<string name="checking_inbox">Prüfe auf neue Nachrichten</string>
+	<string name="checking_for_subscribed_topics">Prüfe abonnierte Themen</string>
+	<string name="checking_for_subscribed_forums">Prüfe abonnierte Foren</string>
 	<string name="name">Name</string>
 
 
