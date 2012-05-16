@@ -62,9 +62,6 @@ public class IBCApplication extends Application
 		{
 			startService(new Intent(getApplicationContext(),
 					SubscriptionService.class));
-
-			Toast.makeText(this, R.string.subscription_service_started,
-					Toast.LENGTH_SHORT).show();
 		}
 
 		super.onCreate();
