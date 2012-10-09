@@ -25,7 +25,7 @@ public class NewsDetailActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.detail);
 
@@ -72,32 +72,14 @@ public class NewsDetailActivity extends Activity
 				final RSSItem item = feed.getItems().get(
 						getIntent().getIntExtra("itemid", 0));
 
-//				final String title = DateFormat.getTimeFormat(NewsDetailActivity.this)
-//				.format(item.getPubDate());
-				
-//				NewsDetailActivity.this.setTitle(title);
-				
-
 				final String html = item.getFullContent();
-				
-				webView.getSettings().setLoadsImagesAutomatically(prefs.getBoolean("load_images", false));
-				webView.loadData(html,"text/html","UTF-16");
 
+				webView.getSettings().setLoadsImagesAutomatically(
+						prefs.getBoolean("load_images", false));
+				webView.loadDataWithBaseURL(IBC.IBC_NEWS_RSS_URL, html,
+						"text/html", "UTF-8", null);
 
 				setTitle(item.getTitle());
-
-				// button.setOnClickListener(new OnClickListener()
-				// {
-				//
-				// @Override
-				// public void onClick(View v)
-				//
-				// {
-				// Intent i = new Intent(Intent.ACTION_VIEW);
-				// i.setData(item.getLink());
-				// startActivity(i);
-				// }
-				// });
 			}
 		}.execute();
 	}
