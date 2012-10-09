@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -46,13 +45,15 @@ public class TopicActivity extends EndlessListActivity<Post>
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		client = ((IBCApplication) getApplication()).getTapatalkClient();
 		super.onCreate(savedInstanceState);
+		
+		setTheme(((IBCApplication) getApplication()).themeResId);
+		setContentView(R.layout.listing);
+		
+		client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 		topicId = TopicActivity.this.getIntent().getStringExtra(TOPIC_ID);
 		// forumId = TopicActivity.this.getIntent().getStringExtra("forum_id");
-
-		setContentView(R.layout.listing);
 
 		ListAdapter adapter = new ListEntryContentAdapter(TopicActivity.this,
 				entries, true, false);
@@ -62,6 +63,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 
 		final ListView list = getListView();
 
+		/*
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
@@ -77,7 +79,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 				// intent.putExtra("itemid", position);
 				// startActivity(intent);
 			}
-		});
+		});*/
 	}
 
 	@Override

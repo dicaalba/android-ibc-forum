@@ -45,7 +45,8 @@ public class ForumOverviewActivity extends ExpandableListActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
+		
+		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.exp_listing);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -86,8 +87,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 	private void loadForum()
 	{
-		client = ((IBCApplication) getApplication())
-				.getTapatalkClient();
+		client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 		new ServerAsyncTask(this, R.string.waitingfor_forum)
 		{
@@ -95,6 +95,8 @@ public class ForumOverviewActivity extends ExpandableListActivity
 			@Override
 			protected void callServer() throws TapatalkException
 			{
+				forumList = ((IBCApplication) getApplication()).getForumList();
+
 				// Forumliste nur laden, wenn noch nicht vorhanden.
 				if (forumList == null)
 				{
@@ -105,8 +107,9 @@ public class ForumOverviewActivity extends ExpandableListActivity
 									.getString("password", ""));
 
 					forumList = client.getAllForum();
+					((IBCApplication) getApplication()).setForumList(forumList);
+					
 					unterforenFlachkloppen();
-
 				}
 			}
 
@@ -137,42 +140,56 @@ public class ForumOverviewActivity extends ExpandableListActivity
 				}
 				else if (!TextUtils.isEmpty(forum.url))
 				{
-			        if (!Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
+					if (!Intent.ACTION_CREATE_SHORTCUT.equals(getIntent()
+							.getAction()))
+					{
 						startActivity(new Intent(Intent.ACTION_VIEW, Uri
 								.parse(forum.url)));
-			        }
+					}
 				}
 				else
 				{
-			        if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
+					if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent()
+							.getAction()))
+					{
 
-			        	Intent shortcutIntent = new Intent(
+						Intent shortcutIntent = new Intent(
 								ForumOverviewActivity.this, ForumActivity.class);
-//			            Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
-//			            shortcutIntent.setClassName(ForumActivity.class.getPackage().getName(), "." + ForumActivity.class.getSimpleName());
-//			            shortcutIntent.setClassName(ForumActivity.class.getPackage().getName(), ForumActivity.class.getName());
-			            shortcutIntent.putExtra("forum_id", forum.getId());
+						// Intent shortcutIntent = new
+						// Intent(Intent.ACTION_MAIN);
+						// shortcutIntent.setClassName(ForumActivity.class.getPackage().getName(),
+						// "." + ForumActivity.class.getSimpleName());
+						// shortcutIntent.setClassName(ForumActivity.class.getPackage().getName(),
+						// ForumActivity.class.getName());
+						shortcutIntent.putExtra("forum_id", forum.getId());
 
-			            // Then, set up the container intent (the response to the caller)
+						// Then, set up the container intent (the response to
+						// the caller)
 
-			            Intent intent = new Intent();
-			            intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-			            intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, forum.getTitle());
-			            Parcelable iconResource = Intent.ShortcutIconResource.fromContext(
-			                    ForumOverviewActivity.this,  R.drawable.ibc_icon);
-			            intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
+						Intent intent = new Intent();
+						intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
+								shortcutIntent);
+						intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, forum
+								.getTitle());
+						Parcelable iconResource = Intent.ShortcutIconResource
+								.fromContext(ForumOverviewActivity.this,
+										R.drawable.ibc_icon);
+						intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+								iconResource);
 
-			            // Now, return the result to the launcher
+						// Now, return the result to the launcher
 
-			            setResult(RESULT_OK, intent);
-			            finish();
+						setResult(RESULT_OK, intent);
+						finish();
 
-			        } else {
+					}
+					else
+					{
 						final Intent intent = new Intent(
 								ForumOverviewActivity.this, ForumActivity.class);
 						intent.putExtra("forum_id", forum.getId());
 						startActivity(intent);
-			        }
+					}
 				}
 				return true;
 			}
@@ -217,6 +234,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
 	 */
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -260,7 +278,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 			case R.id.menu_logout:
 				logout();
-				
+
 				// Forum-Übersicht neu laden.
 				forumList = null;
 				loadForum();

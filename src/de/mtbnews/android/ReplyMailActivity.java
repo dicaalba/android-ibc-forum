@@ -23,9 +23,13 @@ public class ReplyMailActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		client = ((IBCApplication) getApplication()).getTapatalkClient();
-		setContentView(R.layout.post);
 		super.onCreate(savedInstanceState);
+		
+		client = ((IBCApplication) getApplication()).getTapatalkClient();
+		
+		setTheme(((IBCApplication) getApplication()).themeResId);
+		setContentView(R.layout.post);
+		
 
 		final TextView recipient = (TextView) findViewById(R.id.recipient);
 		final TextView subject = (TextView) findViewById(R.id.subject);

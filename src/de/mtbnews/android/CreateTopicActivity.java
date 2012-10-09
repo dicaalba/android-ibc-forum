@@ -24,8 +24,11 @@ public class CreateTopicActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		setContentView(R.layout.post);
 		super.onCreate(savedInstanceState);
+		
+		setTheme(((IBCApplication) getApplication()).themeResId);
+		setContentView(R.layout.post);
+		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		forumId = getIntent().getStringExtra("forum_id");
 
