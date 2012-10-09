@@ -32,6 +32,7 @@ public class PhotoActivity extends ListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.listing);
 
 		super.onCreate(savedInstanceState);

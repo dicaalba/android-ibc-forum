@@ -32,9 +32,11 @@ public class MailboxActivity extends ListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		super.onCreate(savedInstanceState);
+		
+		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.listing);
 
-		super.onCreate(savedInstanceState);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		new ServerAsyncTask(this, R.string.waitingforcontent)
@@ -75,35 +77,46 @@ public class MailboxActivity extends ListActivity
 					int position, long id)
 			{
 				final Mailbox mailbox = mailboxList.get(position);
-				
-		        if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
 
-		        	Intent shortcutIntent = new Intent(
-		        			MailboxActivity.this, MailActivity.class);
-//		            Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
-		            shortcutIntent.setClassName(MailboxActivity.this, MailActivity.class.getName());
-		            shortcutIntent.putExtra("box_id", mailbox.getId());
+				if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent()
+						.getAction()))
+				{
 
-		            // Then, set up the container intent (the response to the caller)
+					Intent shortcutIntent = new Intent(MailboxActivity.this,
+							MailActivity.class);
+					// Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
+					shortcutIntent.setClassName(MailboxActivity.this,
+							MailActivity.class.getName());
+					shortcutIntent.putExtra("box_id", mailbox.getId());
 
-		            Intent intent = new Intent();
-		            intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-		            intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, mailbox.getTitle());
-		            Parcelable iconResource = Intent.ShortcutIconResource.fromContext(
-		                    MailboxActivity.this,  R.drawable.ibc_icon);
-		            intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
+					// Then, set up the container intent (the response to the
+					// caller)
 
-		            // Now, return the result to the launcher
+					Intent intent = new Intent();
+					intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
+							shortcutIntent);
+					intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, mailbox
+							.getTitle());
+					Parcelable iconResource = Intent.ShortcutIconResource
+							.fromContext(MailboxActivity.this,
+									R.drawable.ibc_icon);
+					intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+							iconResource);
 
-		            setResult(RESULT_OK, intent);
-		            finish();
+					// Now, return the result to the launcher
 
-		        } else {
+					setResult(RESULT_OK, intent);
+					finish();
 
-					Intent i = new Intent(MailboxActivity.this, MailActivity.class);
+				}
+				else
+				{
+
+					Intent i = new Intent(MailboxActivity.this,
+							MailActivity.class);
 					i.putExtra("box_id", mailbox.getId());
 					startActivity(i);
-		        }
+				}
 			}
 		});
 

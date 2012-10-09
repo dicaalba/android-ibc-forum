@@ -45,11 +45,12 @@ public class SubscriptionForenActivity extends ListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		client = ((IBCApplication) getApplication()).getTapatalkClient();
 		super.onCreate(savedInstanceState);
 
+		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.listing);
 
+		client = ((IBCApplication) getApplication()).getTapatalkClient();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		ListAdapter adapter = new ListEntryContentAdapter(

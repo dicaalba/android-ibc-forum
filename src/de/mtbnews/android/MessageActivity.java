@@ -1,20 +1,14 @@
 package de.mtbnews.android;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Message;
@@ -28,9 +22,10 @@ public class MessageActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		setContentView(R.layout.newsdetail);
-
 		super.onCreate(savedInstanceState);
+		
+		setTheme(((IBCApplication) getApplication()).themeResId);
+		setContentView(R.layout.newsdetail);
 
 		boxId = getIntent().getStringExtra("box_id");
 		messageId = getIntent().getStringExtra("message_id");

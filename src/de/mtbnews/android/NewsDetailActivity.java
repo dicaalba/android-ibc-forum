@@ -24,10 +24,12 @@ public class NewsDetailActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		super.onCreate(savedInstanceState);
+		
+		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.detail);
 
-		super.onCreate(savedInstanceState);
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		final WebView webView = (WebView) findViewById(R.id.webView);
 
