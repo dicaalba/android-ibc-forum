@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.text.format.DateFormat;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import de.mtbnews.android.IBCApplication;
 import de.mtbnews.android.R;
-import de.mtbnews.android.image.URLImageParser;
 import de.mtbnews.android.tapatalk.wrapper.ListEntry;
 
 /**
@@ -157,25 +157,27 @@ public class ListEntryContentAdapter extends BaseAdapter
 				// .create();
 				// html = create.process(e.getContent());
 				html = e.getContent();
-				html = new ProcessBBCode().preparePostText(html);
+				html = new BBCodeConverter().process(html);
 
-				Html.ImageGetter imageGetter = null;
-				if (prefs.getBoolean("load_images", false))
-					// imageGetter = new ImageGetter();
-					imageGetter = new URLImageParser(viewHolder.desc, mContext);
+				// Html.ImageGetter imageGetter = null;
+				// if (prefs.getBoolean("load_images", false))
+				// // imageGetter = new ImageGetter();
+				// imageGetter = new URLImageParser(viewHolder.desc, mContext);
 
-				viewHolder.desc.setText(Html.fromHtml(html.toString(),
-						imageGetter, null));
+				// viewHolder.desc.setText(Html.fromHtml(html.toString(),
+				// imageGetter, null));
+				viewHolder.desc.setText(Html.fromHtml(html));
+				viewHolder.desc.setMovementMethod(LinkMovementMethod.getInstance());
+				//viewHolder.desc.setAutoLinkMask(Linkify.ALL);
 			}
 			else if (containsHtml)
 			{
-				final CharSequence html = e.getContent();
-				Html.ImageGetter imageGetter = null;
-				if (prefs.getBoolean("load_images", false))
-					imageGetter = new URLImageParser(viewHolder.desc, mContext);
 
-				viewHolder.desc.setText(Html.fromHtml(html.toString(),
-						imageGetter, null));
+				final CharSequence html = e.getContent();
+				// if (prefs.getBoolean("load_images", false))
+				// imageGetter = new URLImageParser(viewHolder.desc, mContext);
+
+				viewHolder.desc.setText(Html.fromHtml(html.toString()));
 			}
 			else
 			{
