@@ -755,11 +755,11 @@ public class TapatalkClient
 		}
 	}
 
-	@Deprecated
-	public XMLRPCClient getXMLRPCClient()
+	public void setUserAgent( String agent)
 	{
-		return client;
+		client.setUserAgent(agent);
 	}
+
 
 	private static String byteArrayToString(Object object)
 	{
