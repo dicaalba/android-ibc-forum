@@ -26,7 +26,7 @@
 		<EditTextPreference android:key="password"
 			android:password="true" android:title="@string/password"></EditTextPreference>
 
-		<CheckBoxPreference android:defaultValue="false"
+		<CheckBoxPreference android:defaultValue="true"
 			android:summary="@string/auto_login_desc" android:key="auto_login"
 			android:title="@string/auto_login" android:dependency="username" />
 
@@ -43,15 +43,15 @@
 			android:summary="@string/auto_load_next_desc" android:key="auto_load_next"
 			android:title="@string/auto_load_next" android:enabled="false" />
 
-		<CheckBoxPreference android:defaultValue="false"
+		<CheckBoxPreference android:defaultValue="true"
 			android:summary="@string/scroll_down_desc" android:key="scroll_down"
 			android:title="@string/scroll_down" />
 
-		<CheckBoxPreference android:defaultValue="false"
+		<CheckBoxPreference android:defaultValue="true"
 			android:summary="@string/parse_bbcode_desc" android:key="parse_bbcode"
 			android:title="@string/parse_bbcode" />
 
-		<CheckBoxPreference android:defaultValue="false"
+		<CheckBoxPreference android:defaultValue="true"
 			android:key="load_images" android:summary="@string/load_images_desc"
 			android:title="@string/load_images" />
 
@@ -61,14 +61,14 @@
 
 		<CheckBoxPreference android:defaultValue="true"
 			android:key="autostart_subscription_service" android:summary="@string/subscription_service_desc"
-			android:title="@string/subscription_service" />
-		<ListPreference android:defaultValue="60"
+			android:title="@string/subscription_service" android:dependency="username" />
+		<ListPreference android:defaultValue="180"
 			android:entries="@array/interval_list_label" android:entryValues="@array/interval_list"
 			android:key="subscription_service_interval" android:title="@string/interval"
 			android:dependency="autostart_subscription_service" />
 		<RingtonePreference android:key="ringtone"
 			android:showSilent="true" android:showDefault="true"
-			android:ringtoneType="notification" android:title="@string/ringtone" />
+			android:ringtoneType="notification" android:title="@string/ringtone" android:dependency="autostart_subscription_service" />
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="use_vibration" android:summary="@string/vibration_desc"
 			android:title="@string/vibration" android:dependency="autostart_subscription_service" />
