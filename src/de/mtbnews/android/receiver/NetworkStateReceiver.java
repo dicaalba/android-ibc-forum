@@ -1,12 +1,11 @@
 package de.mtbnews.android.receiver;
 
-import de.mtbnews.android.service.SubscriptionService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.preference.PreferenceManager;
 import android.util.Log;
+import de.mtbnews.android.service.SubscriptionService;
 
 /**
  * Ein Receiver für die Erkennung von Änderungen am Verbindungsstatus. Wenn die
@@ -35,22 +34,20 @@ public class NetworkStateReceiver extends BroadcastReceiver
 	public void onReceive(Context context, Intent intent)
 	{
 		// Feststellen, ob die Verbindung besteht.
-		final boolean noConnectivity = intent.getBooleanExtra(
+		final boolean connectionAvailable = !intent.getBooleanExtra(
 				ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 
-		if (!noConnectivity)
+		if (connectionAvailable)
 		{
 			// Datenverbindung vorhanden
-			Log.d("IBC", "connection established, (re-)starting service");
-			context.stopService(new Intent(context, SubscriptionService.class));
+			Log.d("IBC", "Connection established, (re-)starting service");
 			context
 					.startService(new Intent(context, SubscriptionService.class));
 		}
 		else
 		{
-			// Datenverbindung unterbrochen
-			Log.d("IBC", "connection lost, stopping service");
-			context.stopService(new Intent(context, SubscriptionService.class));
+			// Service wird nicht beendet, sondern der Timer soll weiterlaufen.
+			;
 		}
 	}
 }
