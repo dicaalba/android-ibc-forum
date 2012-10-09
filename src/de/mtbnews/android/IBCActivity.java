@@ -103,7 +103,7 @@ public class IBCActivity extends ListActivity
 			{
 				final RSSFeed oldFeed = ((IBCApplication) getApplication())
 						.getNewsFeed();
-				
+
 				if (oldFeed != null)
 				{
 					feed = oldFeed;
@@ -133,7 +133,7 @@ public class IBCActivity extends ListActivity
 				IBCActivity.this.setTitle(feed.getTitle());
 
 				ListAdapter adapter = new ListEntryContentAdapter(
-						IBCActivity.this, this.feed.getItems());
+						IBCActivity.this, this.feed.getItems(), false, true);
 				setListAdapter(adapter);
 			}
 		}.execute();
