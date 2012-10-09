@@ -38,13 +38,23 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 {
 	private int totalSize;
 	private SharedPreferences prefs;
-
+	/**
+	 * Diese Liste immer von oben beginnen.
+	 * 
+	 * @see de.mtbnews.android.EndlessListActivity#isAutoScrolldown()
+	 */
+	@Override
+	protected boolean isAutoScrolldown()
+	{
+		return false;
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.listing);
 
 		ListAdapter adapter = new ListEntryContentAdapter(

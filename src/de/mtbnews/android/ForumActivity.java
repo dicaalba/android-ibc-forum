@@ -49,17 +49,28 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 	private TapatalkClient client;
 
+	/**
+	 * Diese Liste immer von oben beginnen.
+	 * 
+	 * @see de.mtbnews.android.EndlessListActivity#isAutoScrolldown()
+	 */
+	@Override
+	protected boolean isAutoScrolldown()
+	{
+		return false;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
+		
+		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.listing);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		client = ((IBCApplication) getApplication())
-				.getTapatalkClient();
+		client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 		if (!client.loggedIn && prefs.getBoolean("auto_login", false))
 		{

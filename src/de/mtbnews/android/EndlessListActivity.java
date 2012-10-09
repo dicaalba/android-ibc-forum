@@ -60,6 +60,11 @@ public abstract class EndlessListActivity<T> extends ListActivity
 	 */
 	protected abstract int getTotalSize();
 
+	protected boolean isAutoScrolldown()
+	{
+		return prefs.getBoolean("scroll_down", false);
+	}
+
 	/**
 	 * Initiales Laden der ersten Listeneinträge.
 	 */
@@ -74,7 +79,7 @@ public abstract class EndlessListActivity<T> extends ListActivity
 		else if (getIntent().getBooleanExtra(LAST_POST, false))
 			autoScrollDown = true;
 		else
-			autoScrollDown = prefs.getBoolean("scroll_down", false);
+			autoScrollDown = isAutoScrolldown();
 
 		if (autoScrollDown)
 		{

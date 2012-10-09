@@ -28,6 +28,16 @@ public class MailActivity extends EndlessListActivity<Message>
 {
 	private int totalMessageCount;
 	private String boxId;
+	/**
+	 * Diese Liste immer von oben beginnen.
+	 * 
+	 * @see de.mtbnews.android.EndlessListActivity#isAutoScrolldown()
+	 */
+	@Override
+	protected boolean isAutoScrolldown()
+	{
+		return false;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

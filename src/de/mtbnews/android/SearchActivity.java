@@ -3,8 +3,6 @@
  */
 package de.mtbnews.android;
 
-import java.io.IOException;
-
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,12 +45,25 @@ public class SearchActivity extends EndlessListActivity<Topic>
 	private int searchType;
 	private String username;
 
+	/**
+	 * Diese Liste immer von oben beginnen.
+	 * 
+	 * @see de.mtbnews.android.EndlessListActivity#isAutoScrolldown()
+	 */
+	@Override
+	protected boolean isAutoScrolldown()
+	{
+		return false;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		super.onCreate(savedInstanceState);
+		setTheme(((IBCApplication) getApplication()).themeResId);
+		
 		setContentView(R.layout.listing);
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		username = prefs.getString("username", "");
 
@@ -174,7 +185,8 @@ public class SearchActivity extends EndlessListActivity<Topic>
 			@Override
 			protected void callServer() throws TapatalkException
 			{
-				TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
+				TapatalkClient client = ((IBCApplication) getApplication())
+						.getTapatalkClient();
 
 				search = client.searchTopics(searchType, query, username, from,
 						to, searchId);
