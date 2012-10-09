@@ -12,6 +12,11 @@ public interface IBC
 	/**
 	 * Tapatalk-API für IBC-Forum.
 	 */
+	static final String IBC_FORUM_URL = "http://www.mtb-news.de/forum/";
+
+	/**
+	 * Tapatalk-API für IBC-Forum.
+	 */
 	static final String IBC_FORUM_CONNECTOR_URL = "http://www.mtb-news.de/forum/mobiquo/mobiquo.php";
 
 	/**
