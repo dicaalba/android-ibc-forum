@@ -6,7 +6,7 @@
 		android:key="ibc_theme" android:title="@string/use_ibc_theme" />
 
 	<CheckBoxPreference android:defaultValue="true"
-		android:key="show_hints" android:title="@string/show_hints" />
+		android:key="show_hints" android:title="@string/show_hints" android:summary="@string/show_hints_desc" />
 
 	<!--
 		<EditTextPreference android:key="timeout"
@@ -53,7 +53,7 @@
 
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="load_images" android:summary="@string/load_images_desc"
-			android:title="@string/load_images" android:dependency="parse_bbcode" />
+			android:title="@string/load_images" />
 
 	</PreferenceCategory>
 
