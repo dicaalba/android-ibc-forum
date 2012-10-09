@@ -15,8 +15,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -81,7 +79,7 @@ public class SubscriptionService extends Service
 	 */
 	public void onCreate()
 	{
-		Log.d(IBC.TAG, "Starting service");
+		Log.i(IBC.TAG, "Starting service");
 		super.onCreate();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -101,7 +99,7 @@ public class SubscriptionService extends Service
 		else
 		{
 			// Service soll nicht laufen, also sofort wieder stoppen
-			Log.d(IBC.TAG, "Stopping service");
+			Log.i(IBC.TAG, "Stopping service (should not start)");
 			stopSelf();
 		}
 
@@ -118,9 +116,9 @@ public class SubscriptionService extends Service
 	 */
 	private class SubscriptionTask extends TimerTask
 	{
-		public void run() 
+		public void run()
 		{
-			Log.d(IBC.TAG, "timer event fired");
+			Log.i(IBC.TAG, "Timer event fired");
 
 			// Für diesen Timer-Event erzeugen wir einen eigene Instanz des
 			// Tapatalk-Client. Die Laufzeit ist hier unkritisch, dafür belastet
@@ -131,26 +129,31 @@ public class SubscriptionService extends Service
 			final TapatalkClient client = new TapatalkClient(
 					IBC.IBC_FORUM_CONNECTOR_URL);
 
-			// Anzeigen einer Notification, damit der Benutzer weiß, dass neue Nachrichten ab
+			// Anzeigen einer Notification, damit der Benutzer weiß, dass neue
+			// Nachrichten ab
 			final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			final PendingIntent emptyIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
-			
+			final PendingIntent emptyIntent = PendingIntent.getActivity(
+					getApplicationContext(), 0, new Intent(), 0);
+
 			final String tickerText1 = getResources().getString(
 					R.string.checking_new);
-			
-			final Notification notificationRunning = new Notification(R.drawable.ibc_logo,
-					tickerText1, System.currentTimeMillis());
 
-			notificationRunning
-			.setLatestEventInfo(getApplicationContext(), getResources()
-					.getString(R.string.checking_new),
-					"", emptyIntent);
+			if (prefs.getBoolean("show_hints", false))
+			{
+				final Notification notificationRunning = new Notification(
+						R.drawable.ibc_logo, tickerText1, System
+								.currentTimeMillis());
 
-			notificationRunning.defaults = 0;
-			notificationRunning.flags = Notification.FLAG_ONGOING_EVENT
-			| Notification.FLAG_NO_CLEAR;
-			nm.notify(NOTIFICATION_EVENT_RUNNING, notificationRunning);
-			
+				notificationRunning.setLatestEventInfo(getApplicationContext(),
+						getResources().getString(R.string.checking_new), "",
+						emptyIntent);
+
+				notificationRunning.defaults = 0;
+				notificationRunning.flags = Notification.FLAG_ONGOING_EVENT
+						| Notification.FLAG_NO_CLEAR;
+				nm.notify(NOTIFICATION_EVENT_RUNNING, notificationRunning);
+			}
+
 			try
 			{
 				// Zuerst Login
@@ -282,7 +285,7 @@ public class SubscriptionService extends Service
 		@Override
 		public boolean cancel()
 		{
-			Log.d(IBC.TAG, "Timer canceled");
+			Log.i(IBC.TAG, "Timer canceled");
 			return super.cancel();
 		}
 	}
