@@ -3,23 +3,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="wrap_content" android:layout_margin="8sp"
-	android:padding="5sp" style="@style/textbox">
+	android:padding="5sp" style="?textbox">
 
-	<LinearLayout android:orientation="horizontal" style="@style/textbox"
+	<LinearLayout android:orientation="horizontal" style="?textbox"
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/item_date"
-			style="@style/infoText"></TextView>
+			style="?infoText"></TextView>
 		<TextView android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:id="@+id/item_name"
-			style="@style/infoText" android:gravity="right"></TextView>
+			style="?infoText" android:gravity="right"></TextView>
 	</LinearLayout>
 
 	<TextView android:text="" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:id="@+id/item_title"
-		style="@style/titleText"></TextView>
+		style="?titleText"></TextView>
 
 	<TextView android:text="" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:id="@+id/item_description"
-		style="@style/normalText"></TextView>
+		style="?normalText"></TextView>
 </LinearLayout> 

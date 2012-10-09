@@ -6,7 +6,6 @@ package de.mtbnews.android.adapter;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +22,6 @@ import de.mtbnews.android.tapatalk.wrapper.Forum;
 public class ExpandableForumContentAdapter extends BaseExpandableListAdapter
 {
 
-	private static final int IBC_GELB = Color.parseColor("#FFCC66");
-
-	/** Remember our context so we can use it when constructing views. */
-	private Context mContext;
-
 	/**
 	 * Hold onto a copy of the entire Contact List.
 	 */
@@ -37,7 +31,6 @@ public class ExpandableForumContentAdapter extends BaseExpandableListAdapter
 
 	public ExpandableForumContentAdapter(Context context, List<Forum> forumList)
 	{
-		mContext = context;
 		inflator = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -63,19 +56,19 @@ public class ExpandableForumContentAdapter extends BaseExpandableListAdapter
 	{
 		Forum e = forumList.get(groupPosition).subForen.get(childPosition);
 
-		final View view = inflator.inflate(R.layout.rss_item, null);
+		final View itemView = inflator.inflate(R.layout.rss_item, null);
 
-		TextView datum = (TextView) view.findViewById(R.id.item_date);
+		TextView datum = (TextView) itemView.findViewById(R.id.item_date);
 		datum.setVisibility(View.INVISIBLE);
 
-		TextView name = (TextView) view.findViewById(R.id.item_title);
+		TextView name = (TextView) itemView.findViewById(R.id.item_title);
 		name.setText(e.getTitle());
 
-		TextView desc = (TextView) view.findViewById(R.id.item_description);
+		TextView desc = (TextView) itemView.findViewById(R.id.item_description);
 
 		desc.setText(e.getContent());
 
-		return view;
+		return itemView;
 	}
 
 	@Override
@@ -99,7 +92,6 @@ public class ExpandableForumContentAdapter extends BaseExpandableListAdapter
 	@Override
 	public long getGroupId(int groupPosition)
 	{
-		// TODO Auto-generated method stub
 		return groupPosition;
 	}
 
@@ -107,33 +99,24 @@ public class ExpandableForumContentAdapter extends BaseExpandableListAdapter
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent)
 	{
-		Forum e = forumList.get(groupPosition);
+		final Forum forum = forumList.get(groupPosition);
 
-		final View view = inflator.inflate(R.layout.rss_item, null);
-		view.setBackgroundColor(IBC_GELB);
+		final View itemView = inflator.inflate(R.layout.rss_item, null);
 
-		TextView datum = (TextView) view.findViewById(R.id.item_date);
+		TextView datum = (TextView) itemView.findViewById(R.id.item_date);
 		datum.setText("");
-		datum.setBackgroundColor(IBC_GELB);
-		// datum.setVisibility(View.INVISIBLE);
 
-		TextView name = (TextView) view.findViewById(R.id.item_name);
+		TextView name = (TextView) itemView.findViewById(R.id.item_name);
 		name.setText("");
-		name.setBackgroundColor(IBC_GELB);
-		// name.setVisibility(View.INVISIBLE);
 
-		TextView title = (TextView) view.findViewById(R.id.item_title);
+		TextView title = (TextView) itemView.findViewById(R.id.item_title);
 		title.setGravity(Gravity.CENTER);
-		title.setBackgroundColor(IBC_GELB);
-		title.setText(e.getTitle());
+		title.setText(forum.getTitle());
 
-		TextView desc = (TextView) view.findViewById(R.id.item_description);
-		// desc.setVisibility(View.INVISIBLE);
-		// desc.setText(e.getContent());
+		TextView desc = (TextView) itemView.findViewById(R.id.item_description);
 		desc.setText("");
-		desc.setBackgroundColor(IBC_GELB);
 
-		return view;
+		return itemView;
 	}
 
 	@Override

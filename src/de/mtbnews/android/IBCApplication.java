@@ -63,7 +63,7 @@ public class IBCApplication extends Application
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		themeResId = (prefs.getBoolean("ibc_theme", true)) ? R.style.IBC
-				: android.R.style.Theme;
+				: R.style.Default;
 
 		if (prefs.getBoolean("autostart_subscription_service", false))
 		{
