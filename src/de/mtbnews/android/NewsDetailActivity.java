@@ -10,17 +10,10 @@ import org.mcsoxford.rss.RSSReader;
 import org.mcsoxford.rss.RSSReaderException;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Html;
-import android.text.format.DateFormat;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
-import de.mtbnews.android.image.URLImageParser;
+import android.webkit.WebView;
 import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.ServerAsyncTask;
 
@@ -32,13 +25,11 @@ public class NewsDetailActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		setContentView(R.layout.newsdetail);
+		setContentView(R.layout.detail);
 
 		super.onCreate(savedInstanceState);
 
-		final TextView datum = (TextView) findViewById(R.id.item_date);
-		final TextView desc = (TextView) findViewById(R.id.item_description);
-		final Button button = (Button) findViewById(R.id.item_button);
+		final WebView webView = (WebView) findViewById(R.id.webView);
 
 		new ServerAsyncTask(this, R.string.waitingfor_news)
 		{
@@ -79,36 +70,32 @@ public class NewsDetailActivity extends Activity
 				final RSSItem item = feed.getItems().get(
 						getIntent().getIntExtra("itemid", 0));
 
-				datum.setText(DateFormat.getTimeFormat(NewsDetailActivity.this)
-						.format(item.getPubDate()));
+//				final String title = DateFormat.getTimeFormat(NewsDetailActivity.this)
+//				.format(item.getPubDate());
+				
+//				NewsDetailActivity.this.setTitle(title);
+				
 
-				// TextView name = (TextView) findViewById(R.id.item_title);
-				// name.setText(item.getTitle());
-
-				// if (e.getContent() != null)
 				final String html = item.getFullContent();
+				
+				webView.getSettings().setLoadsImagesAutomatically(prefs.getBoolean("load_images", false));
+				webView.loadData(html,"text/html","UTF-16");
 
-				Html.ImageGetter imageGetter = null;
-				if (prefs.getBoolean("load_images", false))
-					imageGetter = new URLImageParser(desc,
-							NewsDetailActivity.this);
-
-				desc.setText(Html.fromHtml(html, imageGetter, null));
 
 				setTitle(item.getTitle());
 
-				button.setOnClickListener(new OnClickListener()
-				{
-
-					@Override
-					public void onClick(View v)
-
-					{
-						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setData(item.getLink());
-						startActivity(i);
-					}
-				});
+				// button.setOnClickListener(new OnClickListener()
+				// {
+				//
+				// @Override
+				// public void onClick(View v)
+				//
+				// {
+				// Intent i = new Intent(Intent.ACTION_VIEW);
+				// i.setData(item.getLink());
+				// startActivity(i);
+				// }
+				// });
 			}
 		}.execute();
 	}
