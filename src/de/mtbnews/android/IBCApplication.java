@@ -4,6 +4,7 @@
 package de.mtbnews.android;
 
 import java.lang.ref.SoftReference;
+import java.util.List;
 
 import org.mcsoxford.rss.RSSFeed;
 
@@ -12,9 +13,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 import de.mtbnews.android.service.SubscriptionService;
 import de.mtbnews.android.tapatalk.TapatalkClient;
+import de.mtbnews.android.tapatalk.wrapper.Forum;
 import de.mtbnews.android.util.IBC;
 
 /**
@@ -39,6 +40,12 @@ public class IBCApplication extends Application
 	 */
 	private SoftReference<RSSFeed> newsFeedRef = new SoftReference<RSSFeed>(
 			null);
+	/**
+	 * Speichert eine Referenz auf die Forum-Liste. Diese Liste kann vom GC
+	 * jederzeit entfernt werden, wenn der Speicherverbrauch zu hoch ist.
+	 */
+	private SoftReference<List<Forum>> listForumRef = new SoftReference<List<Forum>>(
+			null);;
 
 	public SharedPreferences prefs;
 
@@ -108,9 +115,9 @@ public class IBCApplication extends Application
 		else
 		{
 			Log.d(IBC.TAG, "Creating a new tapatalk client");
-			
+
 			client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
-			client.getXMLRPCClient().setUserAgent(
+			client.setUserAgent(
 					"Mozilla/5.0 (compatible; Android)");
 			tapatalkClientRef = new SoftReference<TapatalkClient>(client);
 			return client;
@@ -125,5 +132,15 @@ public class IBCApplication extends Application
 	public void setNewsFeed(RSSFeed feed)
 	{
 		newsFeedRef = new SoftReference<RSSFeed>(feed);
+	}
+
+	public List<Forum> getForumList()
+	{
+		return listForumRef.get();
+	}
+
+	public void setForumList(List<Forum> feed)
+	{
+		listForumRef = new SoftReference<List<Forum>>(feed);
 	}
 }
