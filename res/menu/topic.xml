@@ -1,16 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+	<item android:id="@+id/menu_reply" android:title="@string/reply"
+		android:icon="@android:drawable/ic_menu_gallery"></item>
+
 	<item android:id="@+id/menu_subscribe" android:title="@string/subscribe_topic"
 		android:icon="@android:drawable/ic_input_get"></item>
 
-	<item android:id="@+id/menu_reply" android:title="@string/reply"
-		android:icon="@android:drawable/ic_menu_gallery"></item>
-		
 	<item android:id="@+id/menu_top" android:title="@string/goto_top"
 		android:icon="@android:drawable/ic_menu_directions"></item>
-		
+
 	<item android:id="@+id/menu_bottom" android:title="@string/goto_bottom"
 		android:icon="@android:drawable/ic_menu_directions"></item>
+
+	<item android:id="@+id/menu_preferences" android:title="@string/preferences"
+		android:icon="@android:drawable/ic_menu_preferences"></item>
+
 	<!--
 		Erst ab Tapatalk-API-Version 4 <item android:id="@+id/menu_mark_read"
 		android:title="@string/mark_topic_read"

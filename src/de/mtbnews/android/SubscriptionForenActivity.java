@@ -162,6 +162,10 @@ public class SubscriptionForenActivity extends ListActivity
 	{
 		switch (item.getItemId())
 		{
+			case R.id.menu_preferences:
+				startActivity(new Intent(this, Configuration.class));
+				return true;
+				
 			case R.id.menu_mailbox:
 				startActivity(new Intent(this, MailboxActivity.class));
 				return true;

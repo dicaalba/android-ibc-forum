@@ -46,10 +46,10 @@ public class TopicActivity extends EndlessListActivity<Post>
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.listing);
-		
+
 		client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 		topicId = TopicActivity.this.getIntent().getStringExtra(TOPIC_ID);
@@ -64,22 +64,17 @@ public class TopicActivity extends EndlessListActivity<Post>
 		final ListView list = getListView();
 
 		/*
-		list.setOnItemClickListener(new OnItemClickListener()
-		{
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
-			{
-				int aktPosition = displayFrom + position + 1;
-				Toast.makeText(TopicActivity.this, "" + aktPosition,
-						Toast.LENGTH_SHORT).show();
-
-				// final Intent intent = new Intent(TopicActivity.this,
-				// PostActivity.class);
-				// intent.putExtra("itemid", position);
-				// startActivity(intent);
-			}
-		});*/
+		 * list.setOnItemClickListener(new OnItemClickListener() {
+		 * 
+		 * @Override public void onItemClick(AdapterView<?> parent, View view,
+		 * int position, long id) { int aktPosition = displayFrom + position +
+		 * 1; Toast.makeText(TopicActivity.this, "" + aktPosition,
+		 * Toast.LENGTH_SHORT).show();
+		 * 
+		 * // final Intent intent = new Intent(TopicActivity.this, //
+		 * PostActivity.class); // intent.putExtra("itemid", position); //
+		 * startActivity(intent); } });
+		 */
 	}
 
 	@Override
@@ -136,6 +131,10 @@ public class TopicActivity extends EndlessListActivity<Post>
 	{
 		switch (item.getItemId())
 		{
+			case R.id.menu_preferences:
+				startActivity(new Intent(this, Configuration.class));
+				return true;
+				
 			case R.id.menu_top:
 
 				getListView().setOnScrollListener(null);

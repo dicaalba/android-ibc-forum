@@ -64,7 +64,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.listing);
 
@@ -224,6 +224,10 @@ public class ForumActivity extends EndlessListActivity<Topic>
 	{
 		switch (item.getItemId())
 		{
+			case R.id.menu_preferences:
+				startActivity(new Intent(this, Configuration.class));
+				return true;
+
 			case R.id.menu_mailbox:
 				startActivity(new Intent(this, MailboxActivity.class));
 				return true;

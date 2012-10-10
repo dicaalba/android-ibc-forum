@@ -45,7 +45,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.exp_listing);
 
@@ -108,7 +108,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 					forumList = client.getAllForum();
 					((IBCApplication) getApplication()).setForumList(forumList);
-					
+
 					unterforenFlachkloppen();
 				}
 			}
@@ -282,6 +282,10 @@ public class ForumOverviewActivity extends ExpandableListActivity
 				// Forum-Übersicht neu laden.
 				forumList = null;
 				loadForum();
+				return true;
+
+			case R.id.menu_preferences:
+				startActivity(new Intent(this, Configuration.class));
 				return true;
 
 			case R.id.menu_login:
