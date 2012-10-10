@@ -6,6 +6,8 @@
 	<attr name="titleText" format="reference" />
 	<attr name="titleBox" format="reference" />
 
+	<color name="ibcborder">#333333</color>
+	<color name="ibcgrey2">#D3D3D3</color>
 	<color name="ibcgrey">#E3E3E3</color>
 	<color name="ibctext">#003399</color>
 	<color name="ibcbg">#FFCC66</color>
@@ -43,7 +45,7 @@
 			<item name="android:layout_width">wrap_content</item> <item
 			name="android:layout_height">wrap_content</item>
 		-->
-		<item name="android:background">@drawable/border</item>
+		<item name="android:background">@drawable/rounded</item>
 		<item name="android:textSize">20sp</item>
 		<item name="android:textColor">@color/ibctext</item>
 		<!--
@@ -52,12 +54,29 @@
 		-->
 	</style>
 
-	<style name="ibctextbox">
-		<item name="android:background">@color/ibcgrey</item>
+	<style name="site">
+		<item name="android:paddingLeft">3px</item>
+		<item name="android:paddingRight">3px</item>
+		<item name="android:background">@color/ibcbg</item>
 	</style>
 
+	<style name="list">
+		<item name="android:divider">@color/ibcbg</item>
+		<item name="android:dividerHeight">5px</item>
+		<item name="android:childDivider">@color/ibcbg</item>
+	</style>
+
+
+	<style name="ibctextbox">
+		<item name="android:background">@drawable/rounded</item>
+		<!-- 
+		<item name="android:background">@color/ibcgrey</item>
+		 -->
+	</style>
+
+
 	<style name="ibctitleBox">
-		<item name="android:background">@color/ibcbg</item>
+		<item name="android:background">#000000</item>
 	</style>
 
 	<style name="ibcnormalText">
