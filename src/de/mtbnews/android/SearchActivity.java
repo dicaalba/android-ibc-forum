@@ -61,7 +61,7 @@ public class SearchActivity extends EndlessListActivity<Topic>
 	{
 		super.onCreate(savedInstanceState);
 		setTheme(((IBCApplication) getApplication()).themeResId);
-		
+
 		setContentView(R.layout.listing);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -73,6 +73,9 @@ public class SearchActivity extends EndlessListActivity<Topic>
 		{
 			searchType = TapatalkClient.SEARCHTYPE_QUERY;
 			query = intent.getStringExtra(SearchManager.QUERY);
+
+			setTitle(R.string.searchresult);
+
 		}
 		else if (ACTION_SEARCH_LATEST_TOPICS.equals(intent.getAction()))
 		{
