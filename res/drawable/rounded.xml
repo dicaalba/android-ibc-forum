@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<!-- A stroke line for the shape -->
+	<stroke android:width="1dp" android:color="@color/ibcborder" />
+
+	<!-- A solid color to fill the shape -->
+	<solid android:color="@color/ibcgrey" />
+
+	<!--
+		<gradient android:startColor="@color/ibcgrey"
+		android:endColor="@color/ibcgrey2" android:angle="225"/>
+	-->
+
+	<!-- Creates rounded corners for the shape -->
+	<corners android:radius="10dip" />
+
+	<!-- Padding to apply to the containing View element -->
+	<padding android:left="3dp" android:top="3dp" android:right="3dp"
+		android:bottom="3dp" />
+</shape>
