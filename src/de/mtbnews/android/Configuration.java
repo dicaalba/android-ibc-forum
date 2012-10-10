@@ -16,7 +16,7 @@ public class Configuration extends PreferenceActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		setTheme(((IBCApplication) getApplication()).themeResId);
+		setTheme(R.style.Default);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener()
