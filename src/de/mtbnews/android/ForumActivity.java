@@ -238,6 +238,14 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				startActivity(intent5);
 				return true;
 
+			case R.id.menu_subscribed_forums:
+				startActivity(new Intent(this, SubscriptionForenActivity.class));
+				return true;
+
+			case R.id.menu_subscribed_topics:
+				startActivity(new Intent(this, SubscriptionTopicsActivity.class));
+				return true;
+
 			case R.id.menu_participated_topics:
 				Intent intent = new Intent(this, SearchActivity.class);
 				intent
