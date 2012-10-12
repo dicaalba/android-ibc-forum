@@ -23,7 +23,7 @@ public class BBCodeConverter
 				"\\[color=['\"]?(.*?[^'\"])['\"]?\\](.*?)\\[/color\\]",
 				"<span style='color:$1'>$2</span>");
 
-		string = processTag(string, "\\[quote.*\\](.*?)\\[/quote\\]",
+		string = processTag(string, "\\[quote[^\\[]+\\](.*?)\\[/quote\\]",
 				"<blockquote>$1</blockquote>");
 
 		string = processTag(string,
