@@ -68,7 +68,7 @@
 	<string name="error_timeout">Zeitablauf</string>
 	<string name="error_io">Keine Verbindung</string>
 	<string name="xmlrpc_error">Keine Verbindung zum Server</string>
-	<string name="error_common_server">Keine Antwort vom Server</string>
+	<string name="error_common_server">Unerwartete Antwort vom Server</string>
 	<string name="error">Fehler</string>
 	<string name="error_tapatalk">Tut uns leid, aber diese Aktion war nicht erfolgreich</string>
 	<string name="reason">Grund</string>

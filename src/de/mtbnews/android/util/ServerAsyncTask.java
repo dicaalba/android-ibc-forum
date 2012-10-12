@@ -71,7 +71,8 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 					public void onCancel(DialogInterface dialog)
 					{
 						ServerAsyncTask.this.cancel(true);
-						Toast.makeText(context,R.string.canceled,Toast.LENGTH_SHORT).show();
+						Toast.makeText(context, R.string.canceled,
+								Toast.LENGTH_SHORT).show();
 					}
 				});
 
@@ -111,7 +112,8 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 		alertDialog = builder.setCancelable(true).create();
 
 		alertDialog.setIcon(android.R.drawable.ic_menu_info_details);
-		alertDialog.setMessage(context.getText(error.getErrorResId()));
+		alertDialog.setTitle(error.getErrorResId());
+		alertDialog.setMessage(error.getMessage());
 		alertDialog.show();
 
 	}
