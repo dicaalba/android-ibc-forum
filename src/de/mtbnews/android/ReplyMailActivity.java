@@ -24,12 +24,11 @@ public class ReplyMailActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		client = ((IBCApplication) getApplication()).getTapatalkClient();
-		
+
 		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.post);
-		
 
 		final TextView recipient = (TextView) findViewById(R.id.recipient);
 		final TextView subject = (TextView) findViewById(R.id.subject);
@@ -38,6 +37,7 @@ public class ReplyMailActivity extends Activity
 		if (getIntent().hasExtra("box_id"))
 		{
 
+			setTitle(R.string.reply);
 			boxId = getIntent().getStringExtra("box_id");
 			messageId = getIntent().getStringExtra("message_id");
 
@@ -68,6 +68,10 @@ public class ReplyMailActivity extends Activity
 
 				}
 			}.execute();
+		}
+		else
+		{
+			setTitle(R.string.new_message);
 		}
 
 		final Button button = (Button) findViewById(R.id.send);

@@ -35,6 +35,9 @@ public class CreateTopicActivity extends Activity
 		final TextView recipient = (TextView) findViewById(R.id.recipient);
 		recipient.setText("");
 		recipient.setVisibility(View.INVISIBLE);
+		
+		final TextView label = (TextView) findViewById(R.id.recipient_label);
+		label.setVisibility(View.INVISIBLE);
 
 		final TextView subject = (TextView) findViewById(R.id.subject);
 		subject.setText("");

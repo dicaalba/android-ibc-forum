@@ -43,7 +43,7 @@
 	<string name="waitingfor_news">Neue Nachrichten werden geladen</string>
 	<string name="waitingfor_forum">Foren werden geladen</string>
 	<string name="waitingfor_topic">Thema wird geladen</string>
-	<string name="waitingfor_search">Suche läuft</string>
+	<string name="waitingfor_search">Suche wird ausgeführt</string>
 	<string name="waitingforcontent">Inhalt wird geladen</string>
 	<string name="waitingforprojects">Projekte werden geladen</string>
 	<string name="waitingfor_login">Anmeldung am Server</string>

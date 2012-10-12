@@ -23,14 +23,12 @@ public class MessageActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.newsdetail);
 
 		boxId = getIntent().getStringExtra("box_id");
 		messageId = getIntent().getStringExtra("message_id");
-
-		findViewById(R.id.item_button).setVisibility(View.INVISIBLE);
 
 		new ServerAsyncTask(this, R.string.waitingforcontent)
 		{
@@ -48,6 +46,8 @@ public class MessageActivity extends Activity
 			protected void doOnSuccess()
 			{
 				// MessageActivity.this.setTitle(feed.getTitle());
+
+				MessageActivity.this.setTitle(message.getTitle());
 
 				TextView datum = (TextView) findViewById(R.id.item_date);
 				datum.setText(DateFormat.getTimeFormat(MessageActivity.this)
@@ -104,6 +104,10 @@ public class MessageActivity extends Activity
 				startActivity(intent);
 				return true;
 
+			case R.id.menu_new_message:
+				Intent intent2 = new Intent(this, ReplyMailActivity.class);
+				startActivity(intent2);
+				return true;
 		}
 		return false;
 	}

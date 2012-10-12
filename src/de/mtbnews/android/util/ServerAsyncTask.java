@@ -57,7 +57,8 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 
 		this.progressDialog = new ProgressDialog(context);
 		// progressDialog.setTitle(R.string.loading);
-		progressDialog.setMessage(context.getResources().getString(message));
+		progressDialog.setMessage(context.getResources().getString(message)
+				+ " ...");
 	}
 
 	@Override
