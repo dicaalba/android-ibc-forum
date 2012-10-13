@@ -23,9 +23,13 @@
 		<item name="titleText">@style/ibctitleText</item>
 		<item name="titleBox">@style/ibctitleBox</item>
 
+		<!--
+			Geht alles nicht, den ProgressBar-Style kann man offenbar nicht
+			verändern :(
+		-->
 		<item name="android:alertDialogStyle">@style/Dialog</item>
-		<item name="android:popupWindowStyle">@style/Dialog</item>
-		
+		<item name="android:progressBarStyle">@style/Dialog</item>
+
 		<item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
 		<item name="android:windowTitleStyle">@style/WindowTitle</item>
 
@@ -53,6 +57,10 @@
 	</style>
 
 	<!-- Fuer AlertDialog etc. -->
+	<!--
+		Geht alles nicht, den ProgressBar-Style kann man offenbar nicht
+		verändern :(
+	-->
 	<style name="Dialog" parent="@android:style/Widget.ProgressBar">
 		<item name="android:textColor">@color/ibctext</item>
 		<item name="android:background">@color/ibcgrey</item>
