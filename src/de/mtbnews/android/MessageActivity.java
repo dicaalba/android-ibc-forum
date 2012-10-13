@@ -2,22 +2,25 @@ package de.mtbnews.android;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Message;
 import de.mtbnews.android.util.ServerAsyncTask;
+import de.mtbnews.android.util.Utils;
 
 public class MessageActivity extends Activity
 {
 	private String boxId;
 	private String messageId;
+	private SharedPreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -27,6 +30,7 @@ public class MessageActivity extends Activity
 		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.newsdetail);
 
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		boxId = getIntent().getStringExtra("box_id");
 		messageId = getIntent().getStringExtra("message_id");
 
@@ -40,6 +44,11 @@ public class MessageActivity extends Activity
 			{
 				client = ((IBCApplication) getApplication())
 						.getTapatalkClient();
+				
+				if (Utils.loginExceeded(client))
+					client.login(prefs.getString("username", ""), prefs
+							.getString("password", ""));
+				
 				message = client.getMessage(boxId, messageId);
 			}
 

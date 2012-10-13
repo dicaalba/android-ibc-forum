@@ -1,12 +1,9 @@
 package de.mtbnews.android;
 
-import java.io.IOException;
-import java.util.List;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import de.mtbnews.android.adapter.ListEntryContentAdapter;
@@ -23,11 +19,13 @@ import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.tapatalk.wrapper.Mailbox;
 import de.mtbnews.android.tapatalk.wrapper.Message;
 import de.mtbnews.android.util.ServerAsyncTask;
+import de.mtbnews.android.util.Utils;
 
 public class MailActivity extends EndlessListActivity<Message>
 {
 	private int totalMessageCount;
 	private String boxId;
+	private SharedPreferences prefs;
 	/**
 	 * Diese Liste immer von oben beginnen.
 	 * 
@@ -46,7 +44,7 @@ public class MailActivity extends EndlessListActivity<Message>
 		setContentView(R.layout.listing);
 
 		super.onCreate(savedInstanceState);
-
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		boxId = getIntent().getStringExtra("box_id");
 
 		ListAdapter adapter = new ListEntryContentAdapter(MailActivity.this,
@@ -139,6 +137,11 @@ public class MailActivity extends EndlessListActivity<Message>
 			{
 					TapatalkClient client = ((IBCApplication) getApplication())
 							.getTapatalkClient();
+					
+					if (Utils.loginExceeded(client))
+						client.login(prefs.getString("username", ""), prefs
+								.getString("password", ""));
+					
 					mailbox = client.getBoxContent(boxId, from, to);
 
 					totalMessageCount = mailbox.countAll;
