@@ -33,6 +33,7 @@ import de.mtbnews.android.tapatalk.wrapper.Topic;
 import de.mtbnews.android.util.IBC;
 import de.mtbnews.android.util.IBCException;
 import de.mtbnews.android.util.ServerAsyncTask;
+import de.mtbnews.android.util.Utils;
 
 /**
  * @author dankert
@@ -411,7 +412,10 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			@Override
 			protected void callServer() throws TapatalkException
 			{
-
+				if (Utils.loginExceeded(client))
+					client.login(prefs.getString("username", ""), prefs
+							.getString("password", ""));
+				
 				this.forum = client.getForum(forumId, from, to, topicMode);
 				totalSize = this.forum.topicCount;
 			}
