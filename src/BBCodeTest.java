@@ -11,6 +11,14 @@ public class BBCodeTest extends TestCase
 		testInOut(in, out);
 	}
 
+	public void testQuoteSimple() throws Exception
+	{
+
+		String in = "[quotE]Hallo[/Quote]Hallo [B]Du[/b].";
+		String out = "<blockquote>Hallo</blockquote>Hallo <b>Du</b>.";
+		testInOut(in, out);
+	}
+
 	public void testQuoteDouble() throws Exception
 	{
 
