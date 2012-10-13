@@ -42,6 +42,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.ListEntryContentAdapter;
 import de.mtbnews.android.util.IBC;
+import de.mtbnews.android.util.IBCException;
 import de.mtbnews.android.util.ServerAsyncTask;
 
 /**
@@ -99,7 +100,7 @@ public class IBCActivity extends ListActivity
 			private RSSFeed feed;
 
 			@Override
-			protected void callServer() throws IOException
+			protected void callServer() throws IBCException
 			{
 				final RSSFeed oldFeed = ((IBCApplication) getApplication())
 						.getNewsFeed();
@@ -119,11 +120,13 @@ public class IBCActivity extends ListActivity
 					}
 					catch (RSSReaderException e)
 					{
-						throw new ClientProtocolException(e);
+						throw new IBCException(R.string.error_io, e
+								.getMessage(), e);
 					}
 					catch (RSSFault e)
 					{
-						throw new ClientProtocolException(e);
+						throw new IBCException(R.string.error_io, e
+								.getMessage(), e);
 					}
 				}
 			}
