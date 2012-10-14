@@ -22,8 +22,7 @@ public class TapatalkException extends Exception
 	 * @param errorCode
 	 *            TODO
 	 */
-	public TapatalkException(String detailMessage, Throwable throwable,
-			TapatalkErrorCode errorCode)
+	public TapatalkException(String detailMessage, Throwable throwable, TapatalkErrorCode errorCode)
 	{
 
 		super(detailMessage, throwable);

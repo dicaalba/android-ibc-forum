@@ -63,5 +63,4 @@ public class Post implements ListEntry
 		return name;
 	}
 
-	
 }

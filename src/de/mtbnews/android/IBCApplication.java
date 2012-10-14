@@ -31,21 +31,18 @@ public class IBCApplication extends Application
 	 * Speichert eine Referenz auf den Tapatalk-Client. Dieser Client kann vom
 	 * GC jederzeit entfernt werden, wenn der Speicherverbrauch zu hoch ist.
 	 */
-	private SoftReference<TapatalkClient> tapatalkClientRef = new SoftReference<TapatalkClient>(
-			null);
+	private SoftReference<TapatalkClient> tapatalkClientRef = new SoftReference<TapatalkClient>(null);
 
 	/**
 	 * Speichert eine Referenz auf den RSSFeed. Dieser Feed kann vom GC
 	 * jederzeit entfernt werden, wenn der Speicherverbrauch zu hoch ist.
 	 */
-	private SoftReference<RSSFeed> newsFeedRef = new SoftReference<RSSFeed>(
-			null);
+	private SoftReference<RSSFeed> newsFeedRef = new SoftReference<RSSFeed>(null);
 	/**
 	 * Speichert eine Referenz auf die Forum-Liste. Diese Liste kann vom GC
 	 * jederzeit entfernt werden, wenn der Speicherverbrauch zu hoch ist.
 	 */
-	private SoftReference<List<Forum>> listForumRef = new SoftReference<List<Forum>>(
-			null);;
+	private SoftReference<List<Forum>> listForumRef = new SoftReference<List<Forum>>(null);;
 
 	public SharedPreferences prefs;
 
@@ -62,13 +59,11 @@ public class IBCApplication extends Application
 		Log.d(IBC.TAG, "starting main application");
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		themeResId = (prefs.getBoolean("ibc_theme", true)) ? R.style.IBC
-				: R.style.Default;
+		themeResId = (prefs.getBoolean("ibc_theme", true)) ? R.style.IBC : R.style.Default;
 
 		if (prefs.getBoolean("autostart_subscription_service", false))
 		{
-			startService(new Intent(getApplicationContext(),
-					SubscriptionService.class));
+			startService(new Intent(getApplicationContext(), SubscriptionService.class));
 		}
 
 		super.onCreate();
@@ -117,8 +112,7 @@ public class IBCApplication extends Application
 			Log.d(IBC.TAG, "Creating a new tapatalk client");
 
 			client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
-			client.setUserAgent(
-					"Mozilla/5.0 (compatible; Android)");
+			client.setUserAgent("Mozilla/5.0 (compatible; Android)");
 			tapatalkClientRef = new SoftReference<TapatalkClient>(client);
 			return client;
 		}

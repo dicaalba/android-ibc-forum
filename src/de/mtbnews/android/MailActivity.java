@@ -26,6 +26,7 @@ public class MailActivity extends EndlessListActivity<Message>
 	private int totalMessageCount;
 	private String boxId;
 	private SharedPreferences prefs;
+
 	/**
 	 * Diese Liste immer von oben beginnen.
 	 * 
@@ -47,8 +48,7 @@ public class MailActivity extends EndlessListActivity<Message>
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		boxId = getIntent().getStringExtra("box_id");
 
-		ListAdapter adapter = new ListEntryContentAdapter(MailActivity.this,
-				super.entries);
+		ListAdapter adapter = new ListEntryContentAdapter(MailActivity.this, super.entries);
 		setListAdapter(adapter);
 
 		initialLoad();
@@ -59,27 +59,22 @@ public class MailActivity extends EndlessListActivity<Message>
 		{
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
 				Intent i = new Intent(MailActivity.this, MessageActivity.class);
 				i.putExtra("box_id", boxId);
-				i.putExtra("message_id", MailActivity.super.entries
-						.get(position).id);
+				i.putExtra("message_id", MailActivity.super.entries.get(position).id);
 				startActivity(i);
 			}
 		});
 		list.setOnItemLongClickListener(new OnItemLongClickListener()
 		{
 			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3)
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
 			{
-				Intent i = new Intent(MailActivity.this,
-						ReplyMailActivity.class);
+				Intent i = new Intent(MailActivity.this, ReplyMailActivity.class);
 				i.putExtra("box_id", boxId);
-				i.putExtra("message_id",
-						MailActivity.super.entries.get(arg2).id);
+				i.putExtra("message_id", MailActivity.super.entries.get(arg2).id);
 				startActivity(i);
 				return true;
 			}
@@ -87,9 +82,6 @@ public class MailActivity extends EndlessListActivity<Message>
 
 	}
 
-	
-	
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -113,8 +105,6 @@ public class MailActivity extends EndlessListActivity<Message>
 		return false;
 	}
 
-	
-	
 	@Override
 	protected int getTotalSize()
 	{
@@ -122,9 +112,8 @@ public class MailActivity extends EndlessListActivity<Message>
 	}
 
 	@Override
-	protected void loadEntries(
-			final OnListLoadedListener<Message> onListLoaded, final int from,
-			final int to, boolean firstLoad)
+	protected void loadEntries(final OnListLoadedListener<Message> onListLoaded, final int from, final int to,
+			boolean firstLoad)
 	{
 
 		new ServerAsyncTask(this, R.string.waitingforcontent)
@@ -135,16 +124,14 @@ public class MailActivity extends EndlessListActivity<Message>
 			@Override
 			protected void callServer() throws TapatalkException
 			{
-					TapatalkClient client = ((IBCApplication) getApplication())
-							.getTapatalkClient();
-					
-					if (Utils.loginExceeded(client))
-						client.login(prefs.getString("username", ""), prefs
-								.getString("password", ""));
-					
-					mailbox = client.getBoxContent(boxId, from, to);
+				TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 
-					totalMessageCount = mailbox.countAll;
+				if (Utils.loginExceeded(client))
+					client.login(prefs.getString("username", ""), prefs.getString("password", ""));
+
+				mailbox = client.getBoxContent(boxId, from, to);
+
+				totalMessageCount = mailbox.countAll;
 			}
 
 			protected void doOnSuccess()

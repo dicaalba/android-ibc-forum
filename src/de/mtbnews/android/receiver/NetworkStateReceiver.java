@@ -34,15 +34,13 @@ public class NetworkStateReceiver extends BroadcastReceiver
 	public void onReceive(Context context, Intent intent)
 	{
 		// Feststellen, ob die Verbindung besteht.
-		final boolean connectionAvailable = !intent.getBooleanExtra(
-				ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
+		final boolean connectionAvailable = !intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 
 		if (connectionAvailable)
 		{
 			// Datenverbindung vorhanden
 			Log.d("IBC", "Connection established, (re-)starting service");
-			context
-					.startService(new Intent(context, SubscriptionService.class));
+			context.startService(new Intent(context, SubscriptionService.class));
 		}
 		else
 		{

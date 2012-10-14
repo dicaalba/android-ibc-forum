@@ -38,6 +38,7 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 {
 	private int totalSize;
 	private SharedPreferences prefs;
+
 	/**
 	 * Diese Liste immer von oben beginnen.
 	 * 
@@ -48,6 +49,7 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 	{
 		return false;
 	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -57,8 +59,7 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.listing);
 
-		ListAdapter adapter = new ListEntryContentAdapter(
-				SubscriptionTopicsActivity.this, entries);
+		ListAdapter adapter = new ListEntryContentAdapter(SubscriptionTopicsActivity.this, entries);
 		setListAdapter(adapter);
 
 		initialLoad();
@@ -68,8 +69,7 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 		{
 
 			@Override
-			public void onCreateContextMenu(ContextMenu menu, View v,
-					ContextMenuInfo menuInfo)
+			public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
 			{
 				MenuInflater menuInflater = new MenuInflater(getApplication());
 				menuInflater.inflate(R.menu.topic_context, menu);
@@ -79,14 +79,11 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
 				// int aktPosition = displayFrom + position + 1;
-				final Intent intent = new Intent(
-						SubscriptionTopicsActivity.this, TopicActivity.class);
-				Topic topic = SubscriptionTopicsActivity.super.entries
-						.get(position);
+				final Intent intent = new Intent(SubscriptionTopicsActivity.this, TopicActivity.class);
+				Topic topic = SubscriptionTopicsActivity.super.entries.get(position);
 				intent.putExtra(TopicActivity.TOPIC_ID, topic.getId());
 				startActivity(intent);
 			}
@@ -97,27 +94,22 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 	@Override
 	public boolean onContextItemSelected(MenuItem item)
 	{
-		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
-				.getMenuInfo();
+		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
 		switch (item.getItemId())
 		{
 			case R.id.menu_goto_top:
 
-				final Intent intent = new Intent(
-						SubscriptionTopicsActivity.this, TopicActivity.class);
-				intent.putExtra(TopicActivity.TOPIC_ID, super.entries.get(
-						menuInfo.position).getId());
+				final Intent intent = new Intent(SubscriptionTopicsActivity.this, TopicActivity.class);
+				intent.putExtra(TopicActivity.TOPIC_ID, super.entries.get(menuInfo.position).getId());
 				intent.putExtra(EndlessListActivity.FIRST_POST, true);
 				startActivity(intent);
 				return true;
 
 			case R.id.menu_goto_bottom:
 
-				final Intent intent2 = new Intent(
-						SubscriptionTopicsActivity.this, TopicActivity.class);
-				intent2.putExtra(TopicActivity.TOPIC_ID, super.entries.get(
-						menuInfo.position).getId());
+				final Intent intent2 = new Intent(SubscriptionTopicsActivity.this, TopicActivity.class);
+				intent2.putExtra(TopicActivity.TOPIC_ID, super.entries.get(menuInfo.position).getId());
 				intent2.putExtra(EndlessListActivity.LAST_POST, true);
 				startActivity(intent2);
 				return true;
@@ -133,13 +125,11 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 	}
 
 	@Override
-	protected void loadEntries(
-			final OnListLoadedListener<Topic> onListLoadedListener,
-			final int from, final int to, final boolean firstLoad)
+	protected void loadEntries(final OnListLoadedListener<Topic> onListLoadedListener, final int from, final int to,
+			final boolean firstLoad)
 	{
-		new ServerAsyncTask(SubscriptionTopicsActivity.this,
-				firstLoad ? R.string.waitingfor_subscription_topics
-						: R.string.waitingfor_loadmore)
+		new ServerAsyncTask(SubscriptionTopicsActivity.this, firstLoad ? R.string.waitingfor_subscription_topics
+				: R.string.waitingfor_loadmore)
 		{
 			private ListHolder<Topic> topicHolder;
 
@@ -150,8 +140,7 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 
 				// Login.
 				if (Utils.loginExceeded(client))
-					client.login(prefs.getString("username", ""), prefs
-							.getString("password", ""));
+					client.login(prefs.getString("username", ""), prefs.getString("password", ""));
 
 				topicHolder = client.getSubscribedTopics(from, to, false);
 
@@ -165,8 +154,7 @@ public class SubscriptionTopicsActivity extends EndlessListActivity<Topic>
 
 				if (firstLoad)
 					if (prefs.getBoolean("show_hints", true))
-						Toast.makeText(SubscriptionTopicsActivity.this,
-								R.string.hint_press_long, Toast.LENGTH_SHORT)
+						Toast.makeText(SubscriptionTopicsActivity.this, R.string.hint_press_long, Toast.LENGTH_SHORT)
 								.show();
 
 			}

@@ -100,8 +100,7 @@ public abstract class EndlessListActivity<T> extends ListActivity
 						{
 							entries.clear();
 							entries.addAll(list);
-							((BaseAdapter) getListAdapter())
-									.notifyDataSetChanged();
+							((BaseAdapter) getListAdapter()).notifyDataSetChanged();
 
 							displayFrom = start;
 							displayTo = end;
@@ -151,8 +150,8 @@ public abstract class EndlessListActivity<T> extends ListActivity
 	 * @param firstLoad
 	 * @return gelandene Elemente
 	 */
-	abstract protected void loadEntries(OnListLoadedListener<T> onListLoaded,
-			final int from, final int to, boolean firstLoad);
+	abstract protected void loadEntries(OnListLoadedListener<T> onListLoaded, final int from, final int to,
+			boolean firstLoad);
 
 	/**
 	 * @param onListLoaded
@@ -161,8 +160,7 @@ public abstract class EndlessListActivity<T> extends ListActivity
 	 * @param firstLoad
 	 * @return gelandene Elemente
 	 */
-	private void loadEntries(OnListLoadedListener<T> onListLoaded, int from,
-			int to)
+	private void loadEntries(OnListLoadedListener<T> onListLoaded, int from, int to)
 	{
 		loadEntries(onListLoaded, from, to, firstLoad);
 		firstLoad = false;
@@ -201,8 +199,8 @@ public abstract class EndlessListActivity<T> extends ListActivity
 			 *      int, int, int)
 			 */
 			@Override
-			public void onScroll(AbsListView view, final int firstVisibleItem,
-					final int visibleItemCount, final int totalItemCount)
+			public void onScroll(AbsListView view, final int firstVisibleItem, final int visibleItemCount,
+					final int totalItemCount)
 			{
 
 				// Letztes Item, dass angezeigt wird.
@@ -212,14 +210,11 @@ public abstract class EndlessListActivity<T> extends ListActivity
 				{
 					// Sind wir am oberen Rand der Liste und die Liste ist noch
 					// nicht vollständig geladen?
-					if (firstVisibleItem == 0 && displayFrom > 0
-							&& !loadingInProgress)
+					if (firstVisibleItem == 0 && displayFrom > 0 && !loadingInProgress)
 					{
 						loadingInProgress = true;
 
-						int start = Math.max(0, displayFrom
-								- Integer.parseInt(prefs.getString("num_load",
-										"10")));
+						int start = Math.max(0, displayFrom - Integer.parseInt(prefs.getString("num_load", "10")));
 
 						int end = displayFrom - 1;
 
@@ -236,14 +231,12 @@ public abstract class EndlessListActivity<T> extends ListActivity
 								entries.clear();
 								entries.addAll(list);
 
-								((BaseAdapter) getListAdapter())
-										.notifyDataSetChanged();
+								((BaseAdapter) getListAdapter()).notifyDataSetChanged();
 
 								// Zur gleichen Position springen (die jetzt
 								// aber etwas weiter nach hinten verschoben
 								// ist).
-								getListView().setSelection(
-										firstVisibleItem + loadedSize);
+								getListView().setSelection(firstVisibleItem + loadedSize);
 
 								loadingInProgress = false;
 							}
@@ -254,16 +247,12 @@ public abstract class EndlessListActivity<T> extends ListActivity
 				else
 				{
 					// Sind wir am unterenRand der Liste?
-					if ((lastInScreen == totalItemCount)
-							&& (totalItemCount < getTotalSize())
-							&& !(loadingInProgress))
+					if ((lastInScreen == totalItemCount) && (totalItemCount < getTotalSize()) && !(loadingInProgress))
 					{
 						loadingInProgress = true;
 
 						int start = displayTo + 1;
-						int end = start
-								+ Integer.parseInt(prefs.getString("num_load",
-										"10")) - 1;
+						int end = start + Integer.parseInt(prefs.getString("num_load", "10")) - 1;
 
 						loadEntries(new OnListLoadedListener<T>()
 						{
@@ -275,8 +264,7 @@ public abstract class EndlessListActivity<T> extends ListActivity
 
 								displayTo += loadedSize;
 
-								((BaseAdapter) getListAdapter())
-										.notifyDataSetChanged();
+								((BaseAdapter) getListAdapter()).notifyDataSetChanged();
 
 								loadingInProgress = false;
 							}

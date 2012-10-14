@@ -103,8 +103,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 					// Login.
 					if (prefs.getBoolean("auto_login", false))
 						if (Utils.loginExceeded(client))
-							client.login(prefs.getString("username", ""), prefs
-									.getString("password", ""));
+							client.login(prefs.getString("username", ""), prefs.getString("password", ""));
 
 					forumList = client.getAllForum();
 					((IBCApplication) getApplication()).setForumList(forumList);
@@ -115,8 +114,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 			protected void doOnSuccess()
 			{
-				ExpandableListAdapter adapter = new ExpandableForumContentAdapter(
-						ForumOverviewActivity.this, forumList);
+				ExpandableListAdapter adapter = new ExpandableForumContentAdapter(ForumOverviewActivity.this, forumList);
 				setListAdapter(adapter);
 			}
 
@@ -128,33 +126,27 @@ public class ForumOverviewActivity extends ExpandableListActivity
 		{
 
 			@Override
-			public boolean onChildClick(ExpandableListView arg0, View arg1,
-					int groupPosition, int childPosition, long rowId)
+			public boolean onChildClick(ExpandableListView arg0, View arg1, int groupPosition, int childPosition,
+					long rowId)
 			{
-				Forum forum = forumList.get(groupPosition).subForen
-						.get(childPosition);
+				Forum forum = forumList.get(groupPosition).subForen.get(childPosition);
 				if (forum.subOnly)
 				{
-					Toast.makeText(ForumOverviewActivity.this,
-							R.string.sub_only, Toast.LENGTH_SHORT).show();
+					Toast.makeText(ForumOverviewActivity.this, R.string.sub_only, Toast.LENGTH_SHORT).show();
 				}
 				else if (!TextUtils.isEmpty(forum.url))
 				{
-					if (!Intent.ACTION_CREATE_SHORTCUT.equals(getIntent()
-							.getAction()))
+					if (!Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction()))
 					{
-						startActivity(new Intent(Intent.ACTION_VIEW, Uri
-								.parse(forum.url)));
+						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(forum.url)));
 					}
 				}
 				else
 				{
-					if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent()
-							.getAction()))
+					if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction()))
 					{
 
-						Intent shortcutIntent = new Intent(
-								ForumOverviewActivity.this, ForumActivity.class);
+						Intent shortcutIntent = new Intent(ForumOverviewActivity.this, ForumActivity.class);
 						// Intent shortcutIntent = new
 						// Intent(Intent.ACTION_MAIN);
 						// shortcutIntent.setClassName(ForumActivity.class.getPackage().getName(),
@@ -167,15 +159,11 @@ public class ForumOverviewActivity extends ExpandableListActivity
 						// the caller)
 
 						Intent intent = new Intent();
-						intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
-								shortcutIntent);
-						intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, forum
-								.getTitle());
-						Parcelable iconResource = Intent.ShortcutIconResource
-								.fromContext(ForumOverviewActivity.this,
-										R.drawable.ibc_icon);
-						intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-								iconResource);
+						intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+						intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, forum.getTitle());
+						Parcelable iconResource = Intent.ShortcutIconResource.fromContext(ForumOverviewActivity.this,
+								R.drawable.ibc_icon);
+						intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
 
 						// Now, return the result to the launcher
 
@@ -185,8 +173,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 					}
 					else
 					{
-						final Intent intent = new Intent(
-								ForumOverviewActivity.this, ForumActivity.class);
+						final Intent intent = new Intent(ForumOverviewActivity.this, ForumActivity.class);
 						intent.putExtra("forum_id", forum.getId());
 						startActivity(intent);
 					}
@@ -259,8 +246,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 			case R.id.menu_participated_topics:
 				Intent intent = new Intent(this, SearchActivity.class);
-				intent
-						.setAction(SearchActivity.ACTION_SEARCH_PARTICIPATED_TOPICS);
+				intent.setAction(SearchActivity.ACTION_SEARCH_PARTICIPATED_TOPICS);
 				startActivity(intent);
 				return true;
 
@@ -292,9 +278,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 
 				if (TextUtils.isEmpty(prefs.getString("username", "")))
 				{
-					Toast
-							.makeText(this, R.string.nousername,
-									Toast.LENGTH_LONG).show();
+					Toast.makeText(this, R.string.nousername, Toast.LENGTH_LONG).show();
 
 					Intent intent4 = new Intent(this, Configuration.class);
 					startActivity(intent4);
@@ -307,11 +291,9 @@ public class ForumOverviewActivity extends ExpandableListActivity
 					{
 
 						@Override
-						protected void callServer() throws IOException,
-								TapatalkException
+						protected void callServer() throws IOException, TapatalkException
 						{
-							client.login(prefs.getString("username", ""), prefs
-									.getString("password", ""));
+							client.login(prefs.getString("username", ""), prefs.getString("password", ""));
 
 						}
 
@@ -319,8 +301,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 						protected void doOnSuccess()
 						{
 							Log.d("IBC", "login success");
-							Toast.makeText(ForumOverviewActivity.this,
-									R.string.login_success, Toast.LENGTH_SHORT)
+							Toast.makeText(ForumOverviewActivity.this, R.string.login_success, Toast.LENGTH_SHORT)
 									.show();
 							forumList = null;
 							loadForum();
@@ -331,9 +312,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 				}
 				else
 				{
-					Toast
-							.makeText(this, R.string.nousername,
-									Toast.LENGTH_LONG).show();
+					Toast.makeText(this, R.string.nousername, Toast.LENGTH_LONG).show();
 				}
 
 				return true;
@@ -347,8 +326,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 		{
 
 			@Override
-			protected synchronized void callServer() throws IOException,
-					TapatalkException
+			protected synchronized void callServer() throws IOException, TapatalkException
 			{
 				client.logout();
 			}
@@ -356,8 +334,7 @@ public class ForumOverviewActivity extends ExpandableListActivity
 			@Override
 			protected void doOnSuccess()
 			{
-				Toast.makeText(ForumOverviewActivity.this, R.string.logout,
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(ForumOverviewActivity.this, R.string.logout, Toast.LENGTH_SHORT).show();
 			}
 
 		}.executeSynchronized();

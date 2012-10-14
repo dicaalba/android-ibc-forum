@@ -31,8 +31,7 @@ public class ExpandableForumContentAdapter extends BaseExpandableListAdapter
 
 	public ExpandableForumContentAdapter(Context context, List<Forum> forumList)
 	{
-		inflator = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		this.forumList = forumList;
 	}
@@ -51,8 +50,8 @@ public class ExpandableForumContentAdapter extends BaseExpandableListAdapter
 	}
 
 	@Override
-	public View getChildView(int groupPosition, int childPosition,
-			boolean isLastChild, View convertView, ViewGroup parent)
+	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView,
+			ViewGroup parent)
 	{
 		Forum e = forumList.get(groupPosition).subForen.get(childPosition);
 
@@ -96,8 +95,7 @@ public class ExpandableForumContentAdapter extends BaseExpandableListAdapter
 	}
 
 	@Override
-	public View getGroupView(int groupPosition, boolean isExpanded,
-			View convertView, ViewGroup parent)
+	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
 	{
 		final Forum forum = forumList.get(groupPosition);
 

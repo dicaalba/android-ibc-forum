@@ -12,12 +12,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import de.mtbnews.android.adapter.ListEntryContentAdapter;
 import de.mtbnews.android.tapatalk.TapatalkClient;
 import de.mtbnews.android.tapatalk.TapatalkException;
@@ -55,16 +51,14 @@ public class TopicActivity extends EndlessListActivity<Post>
 		topicId = TopicActivity.this.getIntent().getStringExtra(TOPIC_ID);
 		// forumId = TopicActivity.this.getIntent().getStringExtra("forum_id");
 
-		ListAdapter adapter = new ListEntryContentAdapter(TopicActivity.this,
-				entries, true, false);
+		ListAdapter adapter = new ListEntryContentAdapter(TopicActivity.this, entries, true, false);
 		setListAdapter(adapter);
 
 		initialLoad();
 
-		final ListView list = getListView();
-
 		/*
-		 * list.setOnItemClickListener(new OnItemClickListener() {
+		 * final ListView list = getListView(); list.setOnItemClickListener(new
+		 * OnItemClickListener() {
 		 * 
 		 * @Override public void onItemClick(AdapterView<?> parent, View view,
 		 * int position, long id) { int aktPosition = displayFrom + position +
@@ -84,13 +78,10 @@ public class TopicActivity extends EndlessListActivity<Post>
 	}
 
 	@Override
-	protected void loadEntries(
-			final OnListLoadedListener<Post> onListLoadedListener,
-			final int from, final int to, boolean firstLoad)
+	protected void loadEntries(final OnListLoadedListener<Post> onListLoadedListener, final int from, final int to,
+			boolean firstLoad)
 	{
-		new ServerAsyncTask(TopicActivity.this,
-				firstLoad ? R.string.waitingfor_topic
-						: R.string.waitingfor_loadmore)
+		new ServerAsyncTask(TopicActivity.this, firstLoad ? R.string.waitingfor_topic : R.string.waitingfor_loadmore)
 		{
 			private List<Post> posts;
 			private Topic topic;
@@ -134,7 +125,7 @@ public class TopicActivity extends EndlessListActivity<Post>
 			case R.id.menu_preferences:
 				startActivity(new Intent(this, Configuration.class));
 				return true;
-				
+
 			case R.id.menu_top:
 
 				getListView().setOnScrollListener(null);
@@ -163,43 +154,36 @@ public class TopicActivity extends EndlessListActivity<Post>
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setTitle(R.string.subscribe_topic);
-				builder.setItems(R.array.subscription_modes,
-						new DialogInterface.OnClickListener()
+				builder.setItems(R.array.subscription_modes, new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, final int item)
+					{
+						new ServerAsyncTask(TopicActivity.this, R.string.subscribe_topic)
 						{
-							public void onClick(DialogInterface dialog,
-									final int item)
+
+							@Override
+							protected void callServer() throws TapatalkException
 							{
-								new ServerAsyncTask(TopicActivity.this,
-										R.string.subscribe_topic)
-								{
-
-									@Override
-									protected void callServer()
-											throws TapatalkException
-									{
-										client
-												.subscribeTopic(topicId,
-														item - 1);
-									}
-
-									@Override
-									protected void doOnSuccess()
-									{
-										Toast.makeText(getApplicationContext(),
-												R.string.subscription_saved,
-												Toast.LENGTH_SHORT).show();
-									}
-								}.execute();
+								client.subscribeTopic(topicId, item - 1);
 							}
-						});
+
+							@Override
+							protected void doOnSuccess()
+							{
+								Toast
+										.makeText(getApplicationContext(), R.string.subscription_saved,
+												Toast.LENGTH_SHORT).show();
+							}
+						}.execute();
+					}
+				});
 				builder.create().show();
 				return true;
 
 			case R.id.menu_mark_read:
 
 				// TODO: In Tapatalk-API-Version 3 nicht verfügbar!
-				new ServerAsyncTask(TopicActivity.this,
-						R.string.mark_topic_read)
+				new ServerAsyncTask(TopicActivity.this, R.string.mark_topic_read)
 				{
 
 					@Override

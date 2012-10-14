@@ -18,9 +18,6 @@
  */
 package de.mtbnews.android;
 
-import java.io.IOException;
-
-import org.apache.http.client.ClientProtocolException;
 import org.mcsoxford.rss.RSSFault;
 import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSReader;
@@ -66,8 +63,7 @@ public class IBCActivity extends ListActivity
 			@Override
 			public void onClick(View v)
 			{
-				startActivity(new Intent(IBCActivity.this,
-						ForumOverviewActivity.class));
+				startActivity(new Intent(IBCActivity.this, ForumOverviewActivity.class));
 			}
 		});
 
@@ -85,11 +81,9 @@ public class IBCActivity extends ListActivity
 		{
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				final Intent intent = new Intent(IBCActivity.this,
-						NewsDetailActivity.class);
+				final Intent intent = new Intent(IBCActivity.this, NewsDetailActivity.class);
 				intent.putExtra("itemid", position);
 				startActivity(intent);
 			}
@@ -102,8 +96,7 @@ public class IBCActivity extends ListActivity
 			@Override
 			protected void callServer() throws IBCException
 			{
-				final RSSFeed oldFeed = ((IBCApplication) getApplication())
-						.getNewsFeed();
+				final RSSFeed oldFeed = ((IBCApplication) getApplication()).getNewsFeed();
 
 				if (oldFeed != null)
 				{
@@ -120,13 +113,11 @@ public class IBCActivity extends ListActivity
 					}
 					catch (RSSReaderException e)
 					{
-						throw new IBCException(R.string.error_io, e
-								.getMessage(), e);
+						throw new IBCException(R.string.error_io, e.getMessage(), e);
 					}
 					catch (RSSFault e)
 					{
-						throw new IBCException(R.string.error_io, e
-								.getMessage(), e);
+						throw new IBCException(R.string.error_io, e.getMessage(), e);
 					}
 				}
 			}
@@ -135,8 +126,7 @@ public class IBCActivity extends ListActivity
 			{
 				IBCActivity.this.setTitle(feed.getTitle());
 
-				ListAdapter adapter = new ListEntryContentAdapter(
-						IBCActivity.this, this.feed.getItems(), false, true);
+				ListAdapter adapter = new ListEntryContentAdapter(IBCActivity.this, this.feed.getItems(), false, true);
 				setListAdapter(adapter);
 			}
 		}.execute();
@@ -163,49 +153,38 @@ public class IBCActivity extends ListActivity
 				startActivity(new Intent(IBCActivity.this, PhotoActivity.class));
 				return true;
 			case R.id.menu_mailbox:
-				startActivity(new Intent(IBCActivity.this,
-						MailboxActivity.class));
+				startActivity(new Intent(IBCActivity.this, MailboxActivity.class));
 				return true;
 
 			case R.id.www_bikemarkt:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://bikemarkt.mtb-news.de/bikemarkt/")));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://bikemarkt.mtb-news.de/bikemarkt/")));
 				return true;
 			case R.id.www_biketest:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://www.mtb-news.de/biketest/")));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.mtb-news.de/biketest/")));
 				return true;
 			case R.id.www_blog:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://schaltwerk.mtb-news.de/")));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://schaltwerk.mtb-news.de/")));
 				return true;
 			case R.id.www_forum:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://www.mtb-news.de/forum/")));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.mtb-news.de/forum/")));
 				return true;
 			case R.id.www_fotos:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://fotos.mtb-news.de/")));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://fotos.mtb-news.de/")));
 				return true;
 			case R.id.www_gewichte:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://gewichte.mtb-news.de/")));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://gewichte.mtb-news.de/")));
 				return true;
 			case R.id.www_lmb:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://www.mtb-news.de/lmb/")));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.mtb-news.de/lmb/")));
 				return true;
 			case R.id.www_news:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://www.mtb-news.de/")));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.mtb-news.de/")));
 				return true;
 			case R.id.www_shop:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://shop.mtb-news.de/")));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://shop.mtb-news.de/")));
 				return true;
 			case R.id.www_video:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://videos.mtb-news.de/")));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://videos.mtb-news.de/")));
 				return true;
 
 		}

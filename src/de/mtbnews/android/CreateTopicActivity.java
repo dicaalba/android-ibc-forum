@@ -25,17 +25,17 @@ public class CreateTopicActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.post);
-		
+
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		forumId = getIntent().getStringExtra("forum_id");
 
 		final TextView recipient = (TextView) findViewById(R.id.recipient);
 		recipient.setText("");
 		recipient.setVisibility(View.INVISIBLE);
-		
+
 		final TextView label = (TextView) findViewById(R.id.recipient_label);
 		label.setVisibility(View.INVISIBLE);
 
@@ -55,25 +55,20 @@ public class CreateTopicActivity extends Activity
 				{
 
 					@Override
-					protected void callServer() throws IOException,
-							TapatalkException
+					protected void callServer() throws IOException, TapatalkException
 					{
-						TapatalkClient client = ((IBCApplication) getApplication())
-								.getTapatalkClient();
-						
+						TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
+
 						// Login.
 						if (Utils.loginExceeded(client))
-							client.login(prefs.getString("username", ""), prefs
-									.getString("password", ""));
+							client.login(prefs.getString("username", ""), prefs.getString("password", ""));
 
-						client.createTopic(forumId, subject.getText()
-								.toString(), text.getText().toString());
+						client.createTopic(forumId, subject.getText().toString(), text.getText().toString());
 					}
 
 					protected void doOnSuccess()
 					{
-						Toast.makeText(CreateTopicActivity.this,
-								R.string.sent_ok, Toast.LENGTH_LONG);
+						Toast.makeText(CreateTopicActivity.this, R.string.sent_ok, Toast.LENGTH_LONG);
 						CreateTopicActivity.this.finish();
 					}
 				}.execute();

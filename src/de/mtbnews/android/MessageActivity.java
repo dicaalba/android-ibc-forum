@@ -42,13 +42,11 @@ public class MessageActivity extends Activity
 			@Override
 			protected void callServer() throws TapatalkException
 			{
-				client = ((IBCApplication) getApplication())
-						.getTapatalkClient();
-				
+				client = ((IBCApplication) getApplication()).getTapatalkClient();
+
 				if (Utils.loginExceeded(client))
-					client.login(prefs.getString("username", ""), prefs
-							.getString("password", ""));
-				
+					client.login(prefs.getString("username", ""), prefs.getString("password", ""));
+
 				message = client.getMessage(boxId, messageId);
 			}
 
@@ -59,8 +57,7 @@ public class MessageActivity extends Activity
 				MessageActivity.this.setTitle(message.getTitle());
 
 				TextView datum = (TextView) findViewById(R.id.item_date);
-				datum.setText(DateFormat.getTimeFormat(MessageActivity.this)
-						.format(message.getDate()));
+				datum.setText(DateFormat.getTimeFormat(MessageActivity.this).format(message.getDate()));
 
 				// TextView name = (TextView) findViewById(R.id.item_title);
 				// name.setText(item.getTitle());

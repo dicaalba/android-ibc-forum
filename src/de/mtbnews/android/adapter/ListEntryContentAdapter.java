@@ -42,22 +42,18 @@ public class ListEntryContentAdapter extends BaseAdapter
 	private boolean containsBBCode;
 	private boolean containsHtml;
 
-	public ListEntryContentAdapter(Context context,
-			List<? extends ListEntry> list)
+	public ListEntryContentAdapter(Context context, List<? extends ListEntry> list)
 	{
 		mContext = context;
-		inflator = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.list = list;
 	}
 
-	public ListEntryContentAdapter(Context context,
-			List<? extends ListEntry> list, boolean containsBBCode,
+	public ListEntryContentAdapter(Context context, List<? extends ListEntry> list, boolean containsBBCode,
 			boolean containsHtml)
 	{
 		mContext = context;
-		inflator = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.list = list;
 		this.containsBBCode = containsBBCode;
 		this.containsHtml = containsHtml;
@@ -105,14 +101,10 @@ public class ListEntryContentAdapter extends BaseAdapter
 
 			viewHolder = new ViewHolder();
 
-			viewHolder.datum = (TextView) convertView
-					.findViewById(R.id.item_date);
-			viewHolder.name = (TextView) convertView
-					.findViewById(R.id.item_name);
-			viewHolder.title = (TextView) convertView
-					.findViewById(R.id.item_title);
-			viewHolder.desc = (TextView) convertView
-					.findViewById(R.id.item_description);
+			viewHolder.datum = (TextView) convertView.findViewById(R.id.item_date);
+			viewHolder.name = (TextView) convertView.findViewById(R.id.item_name);
+			viewHolder.title = (TextView) convertView.findViewById(R.id.item_title);
+			viewHolder.desc = (TextView) convertView.findViewById(R.id.item_description);
 			convertView.setTag(viewHolder);
 		}
 		else
@@ -121,11 +113,8 @@ public class ListEntryContentAdapter extends BaseAdapter
 		}
 
 		if (e.getDate() != null)
-			viewHolder.datum.setText(DateFormat.getDateFormat(
-					parent.getContext()).format(e.getDate())
-					+ " "
-					+ DateFormat.getTimeFormat(parent.getContext()).format(
-							e.getDate()));
+			viewHolder.datum.setText(DateFormat.getDateFormat(parent.getContext()).format(e.getDate()) + " "
+					+ DateFormat.getTimeFormat(parent.getContext()).format(e.getDate()));
 		else
 			// viewHolder.datum.setEnabled(false);
 			viewHolder.datum.setText("");
@@ -148,8 +137,7 @@ public class ListEntryContentAdapter extends BaseAdapter
 
 		if (e.getContent() != null)
 		{
-			SharedPreferences prefs = ((IBCApplication) ((Activity) mContext)
-					.getApplication()).prefs;
+			SharedPreferences prefs = ((IBCApplication) ((Activity) mContext).getApplication()).prefs;
 			if (containsBBCode && prefs.getBoolean("parse_bbcode", false))
 			{
 				String html;
@@ -168,7 +156,7 @@ public class ListEntryContentAdapter extends BaseAdapter
 				// imageGetter, null));
 				viewHolder.desc.setText(Html.fromHtml(html));
 				viewHolder.desc.setMovementMethod(LinkMovementMethod.getInstance());
-				//viewHolder.desc.setAutoLinkMask(Linkify.ALL);
+				// viewHolder.desc.setAutoLinkMask(Linkify.ALL);
 			}
 			else if (containsHtml)
 			{

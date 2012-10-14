@@ -40,8 +40,7 @@ public class NewsDetailActivity extends Activity
 			@Override
 			protected void callServer() throws IOException
 			{
-				final RSSFeed oldFeed = ((IBCApplication) getApplication())
-						.getNewsFeed();
+				final RSSFeed oldFeed = ((IBCApplication) getApplication()).getNewsFeed();
 
 				if (oldFeed != null)
 				{
@@ -69,15 +68,12 @@ public class NewsDetailActivity extends Activity
 
 			protected void doOnSuccess()
 			{
-				final RSSItem item = feed.getItems().get(
-						getIntent().getIntExtra("itemid", 0));
+				final RSSItem item = feed.getItems().get(getIntent().getIntExtra("itemid", 0));
 
 				final String html = item.getFullContent();
 
-				webView.getSettings().setLoadsImagesAutomatically(
-						prefs.getBoolean("load_images", false));
-				webView.loadDataWithBaseURL(IBC.IBC_NEWS_RSS_URL, html,
-						"text/html", "UTF-8", null);
+				webView.getSettings().setLoadsImagesAutomatically(prefs.getBoolean("load_images", false));
+				webView.loadDataWithBaseURL(IBC.IBC_NEWS_RSS_URL, html, "text/html", "UTF-8", null);
 
 				setTitle(item.getTitle());
 			}

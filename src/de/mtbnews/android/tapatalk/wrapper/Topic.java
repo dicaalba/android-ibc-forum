@@ -15,7 +15,7 @@ public class Topic implements ListEntry
 	private String content;
 	private String name;
 	private int postCount;
-	
+
 	public String forumId;
 	public boolean unread;
 
@@ -34,8 +34,7 @@ public class Topic implements ListEntry
 	 * @param name
 	 * @param postCount
 	 */
-	public Topic(String id, List<Post> posts, String title, Date date,
-			String content, String name, int postCount)
+	public Topic(String id, List<Post> posts, String title, Date date, String content, String name, int postCount)
 	{
 		super();
 		this.id = id;

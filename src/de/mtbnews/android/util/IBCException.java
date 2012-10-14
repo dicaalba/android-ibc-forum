@@ -6,7 +6,7 @@ package de.mtbnews.android.util;
 /**
  * 
  * @author dankert
- *
+ * 
  */
 public class IBCException extends Exception
 {
@@ -14,7 +14,8 @@ public class IBCException extends Exception
 	private int errorResId;
 
 	/**
-	 * @param errorResId Resource-Id der Fehlermeldung
+	 * @param errorResId
+	 *            Resource-Id der Fehlermeldung
 	 * @param detailMessage
 	 * @param cause
 	 */
@@ -22,9 +23,9 @@ public class IBCException extends Exception
 	{
 		super(detailMessage, cause);
 		this.errorResId = errorResId;
-		
+
 	}
-	
+
 	/**
 	 * @return
 	 */

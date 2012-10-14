@@ -57,25 +57,22 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 
 		this.progressDialog = new ProgressDialog(context);
 		// progressDialog.setTitle(R.string.loading);
-		progressDialog.setMessage(context.getResources().getString(message)
-				+ " ...");
+		progressDialog.setMessage(context.getResources().getString(message) + " ...");
 	}
 
 	@Override
 	final protected void onPreExecute()
 	{
 		progressDialog.setCancelable(true);
-		progressDialog
-				.setOnCancelListener(new DialogInterface.OnCancelListener()
-				{
-					@Override
-					public void onCancel(DialogInterface dialog)
-					{
-						ServerAsyncTask.this.cancel(true);
-						Toast.makeText(context, R.string.canceled,
-								Toast.LENGTH_SHORT).show();
-					}
-				});
+		progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+		{
+			@Override
+			public void onCancel(DialogInterface dialog)
+			{
+				ServerAsyncTask.this.cancel(true);
+				Toast.makeText(context, R.string.canceled, Toast.LENGTH_SHORT).show();
+			}
+		});
 
 		progressDialog.show();
 	}
@@ -158,8 +155,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 		catch (TapatalkException e)
 		{
 			Log.w(this.getClass().getName(), e.getMessage(), e);
-			error = new IBCException(Utils.getResId(e.getErrorCode()), e
-					.getMessage(), e);
+			error = new IBCException(Utils.getResId(e.getErrorCode()), e.getMessage(), e);
 		}
 		catch (IBCException e)
 		{
@@ -195,8 +191,7 @@ public abstract class ServerAsyncTask extends AsyncTask<Void, Void, Void>
 	 * @throws IOException
 	 *             Vom Server erzeugte Fehler
 	 */
-	protected abstract void callServer() throws IOException, TapatalkException,
-			IBCException;
+	protected abstract void callServer() throws IOException, TapatalkException, IBCException;
 
 	/**
 	 * 

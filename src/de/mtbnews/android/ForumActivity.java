@@ -81,8 +81,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		forumId = getIntent().getStringExtra(FORUM_ID);
 		Log.d(IBC.TAG, "Loading forum #" + forumId);
 
-		ListAdapter adapter = new ListEntryContentAdapter(ForumActivity.this,
-				entries);
+		ListAdapter adapter = new ListEntryContentAdapter(ForumActivity.this, entries);
 		setListAdapter(adapter);
 		initialLoad();
 
@@ -92,8 +91,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		{
 
 			@Override
-			public void onCreateContextMenu(ContextMenu menu, View v,
-					ContextMenuInfo menuInfo)
+			public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
 			{
 				if (topicMode == TapatalkClient.TOPIC_ANNOUNCEMENT)
 					return;
@@ -106,15 +104,13 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
 				if (topicMode == TapatalkClient.TOPIC_ANNOUNCEMENT)
 					return;
 
 				// int aktPosition = displayFrom + position + 1;
-				final Intent intent = new Intent(ForumActivity.this,
-						TopicActivity.class);
+				final Intent intent = new Intent(ForumActivity.this, TopicActivity.class);
 				Topic topic = ForumActivity.super.entries.get(position);
 				intent.putExtra(TopicActivity.TOPIC_ID, topic.getId());
 				startActivity(intent);
@@ -126,27 +122,22 @@ public class ForumActivity extends EndlessListActivity<Topic>
 	@Override
 	public boolean onContextItemSelected(MenuItem item)
 	{
-		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
-				.getMenuInfo();
+		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
 		switch (item.getItemId())
 		{
 			case R.id.menu_goto_top:
 
-				final Intent intent = new Intent(ForumActivity.this,
-						TopicActivity.class);
-				intent.putExtra("topic_id", super.entries
-						.get(menuInfo.position).getId());
+				final Intent intent = new Intent(ForumActivity.this, TopicActivity.class);
+				intent.putExtra("topic_id", super.entries.get(menuInfo.position).getId());
 				intent.putExtra("first_post", true);
 				startActivity(intent);
 				return true;
 
 			case R.id.menu_goto_bottom:
 
-				final Intent intent2 = new Intent(ForumActivity.this,
-						TopicActivity.class);
-				intent2.putExtra("topic_id", super.entries.get(
-						menuInfo.position).getId());
+				final Intent intent2 = new Intent(ForumActivity.this, TopicActivity.class);
+				intent2.putExtra("topic_id", super.entries.get(menuInfo.position).getId());
 				intent2.putExtra("last_post", true);
 				startActivity(intent2);
 				return true;
@@ -161,20 +152,17 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		{
 
 			@Override
-			protected synchronized void callServer() throws IOException,
-					IBCException
+			protected synchronized void callServer() throws IOException, IBCException
 			{
 
 				try
 				{
-					client.login(prefs.getString("username", ""), prefs
-							.getString("password", ""));
+					client.login(prefs.getString("username", ""), prefs.getString("password", ""));
 
 				}
 				catch (TapatalkException e)
 				{
-					throw new IBCException(R.string.login_failed, e
-							.getMessage(), e);
+					throw new IBCException(R.string.login_failed, e.getMessage(), e);
 				}
 
 			}
@@ -188,8 +176,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 		{
 
 			@Override
-			protected synchronized void callServer() throws IOException,
-					IBCException
+			protected synchronized void callServer() throws IOException, IBCException
 			{
 
 				try
@@ -249,8 +236,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 			case R.id.menu_participated_topics:
 				Intent intent = new Intent(this, SearchActivity.class);
-				intent
-						.setAction(SearchActivity.ACTION_SEARCH_PARTICIPATED_TOPICS);
+				intent.setAction(SearchActivity.ACTION_SEARCH_PARTICIPATED_TOPICS);
 				startActivity(intent);
 				return true;
 
@@ -273,9 +259,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 				if (TextUtils.isEmpty(prefs.getString("username", "")))
 				{
-					Toast
-							.makeText(this, R.string.nousername,
-									Toast.LENGTH_LONG).show();
+					Toast.makeText(this, R.string.nousername, Toast.LENGTH_LONG).show();
 
 					Intent intent4 = new Intent(this, Configuration.class);
 					startActivity(intent4);
@@ -288,9 +272,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				}
 				else
 				{
-					Toast
-							.makeText(this, R.string.nousername,
-									Toast.LENGTH_LONG).show();
+					Toast.makeText(this, R.string.nousername, Toast.LENGTH_LONG).show();
 				}
 
 				return true;
@@ -299,43 +281,35 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setTitle(R.string.subscribe_forum);
-				builder.setItems(R.array.subscription_modes,
-						new DialogInterface.OnClickListener()
+				builder.setItems(R.array.subscription_modes, new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, final int item)
+					{
+
+						new ServerAsyncTask(ForumActivity.this, R.string.subscribe_forum)
 						{
-							public void onClick(DialogInterface dialog,
-									final int item)
+
+							@Override
+							protected void callServer() throws IOException, TapatalkException
 							{
-
-								new ServerAsyncTask(ForumActivity.this,
-										R.string.subscribe_forum)
-								{
-
-									@Override
-									protected void callServer()
-											throws IOException,
-											TapatalkException
-									{
-										client
-												.subscribeForum(forumId,
-														item - 1);
-									}
-
-									@Override
-									protected void doOnSuccess()
-									{
-										Toast.makeText(getApplicationContext(),
-												R.string.subscription_saved,
-												Toast.LENGTH_SHORT).show();
-									}
-								}.execute();
+								client.subscribeForum(forumId, item - 1);
 							}
-						});
+
+							@Override
+							protected void doOnSuccess()
+							{
+								Toast
+										.makeText(getApplicationContext(), R.string.subscription_saved,
+												Toast.LENGTH_SHORT).show();
+							}
+						}.execute();
+					}
+				});
 				builder.create().show();
 				return true;
 			case R.id.menu_mark_read:
 
-				new ServerAsyncTask(ForumActivity.this,
-						R.string.mark_forum_read)
+				new ServerAsyncTask(ForumActivity.this, R.string.mark_forum_read)
 				{
 
 					@Override
@@ -354,8 +328,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 			case R.id.menu_mark_all_read:
 
-				new ServerAsyncTask(ForumActivity.this,
-						R.string.mark_forum_read)
+				new ServerAsyncTask(ForumActivity.this, R.string.mark_forum_read)
 				{
 					@Override
 					protected void callServer() throws TapatalkException
@@ -376,17 +349,15 @@ public class ForumActivity extends EndlessListActivity<Topic>
 				// Den Topic-Mode ändern (Standard,Wichtig,Ankündigungen)
 				AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
 				builder2.setTitle(R.string.mode);
-				builder2.setItems(R.array.topic_modes,
-						new DialogInterface.OnClickListener()
-						{
+				builder2.setItems(R.array.topic_modes, new DialogInterface.OnClickListener()
+				{
 
-							public void onClick(DialogInterface dialog,
-									final int item)
-							{
-								topicMode = item + 1;
-								initialLoad();
-							}
-						});
+					public void onClick(DialogInterface dialog, final int item)
+					{
+						topicMode = item + 1;
+						initialLoad();
+					}
+				});
 				builder2.create().show();
 				return true;
 		}
@@ -400,8 +371,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 	}
 
 	@Override
-	protected void loadEntries(
-			final de.mtbnews.android.EndlessListActivity.OnListLoadedListener<Topic> onListLoaded,
+	protected void loadEntries(final de.mtbnews.android.EndlessListActivity.OnListLoadedListener<Topic> onListLoaded,
 			final int from, final int to, final boolean firstLoad)
 	{
 
@@ -413,9 +383,8 @@ public class ForumActivity extends EndlessListActivity<Topic>
 			protected void callServer() throws TapatalkException
 			{
 				if (Utils.loginExceeded(client))
-					client.login(prefs.getString("username", ""), prefs
-							.getString("password", ""));
-				
+					client.login(prefs.getString("username", ""), prefs.getString("password", ""));
+
 				this.forum = client.getForum(forumId, from, to, topicMode);
 				totalSize = this.forum.topicCount;
 			}
@@ -427,9 +396,7 @@ public class ForumActivity extends EndlessListActivity<Topic>
 
 				if (firstLoad)
 					if (prefs.getBoolean("show_hints", true))
-						Toast.makeText(ForumActivity.this,
-								R.string.hint_press_long, Toast.LENGTH_SHORT)
-								.show();
+						Toast.makeText(ForumActivity.this, R.string.hint_press_long, Toast.LENGTH_SHORT).show();
 			}
 
 		}.execute();

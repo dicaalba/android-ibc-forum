@@ -19,7 +19,7 @@ public class Forum implements ListEntry
 	public boolean subOnly;
 	public boolean unread;
 	public String url;
-	
+
 	@Override
 	public boolean isUnread()
 	{
@@ -34,8 +34,7 @@ public class Forum implements ListEntry
 	 * @param content
 	 * @param postCount
 	 */
-	public Forum(String id, List<Topic> topics, String title, Date date,
-			String content)
+	public Forum(String id, List<Topic> topics, String title, Date date, String content)
 	{
 		super();
 		this.id = id;

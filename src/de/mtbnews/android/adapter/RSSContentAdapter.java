@@ -37,8 +37,7 @@ public class RSSContentAdapter extends BaseAdapter
 	public RSSContentAdapter(Context context, RSSFeed feed)
 	{
 		mContext = context;
-		inflator = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.feed = feed;
 	}
 
@@ -72,11 +71,8 @@ public class RSSContentAdapter extends BaseAdapter
 		final View view = inflator.inflate(R.layout.rss_item, null);
 
 		TextView datum = (TextView) view.findViewById(R.id.item_date);
-		datum.setText(DateFormat.getDateFormat(parent.getContext()).format(
-				e.getPubDate())
-				+ " "
-				+ DateFormat.getTimeFormat(parent.getContext()).format(
-						e.getPubDate()));
+		datum.setText(DateFormat.getDateFormat(parent.getContext()).format(e.getPubDate()) + " "
+				+ DateFormat.getTimeFormat(parent.getContext()).format(e.getPubDate()));
 
 		TextView name = (TextView) view.findViewById(R.id.item_title);
 		name.setText(e.getTitle());

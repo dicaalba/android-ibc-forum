@@ -62,8 +62,7 @@ public class PhotoActivity extends ListActivity
 
 			protected void doOnSuccess()
 			{
-				ListAdapter adapter = new RSSContentAdapter(PhotoActivity.this,
-						feed);
+				ListAdapter adapter = new RSSContentAdapter(PhotoActivity.this, feed);
 				PhotoActivity.this.setTitle(feed.getTitle());
 
 				setListAdapter(adapter);
@@ -76,8 +75,7 @@ public class PhotoActivity extends ListActivity
 		{
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
 				RSSItem item = (RSSItem) getListAdapter().getItem(position);
 

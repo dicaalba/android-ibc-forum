@@ -19,7 +19,7 @@ public class ListHolder<T>
 	public ListHolder(List<T> children, int totalCount, int from, int to)
 	{
 		super();
-		this.children= children;
+		this.children = children;
 		this.totalCount = totalCount;
 		this.from = from;
 		this.to = to;

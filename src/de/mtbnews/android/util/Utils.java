@@ -41,7 +41,6 @@ public final class Utils
 	 */
 	public static final boolean loginExceeded(TapatalkClient client)
 	{
-		return !client.loggedIn
-				|| System.currentTimeMillis() - client.loginTime > IBC.LOGIN_TIMEOUT * 60 * 1000;
+		return !client.loggedIn || System.currentTimeMillis() - client.loginTime > IBC.LOGIN_TIMEOUT * 60 * 1000;
 	}
 }

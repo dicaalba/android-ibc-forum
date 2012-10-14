@@ -33,7 +33,7 @@ public class BBCodeTest extends TestCase
 		String in = "[url]http://example.com/image.png[/url].";
 		String out = "<a href=\"http://example.com/image.png\">http://example.com/image.png</a>.";
 		testInOut(in, out);
-		
+
 		in = "[url=http://example.com/image.png]haha[/url].";
 		out = "<a href=\"http://example.com/image.png\">haha</a>.";
 		testInOut(in, out);
@@ -47,7 +47,6 @@ public class BBCodeTest extends TestCase
 		testInOut(in, out);
 	}
 
-	
 	private void testInOut(String in, String out) throws Exception
 	{
 		BBCodeConverter bbCodeConverter = new BBCodeConverter();

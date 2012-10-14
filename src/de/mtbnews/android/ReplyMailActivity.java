@@ -53,8 +53,7 @@ public class ReplyMailActivity extends Activity
 				protected void callServer() throws TapatalkException
 				{
 					if (Utils.loginExceeded(client))
-						client.login(prefs.getString("username", ""), prefs
-								.getString("password", ""));
+						client.login(prefs.getString("username", ""), prefs.getString("password", ""));
 					message = client.getMessage(boxId, messageId);
 				}
 
@@ -67,11 +66,9 @@ public class ReplyMailActivity extends Activity
 					// TextView name = (TextView) findViewById(R.id.item_title);
 					// name.setText(item.getTitle());
 
-					subject.setText(message.subject.startsWith("Re: ") ? ""
-							: "Re: " + message.subject);
+					subject.setText(message.subject.startsWith("Re: ") ? "" : "Re: " + message.subject);
 
-					text.setText("[quote]" + message.getContent()
-							+ "[/quote]\n\n");
+					text.setText("[quote]" + message.getContent() + "[/quote]\n\n");
 
 				}
 			}.execute();
@@ -87,26 +84,21 @@ public class ReplyMailActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				new ServerAsyncTask(ReplyMailActivity.this,
-						R.string.waitingfor_sending)
+				new ServerAsyncTask(ReplyMailActivity.this, R.string.waitingfor_sending)
 				{
 					@Override
-					protected void callServer() throws IOException,
-							TapatalkException
+					protected void callServer() throws IOException, TapatalkException
 					{
 						if (Utils.loginExceeded(client))
-							client.login(prefs.getString("username", ""), prefs
-									.getString("password", ""));
+							client.login(prefs.getString("username", ""), prefs.getString("password", ""));
 
-						client.createMessage(new String[] { recipient.getText()
-								.toString() }, subject.getText().toString(),
-								text.getText().toString());
+						client.createMessage(new String[] { recipient.getText().toString() }, subject.getText()
+								.toString(), text.getText().toString());
 					}
 
 					protected void doOnSuccess()
 					{
-						Toast.makeText(ReplyMailActivity.this,
-								R.string.sent_ok, Toast.LENGTH_LONG);
+						Toast.makeText(ReplyMailActivity.this, R.string.sent_ok, Toast.LENGTH_LONG);
 						ReplyMailActivity.this.finish();
 					}
 				}.execute();

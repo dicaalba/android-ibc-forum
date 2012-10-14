@@ -53,8 +53,7 @@ public class SubscriptionForenActivity extends ListActivity
 		client = ((IBCApplication) getApplication()).getTapatalkClient();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		ListAdapter adapter = new ListEntryContentAdapter(
-				SubscriptionForenActivity.this, forumList);
+		ListAdapter adapter = new ListEntryContentAdapter(SubscriptionForenActivity.this, forumList);
 		setListAdapter(adapter);
 
 		ListView list = getListView();
@@ -62,8 +61,7 @@ public class SubscriptionForenActivity extends ListActivity
 		{
 
 			@Override
-			public void onCreateContextMenu(ContextMenu menu, View v,
-					ContextMenuInfo menuInfo)
+			public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
 			{
 				MenuInflater menuInflater = new MenuInflater(getApplication());
 				menuInflater.inflate(R.menu.topic_context, menu);
@@ -74,13 +72,10 @@ public class SubscriptionForenActivity extends ListActivity
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				final Intent intent = new Intent(
-						SubscriptionForenActivity.this, ForumActivity.class);
-				intent.putExtra(ForumActivity.FORUM_ID, forumList.get(position)
-						.getId());
+				final Intent intent = new Intent(SubscriptionForenActivity.this, ForumActivity.class);
+				intent.putExtra(ForumActivity.FORUM_ID, forumList.get(position).getId());
 				startActivity(intent);
 			}
 		});
@@ -101,8 +96,7 @@ public class SubscriptionForenActivity extends ListActivity
 
 				// Login.
 				if (Utils.loginExceeded(client))
-					client.login(prefs.getString("username", ""), prefs
-							.getString("password", ""));
+					client.login(prefs.getString("username", ""), prefs.getString("password", ""));
 
 				newForumList = client.getSubscribedForum(false);
 			}
@@ -114,8 +108,7 @@ public class SubscriptionForenActivity extends ListActivity
 				forumList.clear();
 				forumList.addAll(newForumList);
 
-				((BaseAdapter) SubscriptionForenActivity.this.getListAdapter())
-						.notifyDataSetChanged();
+				((BaseAdapter) SubscriptionForenActivity.this.getListAdapter()).notifyDataSetChanged();
 			}
 
 		}.executeSynchronized();
@@ -124,27 +117,22 @@ public class SubscriptionForenActivity extends ListActivity
 	@Override
 	public boolean onContextItemSelected(MenuItem item)
 	{
-		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
-				.getMenuInfo();
+		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
 		switch (item.getItemId())
 		{
 			case R.id.menu_goto_top:
 
-				final Intent intent = new Intent(
-						SubscriptionForenActivity.this, ForumActivity.class);
-				intent.putExtra("forum_id", forumList.get(menuInfo.position)
-						.getId());
+				final Intent intent = new Intent(SubscriptionForenActivity.this, ForumActivity.class);
+				intent.putExtra("forum_id", forumList.get(menuInfo.position).getId());
 				intent.putExtra("first_post", true);
 				startActivity(intent);
 				return true;
 
 			case R.id.menu_goto_bottom:
 
-				final Intent intent2 = new Intent(
-						SubscriptionForenActivity.this, ForumActivity.class);
-				intent2.putExtra("forum_id", forumList.get(menuInfo.position)
-						.getId());
+				final Intent intent2 = new Intent(SubscriptionForenActivity.this, ForumActivity.class);
+				intent2.putExtra("forum_id", forumList.get(menuInfo.position).getId());
 				intent2.putExtra("last_post", true);
 				startActivity(intent2);
 				return true;
@@ -165,15 +153,14 @@ public class SubscriptionForenActivity extends ListActivity
 			case R.id.menu_preferences:
 				startActivity(new Intent(this, Configuration.class));
 				return true;
-				
+
 			case R.id.menu_mailbox:
 				startActivity(new Intent(this, MailboxActivity.class));
 				return true;
 
 			case R.id.menu_participated_topics:
 				Intent intent = new Intent(this, SearchActivity.class);
-				intent
-						.setAction(SearchActivity.ACTION_SEARCH_PARTICIPATED_TOPICS);
+				intent.setAction(SearchActivity.ACTION_SEARCH_PARTICIPATED_TOPICS);
 				startActivity(intent);
 				return true;
 

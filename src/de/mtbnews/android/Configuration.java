@@ -11,38 +11,30 @@ import de.mtbnews.android.service.SubscriptionService;
 
 public class Configuration extends PreferenceActivity
 {
-	private SharedPreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		setTheme(R.style.Default);
 
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener()
 		{
-			public void onSharedPreferenceChanged(SharedPreferences prefs,
-					String key)
+			public void onSharedPreferenceChanged(SharedPreferences prefs, String key)
 			{
 				if (key.equals("autostart_subscription_service"))
 				{
-					if (prefs.getBoolean("autostart_subscription_service",
-							false))
+					if (prefs.getBoolean("autostart_subscription_service", false))
 					{
 
-						startService(new Intent(getApplicationContext(),
-								SubscriptionService.class));
-						Toast.makeText(Configuration.this,
-								R.string.subscription_service_started,
-								Toast.LENGTH_SHORT).show();
+						startService(new Intent(getApplicationContext(), SubscriptionService.class));
+						Toast.makeText(Configuration.this, R.string.subscription_service_started, Toast.LENGTH_SHORT)
+								.show();
 					}
 					else
 					{
-						stopService(new Intent(getApplicationContext(),
-								SubscriptionService.class));
-						Toast.makeText(Configuration.this,
-								R.string.subscription_service_stopped,
-								Toast.LENGTH_SHORT).show();
+						stopService(new Intent(getApplicationContext(), SubscriptionService.class));
+						Toast.makeText(Configuration.this, R.string.subscription_service_stopped, Toast.LENGTH_SHORT)
+								.show();
 					}
 				}
 
@@ -50,17 +42,13 @@ public class Configuration extends PreferenceActivity
 				// starten.
 				if (key.equals("subscription_service_interval"))
 				{
-					if (prefs.getBoolean("autostart_subscription_service",
-							false))
+					if (prefs.getBoolean("autostart_subscription_service", false))
 					{
 						// Restart
-						stopService(new Intent(getApplicationContext(),
-								SubscriptionService.class));
-						startService(new Intent(getApplicationContext(),
-								SubscriptionService.class));
-						Toast.makeText(Configuration.this,
-								R.string.subscription_service_started,
-								Toast.LENGTH_SHORT).show();
+						stopService(new Intent(getApplicationContext(), SubscriptionService.class));
+						startService(new Intent(getApplicationContext(), SubscriptionService.class));
+						Toast.makeText(Configuration.this, R.string.subscription_service_started, Toast.LENGTH_SHORT)
+								.show();
 					}
 				}
 
@@ -73,12 +61,14 @@ public class Configuration extends PreferenceActivity
 					else
 						application.setTheme(android.R.style.Theme);
 
-					Toast.makeText(Configuration.this, R.string.theme_changed,
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(Configuration.this, R.string.theme_changed, Toast.LENGTH_SHORT).show();
 				}
 			}
 		};
 
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		// Den Listener setzen.
 		prefs.registerOnSharedPreferenceChangeListener(listener);
 
 		super.onCreate(savedInstanceState);

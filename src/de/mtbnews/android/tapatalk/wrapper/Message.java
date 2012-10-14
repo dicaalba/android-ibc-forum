@@ -12,7 +12,6 @@ public class Message implements ListEntry
 	public String content;
 	public boolean unread;
 
-	
 	@Override
 	public boolean isUnread()
 	{
@@ -28,8 +27,7 @@ public class Message implements ListEntry
 	 * @param subject
 	 * @param content
 	 */
-	public Message(String id, boolean unread, Date date, String from, String[] to,
-			String subject, String content)
+	public Message(String id, boolean unread, Date date, String from, String[] to, String subject, String content)
 	{
 		super();
 		this.id = id;

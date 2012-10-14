@@ -99,12 +99,10 @@ public class SearchActivity extends EndlessListActivity<Topic>
 
 			// Das kann nur ein Programmfehler sein, daher RTE werfen und damit
 			// hoffen, dass der Benutzer einen Bericht sendet.
-			throw new RuntimeException("Unknown search action: "
-					+ intent.getAction());
+			throw new RuntimeException("Unknown search action: " + intent.getAction());
 		}
 
-		ListAdapter adapter = new ListEntryContentAdapter(SearchActivity.this,
-				entries);
+		ListAdapter adapter = new ListEntryContentAdapter(SearchActivity.this, entries);
 		setListAdapter(adapter);
 
 		initialLoad();
@@ -114,8 +112,7 @@ public class SearchActivity extends EndlessListActivity<Topic>
 		{
 
 			@Override
-			public void onCreateContextMenu(ContextMenu menu, View v,
-					ContextMenuInfo menuInfo)
+			public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
 			{
 				MenuInflater menuInflater = new MenuInflater(getApplication());
 				menuInflater.inflate(R.menu.topic_context, menu);
@@ -125,12 +122,10 @@ public class SearchActivity extends EndlessListActivity<Topic>
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id)
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
 				// int aktPosition = displayFrom + position + 1;
-				final Intent intent = new Intent(SearchActivity.this,
-						TopicActivity.class);
+				final Intent intent = new Intent(SearchActivity.this, TopicActivity.class);
 				Topic topic = SearchActivity.super.entries.get(position);
 				intent.putExtra(TopicActivity.TOPIC_ID, topic.getId());
 				startActivity(intent);
@@ -148,27 +143,22 @@ public class SearchActivity extends EndlessListActivity<Topic>
 	@Override
 	public boolean onContextItemSelected(MenuItem item)
 	{
-		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
-				.getMenuInfo();
+		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
 		switch (item.getItemId())
 		{
 			case R.id.menu_goto_top:
 
-				final Intent intent = new Intent(SearchActivity.this,
-						TopicActivity.class);
-				intent.putExtra(TopicActivity.TOPIC_ID, super.entries.get(
-						menuInfo.position).getId());
+				final Intent intent = new Intent(SearchActivity.this, TopicActivity.class);
+				intent.putExtra(TopicActivity.TOPIC_ID, super.entries.get(menuInfo.position).getId());
 				intent.putExtra("first_post", true);
 				startActivity(intent);
 				return true;
 
 			case R.id.menu_goto_bottom:
 
-				final Intent intent2 = new Intent(SearchActivity.this,
-						TopicActivity.class);
-				intent2.putExtra(TopicActivity.TOPIC_ID, super.entries.get(
-						menuInfo.position).getId());
+				final Intent intent2 = new Intent(SearchActivity.this, TopicActivity.class);
+				intent2.putExtra(TopicActivity.TOPIC_ID, super.entries.get(menuInfo.position).getId());
 				intent2.putExtra("last_post", true);
 				startActivity(intent2);
 				return true;
@@ -178,8 +168,8 @@ public class SearchActivity extends EndlessListActivity<Topic>
 	}
 
 	@Override
-	protected void loadEntries(final OnListLoadedListener<Topic> onListLoaded,
-			final int from, final int to, boolean firstLoad)
+	protected void loadEntries(final OnListLoadedListener<Topic> onListLoaded, final int from, final int to,
+			boolean firstLoad)
 	{
 		new ServerAsyncTask(SearchActivity.this, R.string.waitingfor_loadmore)
 		{
@@ -188,11 +178,9 @@ public class SearchActivity extends EndlessListActivity<Topic>
 			@Override
 			protected void callServer() throws TapatalkException
 			{
-				TapatalkClient client = ((IBCApplication) getApplication())
-						.getTapatalkClient();
+				TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 
-				search = client.searchTopics(searchType, query, username, from,
-						to, searchId);
+				search = client.searchTopics(searchType, query, username, from, to, searchId);
 
 				totalSize = search.topicCount;
 				searchId = search.searchId;

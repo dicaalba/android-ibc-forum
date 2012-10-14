@@ -84,8 +84,7 @@ public class SubscriptionService extends Service
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		// Intervall in Minuten (Default = 3 Stunden)
-		int intervalInMinutes = Integer.parseInt(prefs.getString(
-				"subscription_service_interval", "180"));
+		int intervalInMinutes = Integer.parseInt(prefs.getString("subscription_service_interval", "180"));
 
 		// Prüfen, ob Service laufen soll und ein Benutzername vorhanden ist
 		if (prefs.getBoolean("autostart_subscription_service", false)
@@ -93,8 +92,7 @@ public class SubscriptionService extends Service
 		{
 			Log.d(IBC.TAG, "Creating the timer");
 			timer = new Timer();
-			timer.scheduleAtFixedRate(new SubscriptionTask(), 2000,
-					intervalInMinutes * 60 * 1000);
+			timer.scheduleAtFixedRate(new SubscriptionTask(), 2000, intervalInMinutes * 60 * 1000);
 		}
 		else
 		{
@@ -126,39 +124,32 @@ public class SubscriptionService extends Service
 			// Tapatalk-Client durch den GC weggeräum werden kann. Dieser
 			// Hintergrundprozess wird dadurch deutlich weniger
 			// speicherintensiv.
-			final TapatalkClient client = new TapatalkClient(
-					IBC.IBC_FORUM_CONNECTOR_URL);
+			final TapatalkClient client = new TapatalkClient(IBC.IBC_FORUM_CONNECTOR_URL);
 
 			// Anzeigen einer Notification, damit der Benutzer weiß, dass neue
 			// Nachrichten ab
 			final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			final PendingIntent emptyIntent = PendingIntent.getActivity(
-					getApplicationContext(), 0, new Intent(), 0);
+			final PendingIntent emptyIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
 
-			final String tickerText1 = getResources().getString(
-					R.string.checking_new);
+			final String tickerText1 = getResources().getString(R.string.checking_new);
 
 			if (prefs.getBoolean("show_hints", false))
 			{
-				final Notification notificationRunning = new Notification(
-						R.drawable.ibc_logo, tickerText1, System
-								.currentTimeMillis());
+				final Notification notificationRunning = new Notification(R.drawable.ibc_logo, tickerText1, System
+						.currentTimeMillis());
 
-				notificationRunning.setLatestEventInfo(getApplicationContext(),
-						getResources().getString(R.string.checking_new), "",
-						emptyIntent);
+				notificationRunning.setLatestEventInfo(getApplicationContext(), getResources().getString(
+						R.string.checking_new), "", emptyIntent);
 
 				notificationRunning.defaults = 0;
-				notificationRunning.flags = Notification.FLAG_ONGOING_EVENT
-						| Notification.FLAG_NO_CLEAR;
+				notificationRunning.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 				nm.notify(NOTIFICATION_EVENT_RUNNING, notificationRunning);
 			}
 
 			try
 			{
 				// Zuerst Login
-				client.login(prefs.getString("username", ""), prefs.getString(
-						"password", ""));
+				client.login(prefs.getString("username", ""), prefs.getString("password", ""));
 
 				List<Forum> subscribedForum = client.getSubscribedForum(true);
 
@@ -169,26 +160,20 @@ public class SubscriptionService extends Service
 				}
 				if (!forumNameList.isEmpty())
 				{
-					final Intent notificationIntent = new Intent(
-							SubscriptionService.this,
+					final Intent notificationIntent = new Intent(SubscriptionService.this,
 							SubscriptionForenActivity.class);
-					final PendingIntent contentIntent = PendingIntent
-							.getActivity(SubscriptionService.this, 0,
-									notificationIntent, 0);
+					final PendingIntent contentIntent = PendingIntent.getActivity(SubscriptionService.this, 0,
+							notificationIntent, 0);
 
-					final String tickerText = getResources().getString(
-							R.string.unread_forum)
-							+ "\n" + TextUtils.join("\n", forumNameList);
+					final String tickerText = getResources().getString(R.string.unread_forum) + "\n"
+							+ TextUtils.join("\n", forumNameList);
 
-					final Notification notification = createNotification(
-							tickerText, R.string.unread_forum, "("
-									+ subscribedForum.size() + ")", TextUtils
-									.join(", ", forumNameList), contentIntent);
+					final Notification notification = createNotification(tickerText, R.string.unread_forum, "("
+							+ subscribedForum.size() + ")", TextUtils.join(", ", forumNameList), contentIntent);
 					nm.notify(NOTIFICATION_FORUM, notification);
 				}
 
-				ListHolder<Topic> subscribedTopic = client.getSubscribedTopics(
-						0, 10, true);
+				ListHolder<Topic> subscribedTopic = client.getSubscribedTopics(0, 10, true);
 				final List<String> topicNameList = new ArrayList<String>();
 				for (Topic topic : subscribedTopic.getChildren())
 				{
@@ -197,21 +182,16 @@ public class SubscriptionService extends Service
 				if (!topicNameList.isEmpty())
 				{
 
-					final Intent notificationIntent = new Intent(
-							SubscriptionService.this,
+					final Intent notificationIntent = new Intent(SubscriptionService.this,
 							SubscriptionTopicsActivity.class);
-					final PendingIntent contentIntent = PendingIntent
-							.getActivity(SubscriptionService.this, 0,
-									notificationIntent, 0);
+					final PendingIntent contentIntent = PendingIntent.getActivity(SubscriptionService.this, 0,
+							notificationIntent, 0);
 
-					final String tickerText = getResources().getString(
-							R.string.unread_topic)
-							+ "\n" + TextUtils.join("\n", topicNameList);
+					final String tickerText = getResources().getString(R.string.unread_topic) + "\n"
+							+ TextUtils.join("\n", topicNameList);
 
-					final Notification notification = createNotification(
-							tickerText, R.string.unread_topic, "("
-									+ subscribedTopic.getChildren().size()
-									+ ")", TextUtils.join(", ", topicNameList),
+					final Notification notification = createNotification(tickerText, R.string.unread_topic, "("
+							+ subscribedTopic.getChildren().size() + ")", TextUtils.join(", ", topicNameList),
 							contentIntent);
 
 					nm.notify(NOTIFICATION_TOPIC, notification);
@@ -234,20 +214,15 @@ public class SubscriptionService extends Service
 
 				if (unreadCount > 0)
 				{
-					final Intent notificationIntent = new Intent(
-							SubscriptionService.this, MailboxActivity.class);
-					final PendingIntent contentIntent = PendingIntent
-							.getActivity(SubscriptionService.this, 0,
-									notificationIntent, 0);
+					final Intent notificationIntent = new Intent(SubscriptionService.this, MailboxActivity.class);
+					final PendingIntent contentIntent = PendingIntent.getActivity(SubscriptionService.this, 0,
+							notificationIntent, 0);
 
-					final String tickerText = getResources().getString(
-							R.string.unread_messages)
-							+ "\n" + TextUtils.join("\n", unreadBoxNames);
+					final String tickerText = getResources().getString(R.string.unread_messages) + "\n"
+							+ TextUtils.join("\n", unreadBoxNames);
 
-					final Notification notification = createNotification(
-							tickerText, R.string.unread_messages, "("
-									+ unreadCount + ")", TextUtils.join(", ",
-									unreadBoxNames), contentIntent);
+					final Notification notification = createNotification(tickerText, R.string.unread_messages, "("
+							+ unreadCount + ")", TextUtils.join(", ", unreadBoxNames), contentIntent);
 					nm.notify(NOTIFICATION_MESSAGES, notification);
 				}
 			}
@@ -323,17 +298,13 @@ public class SubscriptionService extends Service
 	 *            Auszulösender Intent
 	 * @return
 	 */
-	private Notification createNotification(String tickerText, int titleResId,
-			String titleExtra, String content, PendingIntent intent)
+	private Notification createNotification(String tickerText, int titleResId, String titleExtra, String content,
+			PendingIntent intent)
 	{
 
-		final Notification notification = new Notification(R.drawable.ibc_logo,
-				tickerText, System.currentTimeMillis());
-		notification
-				.setLatestEventInfo(getApplicationContext(), getResources()
-						.getString(titleResId)
-						+ (titleExtra != null ? " " + titleExtra : ""),
-						content, intent);
+		final Notification notification = new Notification(R.drawable.ibc_logo, tickerText, System.currentTimeMillis());
+		notification.setLatestEventInfo(getApplicationContext(), getResources().getString(titleResId)
+				+ (titleExtra != null ? " " + titleExtra : ""), content, intent);
 
 		notification.defaults = Notification.DEFAULT_LIGHTS;
 
@@ -348,8 +319,7 @@ public class SubscriptionService extends Service
 		if (prefs.getBoolean("use_vibration", false))
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
 
-		notification.flags = Notification.FLAG_AUTO_CANCEL
-				| Notification.FLAG_ONLY_ALERT_ONCE;
+		notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.FLAG_ONLY_ALERT_ONCE;
 
 		return notification;
 	}

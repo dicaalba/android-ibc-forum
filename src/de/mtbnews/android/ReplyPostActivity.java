@@ -26,7 +26,7 @@ public class ReplyPostActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setTheme(((IBCApplication) getApplication()).themeResId);
 		setContentView(R.layout.post);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -44,9 +44,7 @@ public class ReplyPostActivity extends Activity
 		label.setVisibility(View.INVISIBLE);
 
 		final TextView subject = (TextView) findViewById(R.id.subject);
-		subject
-				.setText(ReplyPostActivity.this.subject != null ? ReplyPostActivity.this.subject
-						: "");
+		subject.setText(ReplyPostActivity.this.subject != null ? ReplyPostActivity.this.subject : "");
 
 		final TextView text = (TextView) findViewById(R.id.content);
 		text.setText(quote != null ? "[quote]" + quote + "[/quote]" : "");
@@ -64,22 +62,18 @@ public class ReplyPostActivity extends Activity
 					@Override
 					protected void callServer() throws TapatalkException
 					{
-						TapatalkClient client = ((IBCApplication) getApplication())
-								.getTapatalkClient();
+						TapatalkClient client = ((IBCApplication) getApplication()).getTapatalkClient();
 
 						// Login.
 						if (Utils.loginExceeded(client))
-							client.login(prefs.getString("username", ""), prefs
-									.getString("password", ""));
+							client.login(prefs.getString("username", ""), prefs.getString("password", ""));
 
-						client.createReply(forumId, topicId, subject.getText()
-								.toString(), text.getText().toString());
+						client.createReply(forumId, topicId, subject.getText().toString(), text.getText().toString());
 					}
 
 					protected void doOnSuccess()
 					{
-						Toast.makeText(ReplyPostActivity.this,
-								R.string.sent_ok, Toast.LENGTH_LONG);
+						Toast.makeText(ReplyPostActivity.this, R.string.sent_ok, Toast.LENGTH_LONG);
 						ReplyPostActivity.this.finish();
 					}
 				}.execute();
