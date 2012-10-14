@@ -9,15 +9,24 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 import de.mtbnews.android.service.SubscriptionService;
 
+/**
+ * Konfiguration anzeigen und verändern. Es wird die von Android angebotene
+ * {@link PreferenceActivity} benutzt.
+ * 
+ * @author Jan Dankert
+ * 
+ */
 public class Configuration extends PreferenceActivity
 {
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		// Bei der Konfiguration nicht das IBC-Theme, sondern das
+		// Standard-Android-Theme benutzen.
 		setTheme(R.style.Default);
 
-		OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener()
+		// Erzeugt einen Listener, um auf Konfigurationsänderungen zu reagieren.
+		final OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener()
 		{
 			public void onSharedPreferenceChanged(SharedPreferences prefs, String key)
 			{

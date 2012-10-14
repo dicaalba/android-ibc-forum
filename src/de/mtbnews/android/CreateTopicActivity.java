@@ -16,6 +16,12 @@ import de.mtbnews.android.tapatalk.TapatalkException;
 import de.mtbnews.android.util.ServerAsyncTask;
 import de.mtbnews.android.util.Utils;
 
+/**
+ * Erzeugen eines neuen Themas.
+ * 
+ * @author Jan Dankert
+ * 
+ */
 public class CreateTopicActivity extends Activity
 {
 	private String forumId;
